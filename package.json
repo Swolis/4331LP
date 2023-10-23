@@ -1,0 +1,26 @@
+{
+  "name": "biz-starter-pack",
+  "version": "1.0.0",
+  "description": "customizable pos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jjoslin0994/bizStarter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jjoslin0994/bizStarter/issues"
+  },
+  "homepage": "https://github.com/jjoslin0994/bizStarter#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "express": "^4.18.2",
+    "https": "^1.0.0",
+    "mongoose": "^7.6.2",
+    "tls": "^0.0.1"
+  }
+}
