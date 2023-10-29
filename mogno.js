@@ -95,3 +95,18 @@ async function createRecipieCollection(name,client, newListing){
     const result = await client.db(name).collection("recipie").insertOne(newListing);
     console.log(`New listing created with the following id: ${result.insertedId}`);
 }
+async function createRecipieCollection2(name,client, newListing,size){
+    listOfIngridients=[];
+    
+    ingridentId=await client.db(name).collection("ingridients").findOne({ name:"Lovely Loft" });
+    listOfIngridients[0]=ingridentId._id
+    await createRecipieCollection(name,client,
+    {
+        name:"charles",
+        list:listOfIngridients         
+    }
+    );
+    
+}
+
+
