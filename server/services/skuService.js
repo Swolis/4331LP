@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var databaseConnection_1 = require("../config/databaseConnection");
+exports.getNewSKU = void 0;
 var mongoose_1 = require("mongoose");
 // define sku schema
 var skuSchema = new mongoose_1.default.Schema({
@@ -88,26 +88,12 @@ function getNewSKU() {
         });
     });
 }
-function main() {
-    return __awaiter(this, void 0, void 0, function () {
-        var client, newSku;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, databaseConnection_1.connectToDatabase)()];
-                case 1:
-                    client = _a.sent();
-                    return [4 /*yield*/, getNewSKU()];
-                case 2:
-                    newSku = _a.sent();
-                    console.log('newSku: ', newSku);
-                    //console.log('client: ', client);
-                    return [4 /*yield*/, client.connection.close()];
-                case 3:
-                    //console.log('client: ', client);
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-main();
+exports.getNewSKU = getNewSKU;
+// export async function main(): Promise<number> {
+//     //const client: typeof mongoose = await connectToDatabase();
+//     const newSku: number = await getNewSKU();
+//     console.log('newSku: ', newSku);
+//     //console.log('client: ', client);
+//     //await client.connection.close();
+//     return newSku;
+// }

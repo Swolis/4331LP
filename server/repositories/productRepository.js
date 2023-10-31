@@ -1,4 +1,5 @@
 "use strict";
+// productRepository.ts
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,37 +37,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createProductController = void 0;
-var productRepository_1 = require("../repositories/productRepository");
-var skuService_1 = require("../services/skuService");
-var createProductController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var sku, productData, newProduct, error_1;
+exports.createProduct = void 0;
+//const Product = require('../models/productSchema');
+var productSchema_1 = require("../models/productSchema");
+var createProduct = function (ProductData) { return __awaiter(void 0, void 0, void 0, function () {
+    var newProduct;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 3, , 4]);
-                return [4 /*yield*/, (0, skuService_1.getNewSKU)()];
-            case 1:
-                sku = _a.sent();
-                // Add SKU to the request body
-                req.body.sku = sku;
-                productData = req.body;
-                return [4 /*yield*/, (0, productRepository_1.createProduct)(productData)];
-            case 2:
-                newProduct = _a.sent();
-                // Set the HTTP response status code
-                res.status(201);
-                // Use the json() method to send the response with JSON data
-                res.json(newProduct);
-                return [3 /*break*/, 4];
-            case 3:
-                error_1 = _a.sent();
-                console.error('Error creating product.', error_1);
-                // Set the HTTP response status code for error
-                res.status(500).json({ error: 'Internal server error.' });
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
-        }
+        newProduct = new productSchema_1.default(ProductData);
+        return [2 /*return*/, newProduct.save()];
     });
 }); };
-exports.createProductController = createProductController;
+exports.createProduct = createProduct;

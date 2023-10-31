@@ -1,7 +1,6 @@
 // productSchema.ts
 import mongoose, {  Model, Schema, Document } from "mongoose";
 
-
 //const mongoose = require('mongoose');
 
 // Define Schema
@@ -19,7 +18,6 @@ export interface IProduct extends Document {
     description?: string;
 }
 
-const Product: Model<IProduct> = mongoose.model<IProduct>('Product', productSchema);
-
+const Product: Model<IProduct> = mongoose.model<IProduct>('ProductCollection', productSchema);
 
 export default Product;
