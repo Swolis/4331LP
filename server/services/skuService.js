@@ -37,81 +37,53 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var console_1 = require("console");
 var databaseConnection_1 = require("../config/databaseConnection");
-// connect to mongo server
-function getSkuCollection(client) {
+var mongoose_1 = require("mongoose");
+// define sku schema
+var skuSchema = new mongoose_1.default.Schema({
+    value: {
+        type: Number,
+        default: 0,
+    },
+});
+// create sku model
+var SKU = mongoose_1.default.model('SKU', skuSchema);
+function getNewSKU() {
     return __awaiter(this, void 0, void 0, function () {
-        var db, collectionName, skuCollection, documentCount, error_1, skuCollection, skuDocument;
+        var skuDocument, newSKU, skuValue_1, skuValue, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    db = client.db();
-                    collectionName = 'sku_counter';
-                    _a.label = 1;
+                    _a.trys.push([0, 6, , 7]);
+                    return [4 /*yield*/, SKU.findOne()];
                 case 1:
-                    _a.trys.push([1, 3, , 7]);
-                    console.log('\nin try\n');
-                    skuCollection = db.collection(collectionName);
-                    return [4 /*yield*/, skuCollection.countDocuments()];
+                    skuDocument = _a.sent();
+                    if (!!skuDocument) return [3 /*break*/, 4];
+                    // The document does not yet exits, creat it.
+                    console.log('making new');
+                    newSKU = new SKU({});
+                    return [4 /*yield*/, newSKU.save()];
                 case 2:
-                    documentCount = _a.sent();
-                    if (documentCount < 1)
-                        throw new Error('newCollection');
-                    return [2 /*return*/, skuCollection];
+                    _a.sent();
+                    skuValue_1 = newSKU.value++;
+                    return [4 /*yield*/, newSKU.save()];
                 case 3:
-                    error_1 = _a.sent();
-                    if (!(error_1.message === 'newCollection')) return [3 /*break*/, 5];
-                    // the collection does not exist --> create it
-                    console.error("Collection ".concat(collectionName, " did not exist"));
-                    return [4 /*yield*/, db.createCollection('sku_counter')];
+                    _a.sent();
+                    return [2 /*return*/, skuValue_1];
                 case 4:
-                    skuCollection = _a.sent();
-                    skuDocument = {
-                        value: 0,
-                    };
-                    skuCollection.insertOne(skuDocument);
-                    return [2 /*return*/, skuCollection];
+                    skuValue = skuDocument.value++;
+                    return [4 /*yield*/, skuDocument.save()
+                        //console.log('value: ', skuDocument.value);
+                    ];
                 case 5:
-                    console.log('\nother error\n');
-                    console.error('Other database error: ', error_1);
+                    _a.sent();
+                    //console.log('value: ', skuDocument.value);
+                    return [2 /*return*/, skuValue];
+                case 6:
+                    error_1 = _a.sent();
+                    console.error('Error getting SKU: ', error_1);
                     throw error_1;
-                case 6: return [3 /*break*/, 7];
                 case 7: return [2 /*return*/];
-            }
-        });
-    });
-}
-function getNewSKU(client) {
-    return __awaiter(this, void 0, void 0, function () {
-        var db, skuCollection, result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    db = client.db();
-                    return [4 /*yield*/, getSkuCollection(client)];
-                case 1:
-                    skuCollection = _a.sent();
-                    return [4 /*yield*/, (skuCollection === null || skuCollection === void 0 ? void 0 : skuCollection.findOneAndUpdate({}, // Filter, find any document in the collection
-                        { $inc: { value: 1 } }, // Increment the valuefield by 1
-                        { returnDocument: "before"
-                        }))];
-                case 2:
-                    result = _a.sent();
-                    console.log('result: ', result);
-                    try {
-                        if (result && typeof result.value === 'number') {
-                            return [2 /*return*/, result.value];
-                        }
-                        else {
-                            throw console_1.error;
-                        }
-                    }
-                    catch (error) {
-                        console.log('error: ', error);
-                        throw error;
-                    }
-                    return [2 /*return*/];
             }
         });
     });
@@ -124,12 +96,14 @@ function main() {
                 case 0: return [4 /*yield*/, (0, databaseConnection_1.connectToDatabase)()];
                 case 1:
                     client = _a.sent();
-                    return [4 /*yield*/, getNewSKU(client)];
+                    return [4 /*yield*/, getNewSKU()];
                 case 2:
                     newSku = _a.sent();
                     console.log('newSku: ', newSku);
-                    return [4 /*yield*/, client.close()];
+                    //console.log('client: ', client);
+                    return [4 /*yield*/, client.connection.close()];
                 case 3:
+                    //console.log('client: ', client);
                     _a.sent();
                     return [2 /*return*/];
             }

@@ -2,79 +2,56 @@
 
 
 import { error } from 'console';
-import { connectToDatabase} from '../config/databaseConnection'
+import { connectToDatabase}  from '../config/databaseConnection'
+import mongoose from 'mongoose';
 
-import { Collection, Document, MongoClient } from 'mongodb';
-// connect to mongo server
 
-async function getSkuCollection(client: MongoClient)
-{
-    const db = client.db();
-    const collectionName: string = 'sku_counter';
+// define sku schema
 
+const skuSchema = new mongoose.Schema({
+    value: {
+        type: Number,
+        default: 0,
+    },
+});
+
+// create sku model
+
+const SKU = mongoose.model('SKU', skuSchema);
+
+async function getNewSKU(): Promise<number> {
     try {
-        console.log('\nin try\n');        
-        const skuCollection = db.collection(collectionName);
-        //console.log('skuCollection: ', skuCollection);
-        const documentCount: number = await skuCollection.countDocuments();
-        if (documentCount < 1) throw new Error('newCollection');
-        return skuCollection;
+        const skuDocument = await SKU.findOne();
 
-    }catch (error) {
-        if(error.message === 'newCollection')
-        {
-            // the collection does not exist --> create it
-            console.error(`Collection ${collectionName} did not exist`)
-            const skuCollection: Collection<Document> = await db.createCollection('sku_counter');
-            const skuDocument = {
-                value: 0,
-            }
-
-            skuCollection.insertOne(skuDocument);
-
-            return skuCollection;
-
-        }else{
-            console.log('\nother error\n');
-            console.error('Other database error: ', error);
-            throw error;
+        if(!skuDocument) {
+            // The document does not yet exits, creat it.
+            console.log('making new');
+            const newSKU = new SKU({});
+            await newSKU.save();
+            const skuValue: number = newSKU.value++;
+            await newSKU.save();
+            return skuValue;
         }
 
-    }
-
-}
-async function getNewSKU(client: MongoClient): Promise<number>
-{
-    const db = client.db();
-    const skuCollection: Collection = await getSkuCollection(client);
-    
-    const result = await skuCollection?.findOneAndUpdate( 
-        {}, // Filter, find any document in the collection
-        { $inc: { value: 1 }}, // Increment the valuefield by 1
-        { returnDocument: "before"
-    });
-
-    console.log('result: ', result);
-    try{
-        if (result && typeof result.value  === 'number'){
-            return result.value;
-        }else{
-        throw error;
-        }
-    }catch(error){
-        console.log('error: ', error);
+        const skuValue: number = skuDocument.value++;
+        await skuDocument.save()
+        //console.log('value: ', skuDocument.value);
+        return skuValue;
+    }catch (error){
+        console.error('Error getting SKU: ', error);
         throw error;
     }
-
-
 }
+
+
 
 
 async function main() {
-    const client: MongoClient = await connectToDatabase();
-    const newSku: number = await getNewSKU(client);
+    const client: typeof mongoose = await connectToDatabase();
+    const newSku: number = await getNewSKU();
     console.log('newSku: ', newSku);
-    await client.close();
+    //console.log('client: ', client);
+    await client.connection.close();
 }
 
 main();

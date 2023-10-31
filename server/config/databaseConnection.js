@@ -37,30 +37,30 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.client = exports.connectToDatabase = void 0;
-var mongodb_1 = require("mongodb");
-var punycode = require('punycode/');
-var uri = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/?retryWrites=true&w=majority';
-var client = new mongodb_1.MongoClient(uri);
-exports.client = client;
+exports.mongoose = exports.connectToDatabase = void 0;
+var mongoose_1 = require("mongoose");
+exports.mongoose = mongoose_1.default;
+var uri = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/test';
 function connectToDatabase() {
     return __awaiter(this, void 0, void 0, function () {
         var error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, 3, 4]);
-                    return [4 /*yield*/, client.connect()];
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, mongoose_1.default.connect(uri, {
+                            ssl: true,
+                        })];
                 case 1:
                     _a.sent();
                     console.log('Connected to the database');
-                    return [2 /*return*/, client]; // return database instance
+                    //console.log('client: ', mongoose);
+                    return [2 /*return*/, mongoose_1.default]; // return database instance
                 case 2:
                     error_1 = _a.sent();
                     console.error('Error connecting to database: ', error_1);
                     throw error_1;
-                case 3: return [7 /*endfinally*/];
-                case 4: return [2 /*return*/];
+                case 3: return [2 /*return*/];
             }
         });
     });
