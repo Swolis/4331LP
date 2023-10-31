@@ -1,0 +1,47 @@
+{
+    "name": "business-kernel",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@testing-library/jest-dom": "^6.1.4",
+        "@testing-library/react": "^14.0.0",
+        "@testing-library/user-event": "^14.5.1",
+        "express": "^4.18.2",
+        "mongodb": "^6.2.0",
+        "postcss": "^8.4.31",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-router-dom": "^6.17.0",
+        "tailwindcss": "^3.3.3",
+        "web-vitals": "^3.5.0"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "watch:css": "tailwindcss build src/styles/tailwind.css -o src/styles/main.css --watch"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.4.16",
+        "react-scripts": "^5.0.1"
+    }
+}
