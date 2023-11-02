@@ -5,14 +5,15 @@
 import express from 'express';
 import { connectToDatabase } from './config/databaseConnection';
 import mainRouter from './routes/expressAppRouter';
-import { MongoClient } from 'mongodb';
+import mongoose, { mongo } from 'mongoose';
+require('dotenv').config();
 
 
 const app = express();
 
 // Connect to database when appliction starts
 connectToDatabase()
-    .then((client: MongoClient) => {
+    .then((client: typeof mongoose) => {
         // make client available to the rest of the application
         app.locals.client = client;
 

@@ -1,4 +1,8 @@
 "use strict";
+// createClientController.ts
+/*
+    Adds new clinet to main database
+*/
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,45 +40,60 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createProductController = void 0;
-var productRepository_1 = require("../repositories/productRepository");
-var skuService_1 = require("../services/skuService");
-var ClientSchema_1 = require("../models/ClientSchema");
-var createProductController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var UserID, user, sku, productData, newProduct, error_1;
+exports.createClientController = void 0;
+var clientRepository_1 = require("../repositories/clientRepository");
+var createClientController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var clientData, newClient, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 4, , 5]);
-                UserID = '6542f3406e0f1642db20a668';
-                return [4 /*yield*/, ClientSchema_1.default.findById(UserID)];
+                _a.trys.push([0, 3, , 4]);
+                clientData = req.body;
+                req.body.userId = null;
+                return [4 /*yield*/, (0, clientRepository_1.createUser)(clientData)];
             case 1:
-                user = _a.sent();
-                if (!user) {
-                    // Handle the case where the user is not found
-                    throw res.status(404).json({ error: 'User not found.' });
-                }
-                return [4 /*yield*/, (0, skuService_1.getNewSKU)()];
+                newClient = _a.sent();
+                //newClient.userId = newClient._id;
+                return [4 /*yield*/, newClient.save()];
             case 2:
-                sku = _a.sent();
-                // Add SKU to the request body
-                req.body.sku = sku;
-                productData = req.body;
-                return [4 /*yield*/, (0, productRepository_1.createProduct)(user, productData)];
-            case 3:
-                newProduct = _a.sent();
+                //newClient.userId = newClient._id;
+                _a.sent();
                 // Set the HTTP response status code
                 res.status(201);
                 // Use the json() method to send the response with JSON data
-                res.json(newProduct);
-                return [3 /*break*/, 5];
-            case 4:
+                res.json(newClient);
+                return [3 /*break*/, 4];
+            case 3:
                 error_1 = _a.sent();
-                console.error('Error creating product.', error_1);
-                res.status(500).json({ error: 'Internal server error.' });
-                return [3 /*break*/, 5];
-            case 5: return [2 /*return*/];
+                console.error('Error adding client: ', error_1);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); };
-exports.createProductController = createProductController;
+exports.createClientController = createClientController;
+// function test() {
+//     const testObject = {
+//         body: {
+//             username: 'testUser',
+//             password: 'password',
+//             email: 'test@email.com',
+//             phone: 1111111111,
+//             address: '123 test drive address',
+//             // _id added by controller
+//             products:[],
+//         },
+//     };
+//     const testRes = {
+//         body: {
+//             username: 'testUser',
+//             password: 'password',
+//             email: 'test@email.com',
+//             phone: 1111111111,
+//             address: '123 test drive address',
+//             userId: mongoose.Schema.Types.ObjectId,
+//             products:[],
+//         },
+//     };
+//     createClientController(testObject, testRes);
+// }

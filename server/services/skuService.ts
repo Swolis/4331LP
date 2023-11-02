@@ -19,7 +19,7 @@ const skuSchema = new mongoose.Schema({
 
 const SKU = mongoose.model('SKU', skuSchema);
 
-async function getNewSKU(): Promise<number> {
+export async function getNewSKU(): Promise<number> {
     try {
         const skuDocument = await SKU.findOne();
 
@@ -46,13 +46,15 @@ async function getNewSKU(): Promise<number> {
 
 
 
-async function main() {
-    const client: typeof mongoose = await connectToDatabase();
-    const newSku: number = await getNewSKU();
-    console.log('newSku: ', newSku);
-    //console.log('client: ', client);
-    await client.connection.close();
-}
+// export async function main(): Promise<number> {
+//     //const client: typeof mongoose = await connectToDatabase();
+//     const newSku: number = await getNewSKU();
+//     console.log('newSku: ', newSku);
+//     //console.log('client: ', client);
+    
+//     //await client.connection.close();
 
-main();
+//     return newSku;
+// }
+
 
