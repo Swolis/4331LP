@@ -5,8 +5,8 @@
 import express from 'express';
 import { connectToDatabase } from './config/databaseConnection';
 import mainRouter from './routes/expressAppRouter';
-import { MongoClient } from 'mongodb';
 import mongoose, { mongo } from 'mongoose';
+require('dotenv').config();
 
 
 const app = express();

@@ -2,6 +2,7 @@ const { createProductController } = require('./CreateProductController');
 const express = require('express');
 const { connectToDatabase } = require ( '../config/databaseConnection');
 
+
 const app = express();
 
 app.set('port', 3001);
@@ -17,6 +18,10 @@ connectToDatabase()
         console.error('Database connection error: ', error);
     });
 
+
+    afterAll(async () => {
+      app.locals.client.connection.close();
+  })
 
 test('Test createProductController', async () => {
   const mockReq = {
@@ -35,6 +40,14 @@ test('Test createProductController', async () => {
   await createProductController(mockReq, mockRes);
 
   // Add your assertions here
-  expect(mockRes.status).toHaveBeenCalledWith(201); // Expected status code
-  expect(mockRes.json).toHaveBeenCalledWith(/* Expected JSON data */);
+  //expect(mockRes.status).toHaveBeenCalledWith(201); // Expected status code
+  expect(mockRes.json).toHaveBeenCalledWith(
+    expect.objectContaining({
+
+        "name": expect.any(String),
+        "price": expect.any(Number),
+        "sku": expect.any(Number)
+    })
+);
+
 }, 20000);

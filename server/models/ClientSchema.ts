@@ -1,7 +1,8 @@
-import { Model, Schema } from "mongoose";
-const Product = require('./productSchema');
+// clientSchema.ts
+import { Model, Schema, Document } from "mongoose";
+import Product, { IProduct } from './productSchema';
+import mongoose from 'mongoose';
 
-const mongoose = require('mongoose');
 
 const userSchema: Schema = new mongoose.Schema({
     username: {type: String, unique: true, required: true},
@@ -9,18 +10,28 @@ const userSchema: Schema = new mongoose.Schema({
     email: {type: String, unique: true, required: true},
     phone: {type: Number, unique: true, required: true},
     address: {type: String, unique: true, required: true},
+    userId: { type: mongoose.Schema.Types.ObjectId},
 
     products: [Product.schema]
 });
 
-interface IUser extends Document {
+userSchema.pre('save', function(next) {
+    if (!this.userId) {
+        this.userId = this._id;
+    }
+    next();
+});
+
+export interface IUser extends Document {
     username: string;
     password: string;
     email: string;
     phone: number;
     address: string;
+    userId: mongoose.Types.ObjectId;
+    products: IProduct[];
 }
 
-const newUser: Model<IUser> = mongoose.model('Client', userSchema);
+const User: Model<IUser> = mongoose.model<IUser>('Client', userSchema);
 
-module.exports = newUser;
+export default User;

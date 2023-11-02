@@ -1,5 +1,4 @@
 "use strict";
-// productRepository.ts
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -38,13 +37,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createProduct = void 0;
-//const Product = require('../models/productSchema');
 var productSchema_1 = require("../models/productSchema");
-var createProduct = function (ProductData) { return __awaiter(void 0, void 0, void 0, function () {
+var createProduct = function (user, ProductData) { return __awaiter(void 0, void 0, void 0, function () {
     var newProduct;
     return __generator(this, function (_a) {
-        newProduct = new productSchema_1.default(ProductData);
-        return [2 /*return*/, newProduct.save()];
+        switch (_a.label) {
+            case 0:
+                newProduct = new productSchema_1.default(ProductData);
+                user.products.push(newProduct);
+                return [4 /*yield*/, user.save()];
+            case 1:
+                _a.sent();
+                return [2 /*return*/, newProduct];
+        }
     });
 }); };
 exports.createProduct = createProduct;
