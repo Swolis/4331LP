@@ -15,7 +15,9 @@ export const createProductController = async (req: Request, res: Response): Prom
         }
 
         // Get SKU
-        const sku: number = await getNewSKU();
+        const sku: number = user.nextSKU++;
+
+        await user.save();
 
         // Add SKU to the request body
         req.body.sku = sku;

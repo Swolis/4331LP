@@ -26,7 +26,7 @@ connectToDatabase()
 test('Test createProductController', async () => {
   const mockReq = {
     body: {
-      name: 'second Test Product',
+      name: 'Embeded collection',
       price: 22.99,
       description: 'Test product',
     },
