@@ -9,6 +9,7 @@ var userSchema = new mongoose_1.default.Schema({
     phone: { type: Number, unique: true, required: true },
     address: { type: String, unique: true, required: true },
     userId: { type: mongoose_1.default.Schema.Types.ObjectId },
+    nextSKU: { type: Number, default: 1 },
     products: [productSchema_1.default.schema]
 });
 userSchema.pre('save', function (next) {

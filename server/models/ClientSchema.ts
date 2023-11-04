@@ -11,6 +11,7 @@ const userSchema: Schema = new mongoose.Schema({
     phone: {type: Number, unique: true, required: true},
     address: {type: String, unique: true, required: true},
     userId: { type: mongoose.Schema.Types.ObjectId},
+    nextSKU: { type: Number, default: 1 },
 
     products: [Product.schema]
 });
@@ -29,6 +30,7 @@ export interface IUser extends Document {
     phone: number;
     address: string;
     userId: mongoose.Types.ObjectId;
+    nextSKU: number;
     products: IProduct[];
 }
 
