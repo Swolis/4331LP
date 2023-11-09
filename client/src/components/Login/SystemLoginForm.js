@@ -1,5 +1,3 @@
-// client
-
 import React, { Component } from 'react';
 import '../../styles/SystemLoginForm.css';
 
@@ -29,7 +27,7 @@ class LoginForm extends Component {
         <div className='form-group  w-5/6'>
           <label></label>
           <input
-          className='mx-auto w-full rounded-full shadow-inner border-opacity-.5 p-1 px-4'
+            className='mx-auto w-full rounded-full shadow-inner border-opacity-.5 p-1 px-4'
             type='text'
             name='username'
             placeholder='Username'
@@ -40,15 +38,18 @@ class LoginForm extends Component {
         <div className='form-group w-5/6'>
           <label></label>
           <input
-          className='mx-auto w-full rounded-full shadow-inner p-1 px-4'
+            className='mx-auto w-full rounded-full shadow-inner p-1 px-4'
             type='password'
             name='password'
-            placeholder='password'
+            placeholder='Password'
             value={this.state.password}
             onChange={this.handleInputChange}
           />
         </div>
-        <button className='self-center bg-green-900 rounded-full p-2 px-4 text-gray-200'  type='submit'>Login</button>
+        <div className='button-container flex'>
+          <button className='bg-red-500 rounded-full p-1 px-4 text-gray-200 font-serif m-2' type='submit'>Login</button>
+          <button className='bg-blue-500 rounded-full p-1 px-4 text-gray-200 font-serif m-2' type='submit'>Register</button>
+        </div>
       </form>
     );
   }
