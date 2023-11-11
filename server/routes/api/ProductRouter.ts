@@ -1,6 +1,6 @@
 // ProductRouter.ts
 import { Router } from 'express';
-const createProductController = require('../controllers/CreateContactController');
+import {createProductController} from '../../controllers/CreateProductController';
 
 const ProductRouter = Router();
 

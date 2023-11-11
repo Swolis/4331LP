@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { createProduct } from '../repositories/productRepository';
-import { getNewSKU } from '../services/skuService';
 import User, { IUser } from "../models/ClientSchema";
 
 export const createProductController = async (req: Request, res: Response): Promise<void> => {

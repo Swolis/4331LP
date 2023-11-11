@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 const uri:string = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/test';
 
-async function connectToDatabase(): Promise<typeof mongoose>
+async function connectToClient(): Promise<typeof mongoose>
 {
     try{
         await mongoose.connect(uri, {
@@ -20,4 +20,4 @@ async function connectToDatabase(): Promise<typeof mongoose>
 }
 
 
-export { connectToDatabase, mongoose };
+export { connectToClient, mongoose };

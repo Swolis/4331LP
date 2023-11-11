@@ -48,7 +48,7 @@ class LoginForm extends Component {
             onChange={this.handleInputChange}
           />
         </div>
-        <button className='self-center bg-green-900 rounded-full p-2 px-4 text-gray-200'  type='submit'>Login</button>
+        <button className='self-center bg-green-900 rounded-full p-2 px-4 text-gray-200'  type='submit'>login</button>
       </form>
     );
   }

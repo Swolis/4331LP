@@ -10,5 +10,4 @@ var productSchema = new mongoose_1.default.Schema({
     sku: { type: Number, required: true },
     description: { type: String, required: false }
 });
-var Product = mongoose_1.default.model('ProductCollection', productSchema);
-exports.default = Product;
+exports.default = productSchema;
