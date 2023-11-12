@@ -18,6 +18,4 @@ export interface IProduct extends Document {
     description?: string;
 }
 
-const Product: Model<IProduct> = mongoose.model<IProduct>('ProductCollection', productSchema);
-
-export default Product;
+export default productSchema;

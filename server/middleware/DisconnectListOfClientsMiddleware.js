@@ -1,5 +1,4 @@
 "use strict";
-// skuService.js
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -37,63 +36,44 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getNewSKU = void 0;
+exports.DisconnectFromClientList = void 0;
 var mongoose_1 = require("mongoose");
-// define sku schema
-var skuSchema = new mongoose_1.default.Schema({
-    value: {
-        type: Number,
-        default: 0,
-    },
-});
-// create sku model
-var SKU = mongoose_1.default.model('SKU', skuSchema);
-function getNewSKU() {
-    return __awaiter(this, void 0, void 0, function () {
-        var skuDocument, newSKU, skuValue_1, skuValue, error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 6, , 7]);
-                    return [4 /*yield*/, SKU.findOne()];
-                case 1:
-                    skuDocument = _a.sent();
-                    if (!!skuDocument) return [3 /*break*/, 4];
-                    // The document does not yet exits, creat it.
-                    console.log('making new');
-                    newSKU = new SKU({});
-                    return [4 /*yield*/, newSKU.save()];
-                case 2:
-                    _a.sent();
-                    skuValue_1 = newSKU.value++;
-                    return [4 /*yield*/, newSKU.save()];
-                case 3:
-                    _a.sent();
-                    return [2 /*return*/, skuValue_1];
-                case 4:
-                    skuValue = skuDocument.value++;
-                    return [4 /*yield*/, skuDocument.save()
-                        //console.log('value: ', skuDocument.value);
-                    ];
-                case 5:
-                    _a.sent();
-                    //console.log('value: ', skuDocument.value);
-                    return [2 /*return*/, skuValue];
-                case 6:
-                    error_1 = _a.sent();
-                    console.error('Error getting SKU: ', error_1);
-                    throw error_1;
-                case 7: return [2 /*return*/];
-            }
-        });
+var DisconnectFromClientList = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var numConnections, error_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                console.log('\nEntering disconnect from client list');
+                if (!(req.url === '/Admin-Login' || req.url === '/Admin-Registration') && req.method === 'POST') {
+                    console.log('DisconnectFromClientList not applicable.');
+                    return [2 /*return*/, next()];
+                }
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                numConnections = mongoose_1.default.connections.length;
+                console.log("Number of open connections: ".concat(numConnections));
+                console.log("about to close: \" ".concat(req.app.locals.client.connection.name));
+                return [4 /*yield*/, req.app.locals.client.connection.close()];
+            case 2:
+                _a.sent();
+                console.log("closed connection to list:  ".concat(req.app.locals.client.connection.name));
+                numConnections = mongoose_1.default.connections.length;
+                console.log("Number of open connections: ".concat(numConnections));
+                if (req.app.locals.client.connection.readyState === 0) {
+                    console.log("closed connection to list: ".concat(req.app.locals.client.connection.name));
+                }
+                else {
+                    console.log('Failed to close the connection.');
+                }
+                next();
+                return [3 /*break*/, 4];
+            case 3:
+                error_1 = _a.sent();
+                console.log('had error diconnecting');
+                return [2 /*return*/, res.status(500).json({ message: 'Error disconnecting from Client List Database.' })];
+            case 4: return [2 /*return*/];
+        }
     });
-}
-exports.getNewSKU = getNewSKU;
-// export async function main(): Promise<number> {
-//     //const client: typeof mongoose = await connectToDatabase();
-//     const newSku: number = await getNewSKU();
-//     console.log('newSku: ', newSku);
-//     //console.log('client: ', client);
-//     //await client.connection.close();
-//     return newSku;
-// }
+}); };
+exports.DisconnectFromClientList = DisconnectFromClientList;

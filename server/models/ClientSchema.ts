@@ -1,37 +1,36 @@
 // clientSchema.ts
-import { Model, Schema, Document } from "mongoose";
-import Product, { IProduct } from './productSchema';
+import { Schema, Document } from "mongoose";
 import mongoose from 'mongoose';
 
 
-const userSchema: Schema = new mongoose.Schema({
-    username: {type: String, unique: true, required: true},
-    password: {type: String, required: true},
-    email: {type: String, unique: true, required: true},
-    phone: {type: Number, unique: true, required: true},
-    address: {type: String, unique: true, required: true},
-    userId: { type: mongoose.Schema.Types.ObjectId},
+const clientSchema: Schema = new mongoose.Schema({
+    username: {type: String, unique: true, required: true },
+    email: {type: String, unique: true, required: true },
+    phone: {type: String, unique: true, required: true },
+    address: {type: String, unique: true, required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId },
+    
+    nextSKU: { type: Number, default: 1 },
 
-    products: [Product.schema]
 });
 
-userSchema.pre('save', function(next) {
+clientSchema.pre('save', function(next) {
     if (!this.userId) {
         this.userId = this._id;
     }
     next();
 });
 
-export interface IUser extends Document {
+export interface IClient extends Document {
     username: string;
     password: string;
     email: string;
-    phone: number;
+    phone: String;
     address: string;
     userId: mongoose.Types.ObjectId;
-    products: IProduct[];
+    nextSKU: number;
 }
 
-const User: Model<IUser> = mongoose.model<IUser>('Client', userSchema);
+// const User: Model<IUser> = mongoose.model<IUser>('Client', userSchema);
 
-export default User;
+export default clientSchema;

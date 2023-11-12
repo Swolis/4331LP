@@ -46,10 +46,12 @@ class LoginForm extends Component {
             onChange={this.handleInputChange}
           />
         </div>
+
         <div className='button-container flex'>
           <button className='bg-red-500 rounded-full p-1 px-4 text-gray-200 font-serif m-2' type='submit'>Login</button>
           <button className='bg-blue-500 rounded-full p-1 px-4 text-gray-200 font-serif m-2' type='submit'>Register</button>
         </div>
+
       </form>
     );
   }

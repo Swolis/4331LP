@@ -38,7 +38,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createProductController = void 0;
 var productRepository_1 = require("../repositories/productRepository");
-var skuService_1 = require("../services/skuService");
 var ClientSchema_1 = require("../models/ClientSchema");
 var createProductController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var UserID, user, sku, productData, newProduct, error_1;
@@ -54,9 +53,10 @@ var createProductController = function (req, res) { return __awaiter(void 0, voi
                     // Handle the case where the user is not found
                     throw res.status(404).json({ error: 'User not found.' });
                 }
-                return [4 /*yield*/, (0, skuService_1.getNewSKU)()];
+                sku = user.nextSKU++;
+                return [4 /*yield*/, user.save()];
             case 2:
-                sku = _a.sent();
+                _a.sent();
                 // Add SKU to the request body
                 req.body.sku = sku;
                 productData = req.body;

@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { createProduct } from '../repositories/productRepository';
-import { getNewSKU } from '../services/skuService';
 import User, { IUser } from "../models/ClientSchema";
 
 export const createProductController = async (req: Request, res: Response): Promise<void> => {
@@ -15,7 +14,9 @@ export const createProductController = async (req: Request, res: Response): Prom
         }
 
         // Get SKU
-        const sku: number = await getNewSKU();
+        const sku: number = user.nextSKU++;
+
+        await user.save();
 
         // Add SKU to the request body
         req.body.sku = sku;
