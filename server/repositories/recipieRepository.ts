@@ -8,6 +8,6 @@ export const createRecipie: (user: IClient, RecipieData: any,databaseName:string
     const Recipie: Model<IRecipie> = clientDatabase.model<IRecipie>('Recipie', recipieSchema);
     
     const newRecipie=new Recipie(RecipieData);
-    await user.save();
+    await newRecipie.save();
     return newRecipie;
 }
