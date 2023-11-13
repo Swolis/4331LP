@@ -6,7 +6,10 @@ import mongoose from 'mongoose';
 export const DisconnectFromClientList = async (req: Request, res: Response, next: NextFunction) =>
 {
     console.log('\nEntering disconnect from client list');
-    if(!(req.url === '/Admin-Login' || req.url === '/Admin-Registration') && req.method === 'POST'){
+    if(
+        !(req.url === '/Admin-Login' || req.url === '/Admin-Registration') ||
+        !(req.method === 'POST')
+    ){
         console.log('DisconnectFromClientList not applicable.');
         return next();
     }

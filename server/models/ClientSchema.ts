@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 
 const clientSchema: Schema = new mongoose.Schema({
     username: {type: String, unique: true, required: true },
+    buisnessName: { type: String, required: true },
     email: {type: String, unique: true, required: true },
     phone: {type: String, unique: true, required: true },
     address: {type: String, unique: true, required: true },
@@ -23,7 +24,7 @@ clientSchema.pre('save', function(next) {
 
 export interface IClient extends Document {
     username: string;
-    password: string;
+    buisnessName: string;
     email: string;
     phone: String;
     address: string;

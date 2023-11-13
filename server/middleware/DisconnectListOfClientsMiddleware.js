@@ -44,7 +44,8 @@ var DisconnectFromClientList = function (req, res, next) { return __awaiter(void
         switch (_a.label) {
             case 0:
                 console.log('\nEntering disconnect from client list');
-                if (!(req.url === '/Admin-Login' || req.url === '/Admin-Registration') && req.method === 'POST') {
+                if (!(req.url === '/Admin-Login' || req.url === '/Admin-Registration') ||
+                    !(req.method === 'POST')) {
                     console.log('DisconnectFromClientList not applicable.');
                     return [2 /*return*/, next()];
                 }

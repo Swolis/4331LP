@@ -23,11 +23,12 @@ describe('Express Registration Integration Test', function () {
         request(app)
             .post('/Admin-Registration')
             .send({
-                username: 'testUser4',
-                password: 'password1',
-                email: 'testEmail1@.test.com',
-                phone: '123-456-7891',
-                address: '1881 lovelyLane'
+                username: 'testUser5',
+                buisnessName: 'testBuisness',
+                password: 'password2',
+                email: 'testEmail2@.test.com',
+                phone: '123-456-7892',
+                address: '1881 lovelyLane1'
             })
             .expect(200) // Add an assertion here
             .end(function (err, res) {

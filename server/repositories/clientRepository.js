@@ -1,5 +1,4 @@
 "use strict";
-// clientRepository.ts
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -38,44 +37,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createClient = void 0;
-var productSchema_1 = require("../models/productSchema");
-//import recipeSchema
+// clientRepository.ts
 var ClientSchema_1 = require("../models/ClientSchema");
 var mongoose_1 = require("mongoose");
 var uri = "mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/";
 var createClient = function (userData, databaseName) { return __awaiter(void 0, void 0, void 0, function () {
-    var clientDatabase, Client, Product, newUser, savedUser, collections2, error_1;
+    var clientDatabase, Client, newUser, savedUser, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 4, , 5]);
-                console.log("Creating a client in database: ".concat(databaseName));
+                _a.trys.push([0, 2, , 3]);
                 clientDatabase = mongoose_1.default.createConnection(uri, { dbName: databaseName, ssl: true });
-                console.log("clientDatabase readystate: ".concat(clientDatabase.readyState));
-                console.log('Connected to the MongoDB Atlas cluster: ', clientDatabase.name);
                 Client = clientDatabase.model('Client', ClientSchema_1.default);
-                Product = clientDatabase.model('Products', productSchema_1.default);
                 newUser = new Client(userData);
                 return [4 /*yield*/, newUser.save()];
             case 1:
                 savedUser = _a.sent();
-                return [4 /*yield*/, clientDatabase.db.listCollections().toArray()];
-            case 2:
-                collections2 = _a.sent();
-                console.log("collections contained after save: ".concat(collections2.map(function (collection) { return collection.name; })));
-                // You can add more operations here specific to the client's database
-                // Close the connection after use
-                return [4 /*yield*/, clientDatabase.close()];
-            case 3:
-                // You can add more operations here specific to the client's database
-                // Close the connection after use
-                _a.sent();
                 return [2 /*return*/, { user: savedUser }];
-            case 4:
+            case 2:
                 error_1 = _a.sent();
                 console.error('Error during user creation:', error_1);
                 throw new Error('Failed to create user.');
-            case 5: return [2 /*return*/];
+            case 3: return [2 /*return*/];
         }
     });
 }); };

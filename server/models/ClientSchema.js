@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
 var clientSchema = new mongoose_1.default.Schema({
     username: { type: String, unique: true, required: true },
+    buisnessName: { type: String, required: true },
     email: { type: String, unique: true, required: true },
     phone: { type: String, unique: true, required: true },
     address: { type: String, unique: true, required: true },

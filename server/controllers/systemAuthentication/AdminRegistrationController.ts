@@ -12,13 +12,22 @@ const express = require('express');
 
 export const AdminRegistrationController = async (req: Request, res: Response) =>
 {
-    console.log('entering AdminRegistration')
+    console.log('entering AdminRegistrationcontorller')
     const userData = {
-        username: req.body.username,
-        email: req.body.email,
-        phone: req.body.phone,
+        buisnessName: req.body.businessName,
+        email: req.body.businessEmail,
+        phone: req.body.businessPhone,
         address: req.body.address,
+        username: req.body.username,
+
     }
+
+    console.log('userdata: ',userData);
+
+    console.log(`data: ${req.body.buisnessName, req.body.email,
+        req.body.phone,
+        req.body.address,
+        req.body.username}`)
 
     try{
         

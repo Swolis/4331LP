@@ -45,7 +45,8 @@ var ConnectToClientListMiddleWare = function (req, res, next) { return __awaiter
         switch (_a.label) {
             case 0:
                 console.log('Entering ConnectToClientList middleware');
-                if (!(req.url === '/Admin-Login' || req.url === '/Admin-Registration') && req.method === 'POST') {
+                if (!(req.url === '/Admin-Login' || req.url === '/Admin-Registration') ||
+                    !(req.method === 'POST')) {
                     console.log('ConnectToClientList not applicable: ', req.url, 'method: ', req.method);
                     return [2 /*return*/, next()]; // Return here to avoid further execution
                 }
