@@ -21,6 +21,6 @@ export interface IRecipie extends Document {
     description?: string;
 }
 
-const Recipie: Model<IRecipie> = mongoose.model<IRecipie>('RecipieCollection', recipieSchema);
 
-export default Recipie;
+
+export default recipieSchema;
