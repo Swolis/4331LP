@@ -1,10 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-// ExpressApp.js
-/*
-    Responsible for express applications
-*/
 var express = require('express');
+var cors = require('cors');
+var CORS_1 = require("./middleware/CORS");
+//import { loggingMiddleware } from './middleware/loggingMiddleware';
 var tokenExtractor_1 = require("./middleware/tokenExtractor");
 var DatabaseNameGen_1 = require("./middleware/DatabaseNameGen");
 var ConnectToClientListMiddleware_1 = require("./middleware/ConnectToClientListMiddleware");
@@ -15,22 +14,29 @@ var expressAppRouter_1 = require("./routes/expressAppRouter");
 require('dotenv').config();
 var app = express();
 console.log('created app instance');
+// app.options('*', (req: any, res: any) => {
+//     res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+//     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+//     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//     res.header('Access-Control-Allow-Credentials', 'true');
+//     res.status(204).end();
+// });
+app.use(cors(CORS_1.corsConfig));
+console.log('took update7.');
 app.use(express.json());
-app.use(ConnectToClientListMiddleware_1.ConnectToClientListMiddleWare); // Connect to list of database names *meta database*
-app.use(DatabaseNameGen_1.DatabaseNameGen); // Genrerates database name when client signs up
+//app.use(loggingMiddleware);
+app.use(ConnectToClientListMiddleware_1.ConnectToClientListMiddleWare);
+app.use(DatabaseNameGen_1.DatabaseNameGen);
 app.use(AddClientToListMiddleware_1.AddClientToListMiddleware);
-app.use(AuthenticateUserMiddleware_1.AuthenicateUserMiddleware); // verifies and authenticates client login
-app.use(tokenExtractor_1.tokenExtractor); // Grabs database name to connect to client database
-app.use(DisconnectListOfClientsMiddleware_1.DisconnectFromClientList); // * future task* app.use(DisconnectFromClientList); if /Admin-Login or /Admon-Registration disconnect from client list
-// * future task* app.use(ConnectToClientMiddleWare); connect to client specific database;
-console.log('after token extractor');
-console.log('database name from express app: ', app.locals.databaseName);
-app.use('/', expressAppRouter_1.default); // funnel all routes to the route tree
-// Define the port number you want to use
-var PORT = process.env.PORT || 3000; // You can choose the default port (3000) or use an environment variable
-var server = require('./httpsServer');
-// Start the server
-server.listen(PORT, function () {
-    console.log("Server is running on https://localhost:".concat(PORT));
+app.use(AuthenticateUserMiddleware_1.AuthenicateUserMiddleware);
+app.use(tokenExtractor_1.tokenExtractor);
+app.use(DisconnectListOfClientsMiddleware_1.DisconnectFromClientList);
+app.get('/', function (req, res) {
+    res.send('Hello, this is the root path!');
+});
+app.use('/', expressAppRouter_1.default);
+var PORT = process.env.PORT || 3001;
+app.listen(PORT, function () {
+    console.log("Server is running on http://localhost:".concat(PORT));
 });
 module.exports = app;

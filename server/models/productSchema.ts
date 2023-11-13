@@ -1,5 +1,5 @@
 // productSchema.ts
-import mongoose, {  Model, Schema, Document } from "mongoose";
+import mongoose, {  Model, Schema, Document, Connection } from "mongoose";
 
 //const mongoose = require('mongoose');
 
@@ -16,6 +16,10 @@ export interface IProduct extends Document {
     price: number;
     sku: number;
     description?: string;
+}
+
+export const createProductModel = (connction: Connection): Model<IProduct> => {
+    return connction.model<IProduct>('Product', productSchema);
 }
 
 export default productSchema;

@@ -1,26 +1,29 @@
 // productSchema.ts
-import { ObjectId } from "mongodb";
-import mongoose, {  Model, Schema, Document } from "mongoose";
+
+import mongoose, {  Schema, Document, Model, Types, Connection } from "mongoose";
 
 //const mongoose = require('mongoose');
 
 // Define Schema
 const recipieSchema: Schema = new mongoose.Schema({
-    name: {type: String, required: true},
-    price: {type: Number, required: true},
-    sku: {type: Number, required: true},
-    products:{type:[ObjectId],required:true},
-    description: {type: String, required: false}
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
+    RecipeID: { type: Number, required: true },
+    products:{ type: Types.ObjectId, ref: 'Product', required:true },
+    description: { type: String }
 });
 
 export interface IRecipie extends Document {
     name: string;
     price: number;
     sku: number;
-    products:[ObjectId];
+    products:[];
     description?: string;
 }
 
-const Recipie: Model<IRecipie> = mongoose.model<IRecipie>('RecipieCollection', recipieSchema);
+export const createRecipeModel = (connection: Connection) => {
+    return connection.model<IRecipie>('Recipe', recipieSchema);
+}
 
-export default Recipie;
+
+export default recipieSchema;

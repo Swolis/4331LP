@@ -1,14 +1,6 @@
 // front end App.js
-import React from 'react';
-import './App.css';
-
-import AppRouter from './routes/AppRouter'
-
-// import components
-
-//import SystemLogin from './components/Login/SystemLogin';
-
-
+import AppRouter from './routes/AppRouter';
+//import '../src/App.css';
 
 function App() {
   // system login

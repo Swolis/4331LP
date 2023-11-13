@@ -48,13 +48,19 @@ var AdminRegistrationController = function (req, res) { return __awaiter(void 0,
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log('entering AdminRegistration');
+                console.log('entering AdminRegistrationcontorller');
                 userData = {
-                    username: req.body.username,
-                    email: req.body.email,
-                    phone: req.body.phone,
+                    buisnessName: req.body.businessName,
+                    email: req.body.businessEmail,
+                    phone: req.body.businessPhone,
                     address: req.body.address,
+                    username: req.body.username,
                 };
+                console.log('userdata: ', userData);
+                console.log("data: ".concat((req.body.buisnessName, req.body.email,
+                    req.body.phone,
+                    req.body.address,
+                    req.body.username)));
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
