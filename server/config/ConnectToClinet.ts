@@ -2,12 +2,12 @@
 
 import mongoose from "mongoose";
 
-const uri:string = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/test';
+const uri:string = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/';
 
-async function connectToClient(uriEnd: String): Promise<typeof mongoose>
+export async function connectToClient(databaseName: string): Promise<typeof mongoose>
 {
     try{
-        await mongoose.connect(uri+uriEnd, {
+        await mongoose.connect(uri, { dbName: databaseName,
             ssl: true,
         })
         console.log('Connected to the database');
@@ -20,4 +20,3 @@ async function connectToClient(uriEnd: String): Promise<typeof mongoose>
 }
 
 
-export { connectToClient }

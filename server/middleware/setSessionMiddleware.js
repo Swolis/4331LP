@@ -36,14 +36,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AdminLoginController = void 0;
-var ClientSchema_1 = require("../../models/ClientSchema");
-var AdminLoginController = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+exports.setSession = void 0;
+var ClientSchema_1 = require("../models/ClientSchema");
+var setSession = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var client, ClientModel, data, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log('\n\nentering set settion from controller');
+                if (!(req.url === '/Admin-Login')) {
+                    console.log('set session not applicable');
+                    return [2 /*return*/, next()];
+                }
+                console.log('set session applicable');
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 4, 5, 6]);
@@ -76,4 +80,4 @@ var AdminLoginController = function (req, res, next) { return __awaiter(void 0, 
         }
     });
 }); };
-exports.AdminLoginController = AdminLoginController;
+exports.setSession = setSession;

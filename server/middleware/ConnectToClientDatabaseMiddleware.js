@@ -36,44 +36,29 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AdminLoginController = void 0;
-var ClientSchema_1 = require("../../models/ClientSchema");
-var AdminLoginController = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var client, ClientModel, data, error_1;
+exports.ConnectToClinetDatabaseMiddleware = void 0;
+var ConnectToClinet_1 = require("../config/ConnectToClinet");
+var ConnectToClinetDatabaseMiddleware = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var client, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log('\n\nentering set settion from controller');
+                console.log('entering connect to client database');
                 _a.label = 1;
             case 1:
-                _a.trys.push([1, 4, 5, 6]);
-                return [4 /*yield*/, req.app.locals.client];
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, (0, ConnectToClinet_1.connectToClient)(req.session.databaseName)];
             case 2:
                 client = _a.sent();
-                ClientModel = client.model('Client', ClientSchema_1.default);
-                return [4 /*yield*/, ClientModel.find({}).exec()];
+                req.app.locals.client = client;
+                next();
+                return [3 /*break*/, 4];
             case 3:
-                data = _a.sent();
-                console.log('Data from the "client" collection:', data);
-                if (Array.isArray(data) && data.length > 0) {
-                    req.session.userID = data[0]._id;
-                    res.status(200).json({ message: 'Login Successful' });
-                    return [2 /*return*/]; // Add this return statement
-                }
-                else {
-                    throw new Error('Invalid user data');
-                }
-                return [3 /*break*/, 6];
-            case 4:
                 error_1 = _a.sent();
-                console.error('Error handling setSession middleware:', error_1);
-                res.status(500).json({ message: 'Internal server error.' });
-                return [3 /*break*/, 6];
-            case 5:
-                res.end(); // Ensure response is ended even if there's an error
-                return [7 /*endfinally*/];
-            case 6: return [2 /*return*/];
+                console.error('Error connecting to client database: ', error_1);
+                return [2 /*return*/, res.status(500).json({ message: 'Error connecting to Client Database.' })];
+            case 4: return [2 /*return*/];
         }
     });
 }); };
-exports.AdminLoginController = AdminLoginController;
+exports.ConnectToClinetDatabaseMiddleware = ConnectToClinetDatabaseMiddleware;

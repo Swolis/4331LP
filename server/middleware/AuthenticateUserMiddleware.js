@@ -67,7 +67,7 @@ var AuthenicateUserMiddleware = function (req, res, next) { return __awaiter(voi
                 console.log("u: ".concat(EnteredUsername, " p: ").concat(EnteredPassword));
                 _a.label = 3;
             case 3:
-                _a.trys.push([3, 5, , 6]);
+                _a.trys.push([3, 6, , 7]);
                 ListClientModel = mongoose_1.default.model('ClientList', ClientListSchema_1.default);
                 return [4 /*yield*/, ListClientModel.findOne({ username: EnteredUsername })];
             case 4:
@@ -82,24 +82,29 @@ var AuthenicateUserMiddleware = function (req, res, next) { return __awaiter(voi
                 else {
                     console.log('is user');
                 }
-                isMatch = (EnteredPassword === user.hashedPassword);
+                return [4 /*yield*/, bcrypt.compare(EnteredPassword, user.hashedPassword)];
+            case 5:
+                isMatch = _a.sent();
+                // just for testing, the password is not hashed
+                //const isMatch = (EnteredPassword === user.hashedPassword);
                 if (isMatch) {
                     console.log('passwords match');
                     SecretKey = 'SecretKey';
                     token = jwt.sign({ databaseName: user.databaseName }, SecretKey);
-                    req.headers.authorization = token;
-                    console.log('from authorization: req.headers.authorization: ', req.headers.authorization);
+                    //(res as any).headers.authorization = token;
+                    // console.log('from authorization: req.headers.authorization: ', req.headers.authorization);
+                    req.session.databaseName = user.databaseName;
                     next();
                 }
                 else {
                     console.log('passwords dont match');
                     return [2 /*return*/, res.status(401).json({ message: 'Access Denied' })];
                 }
-                return [3 /*break*/, 6];
-            case 5:
+                return [3 /*break*/, 7];
+            case 6:
                 error_1 = _a.sent();
                 return [2 /*return*/, res.status(500).json({ message: 'Internal sever error.' })];
-            case 6: return [2 /*return*/];
+            case 7: return [2 /*return*/];
         }
     });
 }); };

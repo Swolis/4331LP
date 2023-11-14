@@ -1,10 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
-import { Connection, Model } from 'mongoose';
-import clientSchema, { IClient } from '../../models/ClientSchema';
+import mongoose, { Connection, Model } from 'mongoose';
+import clientSchema, { IClient } from '../models/ClientSchema';
 
-export const AdminLoginController = async (req: Request, res: Response, next: NextFunction) => {
-  console.log('\n\nentering set settion from controller');
+export const setSession = async (req: Request, res: Response, next: NextFunction) => {
+    if (!(req.url === '/Admin-Login')) {
+        console.log('set session not applicable');
+        return next();
+    }
 
+    console.log('set session applicable');
 
     try {
         const client: Connection = await (req as any).app.locals.client;
