@@ -39,15 +39,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.connectToClient = void 0;
 var mongoose_1 = require("mongoose");
-var uri = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/test';
-function connectToClient(uriEnd) {
+var uri = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/';
+function connectToClient(databaseName) {
     return __awaiter(this, void 0, void 0, function () {
         var error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, mongoose_1.default.connect(uri + uriEnd, {
+                    return [4 /*yield*/, mongoose_1.default.connect(uri, { dbName: databaseName,
                             ssl: true,
                         })];
                 case 1:

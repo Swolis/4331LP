@@ -2,25 +2,20 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = require('express');
 var cors = require('cors');
+var session = require('express-session');
 var CORS_1 = require("./middleware/CORS");
-//import { loggingMiddleware } from './middleware/loggingMiddleware';
-var tokenExtractor_1 = require("./middleware/tokenExtractor");
+//import { tokenExtractor } from './middleware/tokenExtractor';
 var DatabaseNameGen_1 = require("./middleware/DatabaseNameGen");
 var ConnectToClientListMiddleware_1 = require("./middleware/ConnectToClientListMiddleware");
 var AuthenticateUserMiddleware_1 = require("./middleware/AuthenticateUserMiddleware");
 var AddClientToListMiddleware_1 = require("./middleware/AddClientToListMiddleware");
 var DisconnectListOfClientsMiddleware_1 = require("./middleware/DisconnectListOfClientsMiddleware");
+var ConnectToClientDatabaseMiddleware_1 = require("./middleware/ConnectToClientDatabaseMiddleware");
+//import { setSession } from './middleware/setSessionMiddleware';
 var expressAppRouter_1 = require("./routes/expressAppRouter");
 require('dotenv').config();
 var app = express();
 console.log('created app instance');
-// app.options('*', (req: any, res: any) => {
-//     res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-//     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-//     res.header('Access-Control-Allow-Credentials', 'true');
-//     res.status(204).end();
-// });
 app.use(cors(CORS_1.corsConfig));
 console.log('took update7.');
 app.use(express.json());
@@ -28,9 +23,16 @@ app.use(express.json());
 app.use(ConnectToClientListMiddleware_1.ConnectToClientListMiddleWare);
 app.use(DatabaseNameGen_1.DatabaseNameGen);
 app.use(AddClientToListMiddleware_1.AddClientToListMiddleware);
+app.use(session({
+    secret: 'temp-secret',
+    resave: false,
+    saveUninitialized: true,
+}));
 app.use(AuthenticateUserMiddleware_1.AuthenicateUserMiddleware);
-app.use(tokenExtractor_1.tokenExtractor);
+//app.use(tokenExtractor);
 app.use(DisconnectListOfClientsMiddleware_1.DisconnectFromClientList);
+app.use(ConnectToClientDatabaseMiddleware_1.ConnectToClinetDatabaseMiddleware);
+//app.use(setSession);
 app.get('/', function (req, res) {
     res.send('Hello, this is the root path!');
 });

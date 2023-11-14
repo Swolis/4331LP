@@ -45,9 +45,9 @@ export const AuthenicateUserMiddleware = async (req: Request, res: Response, nex
             console.log('is user')
         }
 
-        // const isMatch: boolean = await bcrypt.compare(EnteredPassword, user.hashedPassword);
+        const isMatch: boolean = await bcrypt.compare(EnteredPassword, user.hashedPassword);
         // just for testing, the password is not hashed
-        const isMatch = (EnteredPassword === user.hashedPassword);
+        //const isMatch = (EnteredPassword === user.hashedPassword);
         
 
 
@@ -55,9 +55,10 @@ export const AuthenicateUserMiddleware = async (req: Request, res: Response, nex
             console.log('passwords match');
             const SecretKey = 'SecretKey';
             const token = jwt.sign({ databaseName: user.databaseName}, SecretKey);
-            (req as any).headers.authorization = token;
+            //(res as any).headers.authorization = token;
             
-            console.log('from authorization: req.headers.authorization: ', req.headers.authorization);
+           // console.log('from authorization: req.headers.authorization: ', req.headers.authorization);
+            (req as any).session.databaseName = user.databaseName;
             next();
         }else{
             console.log('passwords dont match');
