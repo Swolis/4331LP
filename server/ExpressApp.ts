@@ -12,7 +12,13 @@ import { ConnectToClinetDatabaseMiddleware } from './middleware/ConnectToClientD
 //import { setSession } from './middleware/setSessionMiddleware';
 import mainRouter from './routes/expressAppRouter';
 
-require('dotenv').config();
+if (process.env.NODE_ENV !== 'production') {
+    
+    require('dotenv').config( { path: __dirname + '/.env' });
+
+}else {
+    console.log('NOT using dotenv');
+}
 
 const app = express();
 console.log('created app instance');
@@ -32,6 +38,9 @@ app.use(session({
     secret: 'temp-secret',
     resave: false,
     saveUninitialized: true,
+    cookie: {
+        maxAge: 30 * 60 * 1000,
+    }
 }));
 
 app.use(AuthenicateUserMiddleware);

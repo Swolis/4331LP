@@ -40,28 +40,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.connectToClient = void 0;
 var mongoose_1 = require("mongoose");
 var uri = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/';
+// Create an array to store multiple connections
+var connections = [];
 function connectToClient(databaseName) {
-    return __awaiter(this, void 0, void 0, function () {
-        var error_1;
+    var _this = this;
+    return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+        var connectionIndex, connection, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, mongoose_1.default.connect(uri, { dbName: databaseName,
-                            ssl: true,
-                        })];
+                    connectionIndex = 1;
+                    connection = connections[connectionIndex] || mongoose_1.default.createConnection();
+                    return [4 /*yield*/, connection.openUri(uri, { dbName: databaseName, ssl: true })];
                 case 1:
                     _a.sent();
-                    console.log('Connected to the database');
-                    //console.log('client: ', mongoose);
-                    return [2 /*return*/, mongoose_1.default]; // return database instance
+                    console.log("Connected to the database on connection[".concat(connectionIndex, "]"));
+                    connections[connectionIndex] = connection;
+                    resolve(connection); // resolve with the database instance
+                    return [3 /*break*/, 3];
                 case 2:
                     error_1 = _a.sent();
-                    console.error('Error connecting to database: ', error_1);
-                    throw error_1;
+                    console.error('Error connecting to the database: ', error_1);
+                    reject(error_1); // reject with the error
+                    return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
         });
-    });
+    }); });
 }
 exports.connectToClient = connectToClient;

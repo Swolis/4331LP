@@ -47,7 +47,7 @@ var AddClientToListMiddleware = function (req, res, next) { return __awaiter(voi
         switch (_b.label) {
             case 0:
                 console.log('Entering add client to list middleware');
-                if (!(req.url === '/Admin-Registration' || req.method === 'POST')) {
+                if (!(req.url === '/Admin-Registration' && req.method === 'POST')) {
                     console.log('Add Client not apllicable');
                     next();
                     return [2 /*return*/];

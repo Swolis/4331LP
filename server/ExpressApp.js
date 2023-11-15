@@ -13,7 +13,12 @@ var DisconnectListOfClientsMiddleware_1 = require("./middleware/DisconnectListOf
 var ConnectToClientDatabaseMiddleware_1 = require("./middleware/ConnectToClientDatabaseMiddleware");
 //import { setSession } from './middleware/setSessionMiddleware';
 var expressAppRouter_1 = require("./routes/expressAppRouter");
-require('dotenv').config();
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config({ path: __dirname + '/.env' });
+}
+else {
+    console.log('NOT using dotenv');
+}
 var app = express();
 console.log('created app instance');
 app.use(cors(CORS_1.corsConfig));
@@ -27,6 +32,9 @@ app.use(session({
     secret: 'temp-secret',
     resave: false,
     saveUninitialized: true,
+    cookie: {
+        maxAge: 30 * 60 * 1000,
+    }
 }));
 app.use(AuthenticateUserMiddleware_1.AuthenicateUserMiddleware);
 //app.use(tokenExtractor);
