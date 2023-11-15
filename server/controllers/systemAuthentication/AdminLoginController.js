@@ -38,8 +38,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminLoginController = void 0;
 var ClientSchema_1 = require("../../models/ClientSchema");
-var AdminLoginController = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var client, ClientModel, data, error_1;
+var jwt = require('jsonwebtoken');
+var AdminLoginController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var client, ClientModel, data, SecretKey, token, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -56,7 +57,13 @@ var AdminLoginController = function (req, res, next) { return __awaiter(void 0, 
                 data = _a.sent();
                 console.log('Data from the "client" collection:', data);
                 if (Array.isArray(data) && data.length > 0) {
+                    SecretKey = process.env.SECRET_KEY;
+                    console.log("secret key: ".concat(SecretKey));
+                    token = jwt.sign({ userID: data[0]._id }, SecretKey, { expiresIn: '120m' });
+                    console.log("Generated token: ".concat(token));
+                    res.cookie('authToken', token, { maxAge: 30 * 60 * 1000, httpOnly: false, secure: true });
                     req.session.userID = data[0]._id;
+                    req.session.authenticated = true;
                     res.status(200).json({ message: 'Login Successful' });
                     return [2 /*return*/]; // Add this return statement
                 }
@@ -66,7 +73,7 @@ var AdminLoginController = function (req, res, next) { return __awaiter(void 0, 
                 return [3 /*break*/, 6];
             case 4:
                 error_1 = _a.sent();
-                console.error('Error handling setSession middleware:', error_1);
+                console.error('Error handling setSession contoroller:', error_1);
                 res.status(500).json({ message: 'Internal server error.' });
                 return [3 /*break*/, 6];
             case 5:

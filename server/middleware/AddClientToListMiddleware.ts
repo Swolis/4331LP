@@ -9,7 +9,7 @@ export const AddClientToListMiddleware = async (req: Request, res: Response, nex
 {
     console.log('Entering add client to list middleware');
 
-    if(!(req.url === '/Admin-Registration' || req.method === 'POST'))
+    if(!(req.url === '/Admin-Registration' && req.method === 'POST'))
     {
         console.log('Add Client not apllicable');
         next();
