@@ -2,7 +2,7 @@
 import clientSchema, { IClient } from '../models/ClientSchema';
 import mongoose, { Model, Connection } from 'mongoose';
 
-const uri = "mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/";
+const uri = "mongodb+srv://buisnessInABox:GZW2YHtng2qNTMUo@cluster0.jvawjrm.mongodb.net/?retryWrites=true&w=majority";
 
 export const createClient: (userData: any, databaseName: string) => Promise<{ user: IClient }> = async (userData, databaseName) => {
     try {

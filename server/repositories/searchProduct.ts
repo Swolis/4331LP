@@ -2,15 +2,21 @@
 import productSchema, { IProduct } from '../models/productSchema';
 import clientSchema,{IClient} from '../models/ClientSchema';
 import mongoose, { Model, Connection } from 'mongoose';
-const uri = "mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/";
-export async function findProduct (user: IClient, ProductSearch:string,databaseName:string,SKU:number) {
-    const clientDatabase: Connection = mongoose.createConnection(uri, { dbName: databaseName, ssl: true });
-    const Product: Model<IProduct> = clientDatabase.model<IProduct>('Product', productSchema);
-   const searchableFields= await Promise.all([ Product.find({name:ProductSearch}), Product.find({sku:SKU})])
-    if(searchableFields==null){
-        return null
-    }    
-    else{
-        return searchableFields
-    }
-}
+import { MongoClient } from 'mongodb';
+
+ export async function findProduct (ProductSearch:string,databaseName:string,SKU:number,req:any) {
+   const uri = "mongodb+srv://buisnessInABox:GZW2YHtng2qNTMUo@cluster0.jvawjrm.mongodb.net/";
+   
+   var clientDatabase= mongoose.createConnection(uri+databaseName)
+    
+    
+    
+    const Product=clientDatabase.model<IProduct>('Products', productSchema);
+//returns list of all finds that we wanna do
+  const result=Promise.all([await Product.find({name:ProductSearch}),await Product.find({sku:SKU})])
+   
+   
+   clientDatabase.close()
+    return result;
+   
+ }

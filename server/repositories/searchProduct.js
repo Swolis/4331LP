@@ -36,25 +36,33 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.findProduct = void 0;
 var productSchema_1 = require("../models/productSchema");
 var mongoose_1 = require("mongoose");
-var uri = "mongodb+srv://buisnessInABox:GZW2YHtng2qNTMUo@cluster0.jvawjrm.mongodb.net/";
-var createProduct = function (ProductData, databaseName) { return __awaiter(void 0, void 0, void 0, function () {
-    var x, Product, newProduct;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                x = mongoose_1.default.createConnection(uri + databaseName);
-                console.log(ProductData);
-                Product = x.model('Products', productSchema_1.default);
-                newProduct = new Product(ProductData);
-                return [4 /*yield*/, newProduct.save()];
-            case 1:
-                _a.sent();
-                console.log("hi");
-                x.close();
-                return [2 /*return*/, newProduct];
-        }
+function findProduct(ProductSearch, databaseName, SKU, req) {
+    return __awaiter(this, void 0, void 0, function () {
+        var uri, x, Product, result, _a, _b, _c;
+        return __generator(this, function (_d) {
+            switch (_d.label) {
+                case 0:
+                    uri = "mongodb+srv://buisnessInABox:GZW2YHtng2qNTMUo@cluster0.jvawjrm.mongodb.net/";
+                    x = mongoose_1.default.createConnection(uri + databaseName);
+                    Product = x.model('Products', productSchema_1.default);
+                    //let db=req.app.locals.client
+                    console.log("hi");
+                    //console.log(clientDatabase)
+                    console.log("hi");
+                    _b = (_a = Promise).all;
+                    return [4 /*yield*/, Product.find({ name: ProductSearch })];
+                case 1:
+                    _c = [_d.sent()];
+                    return [4 /*yield*/, Product.find({ sku: SKU })];
+                case 2:
+                    result = _b.apply(_a, [_c.concat([_d.sent()])]);
+                    x.close();
+                    return [2 /*return*/, result];
+            }
+        });
     });
-}); };
-createProduct({ name: "cheeseeee", price: 3, sku: 2, desciption: "fine" }, "test4");
+}
+exports.findProduct = findProduct;

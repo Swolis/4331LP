@@ -11,7 +11,7 @@ router.post('/login', async (req, res) => {
     try {
         // find user by user name
         const user = await User.findOne({ username });
-
+        
         if (!user) {
             res.status(401).json({ message: 'Authentication Failed.' })
             return;
