@@ -18,7 +18,7 @@ mainRouter.use('/Admin-Registration', AdminRegistrationRouter);
 
 // Mount the required router
 // Product routes
-mainRouter.use('/api/product', ProductRouter);
+mainRouter.use('/Product/', ProductRouter);
 
 // Recipe routes
 // mainRouter.use('/api/recipe', RecipeRouter);

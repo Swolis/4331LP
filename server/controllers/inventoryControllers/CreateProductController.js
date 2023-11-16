@@ -37,43 +37,51 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createProductController = void 0;
-var productRepository_1 = require("../repositories/productRepository");
-var ClientSchema_1 = require("../models/ClientSchema");
+var productRepository_1 = require("../../repositories/inventoryRepositories/productRepository");
+var ClientSchema_1 = require("../../models/ClientSchema");
 var createProductController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var UserID, user, sku, productData, newProduct, error_1;
+    var clientDatabase, ClientModel, client, sku, productData, newProduct, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 4, , 5]);
-                UserID = '6542f3406e0f1642db20a668';
-                return [4 /*yield*/, ClientSchema_1.default.findById(UserID)];
+                console.log('entering create product controller');
+                _a.label = 1;
             case 1:
-                user = _a.sent();
-                if (!user) {
-                    // Handle the case where the user is not found
-                    throw res.status(404).json({ error: 'User not found.' });
-                }
-                sku = user.nextSKU++;
-                return [4 /*yield*/, user.save()];
+                _a.trys.push([1, 5, , 6]);
+                clientDatabase = req.app.locals.client;
+                ClientModel = clientDatabase.model('Client', ClientSchema_1.default);
+                return [4 /*yield*/, ClientModel.findOne({})];
             case 2:
-                _a.sent();
-                // Add SKU to the request body
-                req.body.sku = sku;
-                productData = req.body;
-                return [4 /*yield*/, (0, productRepository_1.createProduct)(user, productData)];
+                client = _a.sent();
+                if (!client) {
+                    throw new Error('user not found');
+                }
+                sku = client.nextSKU++;
+                return [4 /*yield*/, client.save()];
             case 3:
-                newProduct = _a.sent();
-                // Set the HTTP response status code
-                res.status(201);
-                // Use the json() method to send the response with JSON data
-                res.json(newProduct);
-                return [3 /*break*/, 5];
+                _a.sent();
+                console.log("sku: ".concat(sku));
+                req.body.sku = sku;
+                productData = {
+                    name: req.body.name,
+                    price: req.body.price,
+                    sku: req.body.sku,
+                    description: req.body.description,
+                };
+                console.log("productData: ".concat(productData));
+                return [4 /*yield*/, (0, productRepository_1.createProduct)(clientDatabase, productData)];
             case 4:
+                newProduct = _a.sent();
+                res.status(201).json(newProduct);
+                return [3 /*break*/, 6];
+            case 5:
                 error_1 = _a.sent();
-                console.error('Error creating product.', error_1);
-                res.status(500).json({ error: 'Internal server error.' });
-                return [3 /*break*/, 5];
-            case 5: return [2 /*return*/];
+                if (error_1.message === 'user not found') {
+                    res.status(404).json({ message: 'Database error: ', error: error_1 });
+                }
+                res.status(500).json({ message: 'Internal Server Error', error: error_1.message });
+                return [3 /*break*/, 6];
+            case 6: return [2 /*return*/];
         }
     });
 }); };
