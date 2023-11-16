@@ -1,20 +1,37 @@
-// This is the main container for the components of the user dashboard
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import '../../../styles/tailwind.css';
+import { useIdle , handleIdleTimeout} from '../../../services/IdleContext';
 
-class DashboardTemplate extends Component {
-    render() {
-        return (
+const DashboardTemplate = () => {
+    const { isIdle, startIdle } = useIdle();
 
-            <div className="bg-slate-800 min-h-screen flex flex-col items-center">
-                <p>
-                    User DashboardTemplate
-                </p>
-            </div>      
+    useEffect(() => {
+        startIdle();
+    }, [startIdle]);
+
+    useEffect(() => {
+        if(isIdle) {
+            handleIdleTimeout();
+        }
+    })
+
+    return (
+        <div className="bg-slate-800 min-h-screen flex flex-col items-center">
+            <p className='text-white'>
+                User DashboardTemplate
+            </p>
+
+            <Link to={'/ProductPage'}>
+            <button style={{background: '#ffd485'}}className=' rounded p-1 px-4 text-gray-600 m-2' type='submit'>add new product</button>
+            </Link>
             
-            )
-    }
-}
+            {isIdle && (
+                <div>
+                    <p>User is idle. Redirecting to login...</p>
+                </div>
+            )}
+        </div>
+    );
+};
 
 export default DashboardTemplate;

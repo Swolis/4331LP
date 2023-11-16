@@ -16,7 +16,7 @@ mainRouter.use('/Admin-Login', LoginRoutes_1.default);
 mainRouter.use('/Admin-Registration', AdminRegistrationRouter_1.default);
 // Mount the required router
 // Product routes
-mainRouter.use('/api/product', ProductRouter_1.default);
+mainRouter.use('/Product/', ProductRouter_1.default);
 // Recipe routes
 // mainRouter.use('/api/recipe', RecipeRouter);
 exports.default = mainRouter;
