@@ -2,7 +2,15 @@
 import mongoose, {  Schema, Document } from "mongoose";
 
 // Define Schema
-const productSchema: Schema = new mongoose.Schema({
+
+
+export interface IProduct extends Document {
+    name: string,
+    price: number,
+    sku: number,
+    description?: string,
+}
+const productSchema= new Schema<IProduct>({
     name: {type: String, required: true},
     price: {type: Number, required: true},
     sku: {type: Number, required: true},
@@ -10,12 +18,4 @@ const productSchema: Schema = new mongoose.Schema({
 
 
 });
-
-export interface IProduct extends Document {
-    name: string;
-    price: number;
-    sku: number;
-    description?: string;
-}
-
 export default productSchema;

@@ -1,8 +1,4 @@
 "use strict";
-// createClientController.ts
-/*
-    Adds new clinet to main database
-*/
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -40,60 +36,39 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createClientController = void 0;
-var clientRepository_1 = require("../repositories/clientRepository");
-var createClientController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var clientData, newClient, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 3, , 4]);
-                clientData = req.body;
-                req.body.userId = null;
-                return [4 /*yield*/, (0, clientRepository_1.createUser)(clientData)];
-            case 1:
-                newClient = _a.sent();
-                //newClient.userId = newClient._id;
-                return [4 /*yield*/, newClient.save()];
-            case 2:
-                //newClient.userId = newClient._id;
-                _a.sent();
-                // Set the HTTP response status code
-                res.status(201);
-                // Use the json() method to send the response with JSON data
-                res.json(newClient);
-                return [3 /*break*/, 4];
-            case 3:
-                error_1 = _a.sent();
-                console.error('Error adding client: ', error_1);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
-        }
+var productSchema_1 = require("../../models/inventoryModels/productSchema");
+var mongoose_1 = require("mongoose");
+var uri = "mongodb+srv://buisnessInABox:GZW2YHtng2qNTMUo@cluster0.jvawjrm.mongodb.net/?retryWrites=true&w=majority/";
+function findProduct(ProductSearch, databaseName, SKU, req) {
+    return __awaiter(this, void 0, void 0, function () {
+        var clientDatabase, Products, searchableFields;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, mongoose_1.default.createConnection(uri, { dbName: databaseName, ssl: true })];
+                case 1:
+                    clientDatabase = _a.sent();
+                    Products = clientDatabase.model('Products', productSchema_1.default);
+                    console.log("hi");
+                    return [4 /*yield*/, Products.findOne({ name: { ProductSearch: ProductSearch } })];
+                case 2:
+                    searchableFields = _a.sent();
+                    return [2 /*return*/, searchableFields];
+            }
+        });
     });
-}); };
-exports.createClientController = createClientController;
-// function test() {
-//     const testObject = {
-//         body: {
-//             username: 'testUser',
-//             password: 'password',
-//             email: 'test@email.com',
-//             phone: 1111111111,
-//             address: '123 test drive address',
-//             // _id added by controller
-//             products:[],
-//         },
-//     };
-//     const testRes = {
-//         body: {
-//             username: 'testUser',
-//             password: 'password',
-//             email: 'test@email.com',
-//             phone: 1111111111,
-//             address: '123 test drive address',
-//             userId: mongoose.Schema.Types.ObjectId,
-//             products:[],
-//         },
-//     };
-//     createClientController(testObject, testRes);
-// }
+}
+function main() {
+    return __awaiter(this, void 0, void 0, function () {
+        var x;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, findProduct('Cheese', 'test4', 1, 'a')];
+                case 1:
+                    x = _a.sent();
+                    console.log("result:".concat(x));
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+main();

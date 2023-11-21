@@ -1,5 +1,5 @@
-import productSchema, { IProduct } from '../models/productSchema';
-import clientSchema,{IClient} from '../models/ClientSchema';
+import productSchema, { IProduct } from '../../models/inventoryModels/productSchema';
+import clientSchema,{IClient} from '../../models/ClientSchema'
 import mongoose, { Model, Connection } from 'mongoose';
 const uri = "mongodb+srv://buisnessInABox:GZW2YHtng2qNTMUo@cluster0.jvawjrm.mongodb.net/?retryWrites=true&w=majority/";
  async function findProduct (ProductSearch:any,databaseName:string,SKU:any,req:any) {

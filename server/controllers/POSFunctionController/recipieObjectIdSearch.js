@@ -1,8 +1,4 @@
 "use strict";
-// createClientController.ts
-/*
-    Adds new clinet to main database
-*/
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -40,60 +36,39 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createClientController = void 0;
-var clientRepository_1 = require("../repositories/clientRepository");
-var createClientController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var clientData, newClient, error_1;
+exports.findProductIDController = void 0;
+var recipieSchema_1 = require("../../models/inventoryModels/recipieSchema");
+var findProductIDController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var clientDatabase, RecipieModel, query, searchResult, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
-                clientData = req.body;
-                req.body.userId = null;
-                return [4 /*yield*/, (0, clientRepository_1.createUser)(clientData)];
+                console.log('entering product search controller');
+                clientDatabase = req.app.locals.client;
+                RecipieModel = clientDatabase.model('recipie', recipieSchema_1.default);
+                query = req.body.query;
+                console.log("query: ".concat(query));
+                _a.label = 1;
             case 1:
-                newClient = _a.sent();
-                //newClient.userId = newClient._id;
-                return [4 /*yield*/, newClient.save()];
+                _a.trys.push([1, 3, , 4]);
+                searchResult = void 0;
+                return [4 /*yield*/, RecipieModel.findById(query)];
             case 2:
-                //newClient.userId = newClient._id;
-                _a.sent();
-                // Set the HTTP response status code
-                res.status(201);
-                // Use the json() method to send the response with JSON data
-                res.json(newClient);
+                searchResult = _a.sent();
+                if (searchResult == null) {
+                    console.log('no product found');
+                    res.status(404).json({ message: 'product no found' });
+                    return [2 /*return*/];
+                }
+                res.status(201).json(searchResult);
                 return [3 /*break*/, 4];
             case 3:
                 error_1 = _a.sent();
-                console.error('Error adding client: ', error_1);
+                console.log('error: ', error_1);
+                res.status(500).json({ message: "Internal server error: ".concat(error_1) });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
     });
 }); };
-exports.createClientController = createClientController;
-// function test() {
-//     const testObject = {
-//         body: {
-//             username: 'testUser',
-//             password: 'password',
-//             email: 'test@email.com',
-//             phone: 1111111111,
-//             address: '123 test drive address',
-//             // _id added by controller
-//             products:[],
-//         },
-//     };
-//     const testRes = {
-//         body: {
-//             username: 'testUser',
-//             password: 'password',
-//             email: 'test@email.com',
-//             phone: 1111111111,
-//             address: '123 test drive address',
-//             userId: mongoose.Schema.Types.ObjectId,
-//             products:[],
-//         },
-//     };
-//     createClientController(testObject, testRes);
-// }
+exports.findProductIDController = findProductIDController;

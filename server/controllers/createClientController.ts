@@ -4,7 +4,7 @@
 */
 
 import { Request, Response } from "express";
-import { createUser } from '../repositories/clientRepository';
+import { createClient } from '../repositories/clientRepository';
 import User, { IUser } from '../models/ClientSchema';
 import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
@@ -14,7 +14,7 @@ export const createClientController = async (req: Request, res: Response): Promi
     try {
         const clientData = req.body;
         req.body.userId = null;
-        const newClient = await createUser(clientData);
+        const newClient = await createClient(clientData);
 
         //newClient.userId = newClient._id;
         await newClient.save();
