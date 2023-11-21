@@ -36,63 +36,67 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createProductController = void 0;
-var productRepository_1 = require("../../repositories/inventoryRepositories/productRepository");
-var ClientSchema_1 = require("../../models/ClientSchema");
-var createProductController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var ClientModel, client, sku, inventoryConfig, inventory, productData, newProduct, error_1;
+exports.findProductController = void 0;
+var productSchema_1 = require("../../models/inventoryModels/productSchema");
+var findProductController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var clientDatabase, ProductModel, query, searchResult, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log('entering create product controller');
+                console.log('entering product search controller');
+                clientDatabase = req.app.locals.client;
+                ProductModel = clientDatabase.model('products', productSchema_1.default);
+                query = req.body.query;
+                console.log("query: ".concat(query));
                 _a.label = 1;
             case 1:
-                _a.trys.push([1, 5, , 6]);
-                ClientModel = (0, ClientSchema_1.getClientModel)(req.app.locals.client);
-                return [4 /*yield*/, ClientModel.findOne({})];
+                _a.trys.push([1, 10, , 11]);
+                searchResult = void 0;
+                if (!(typeof (query) === 'string')) return [3 /*break*/, 3];
+                console.log('query is a string');
+                return [4 /*yield*/, ProductModel.find({
+                        $or: [
+                            { name: { $regex: query, $options: 'i' } },
+                        ],
+                    })];
             case 2:
-                client = _a.sent();
-                if (!client) {
-                    throw new Error('user not found');
-                }
-                sku = client.nextSKU++;
-                return [4 /*yield*/, client.save()];
+                searchResult = _a.sent();
+                return [3 /*break*/, 9];
             case 3:
-                _a.sent();
-                console.log("sku: ".concat(sku));
-                req.body.sku = sku;
-                inventoryConfig = {
-                    innerPack: req.body.innerPackDef,
-                    each: req.body.eachDef,
-                };
-                inventory = {
-                    case: req.body.caseQt,
-                    innerPack: req.body.innerPackQt,
-                    each: req.body.eachQt,
-                };
-                productData = {
-                    name: req.body.name,
-                    price: req.body.price,
-                    sku: req.body.sku,
-                    description: req.body.description,
-                    inventoryConfig: inventoryConfig,
-                    inventory: inventory,
-                };
-                console.log('productData:', JSON.stringify(productData, null, 2));
-                return [4 /*yield*/, (0, productRepository_1.createProduct)(req.app.locals.client, productData)];
+                if (!(typeof (query) === 'number')) return [3 /*break*/, 8];
+                if (!(query === 0)) return [3 /*break*/, 5];
+                return [4 /*yield*/, ProductModel.find({})];
             case 4:
-                newProduct = _a.sent();
-                res.status(201).json(newProduct);
-                return [3 /*break*/, 6];
+                searchResult = _a.sent();
+                return [3 /*break*/, 7];
             case 5:
-                error_1 = _a.sent();
-                if (error_1.message === 'user not found') {
-                    res.status(404).json({ message: 'Database error: ', error: error_1 });
+                console.log('query is a number');
+                return [4 /*yield*/, ProductModel.find({
+                        $or: [
+                            { price: query },
+                            { sku: query },
+                        ],
+                    })];
+            case 6:
+                searchResult = _a.sent();
+                _a.label = 7;
+            case 7: return [3 /*break*/, 9];
+            case 8: throw new Error('search type invalid');
+            case 9:
+                if (searchResult.length === 0) {
+                    console.log('no product found');
+                    res.status(404).json({ message: 'product no found' });
+                    return [2 /*return*/];
                 }
-                res.status(500).json({ message: 'Internal Server Error', error: error_1.message });
-                return [3 /*break*/, 6];
-            case 6: return [2 /*return*/];
+                res.status(201).json(searchResult);
+                return [3 /*break*/, 11];
+            case 10:
+                error_1 = _a.sent();
+                console.log('error: ', error_1);
+                res.status(500).json({ message: "Internal server error: ".concat(error_1) });
+                return [3 /*break*/, 11];
+            case 11: return [2 /*return*/];
         }
     });
 }); };
-exports.createProductController = createProductController;
+exports.findProductController = findProductController;

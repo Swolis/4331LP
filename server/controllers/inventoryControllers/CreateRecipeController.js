@@ -36,15 +36,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createProductController = void 0;
-var productRepository_1 = require("../../repositories/inventoryRepositories/productRepository");
+exports.createRecipeController = void 0;
+var recipeRepository_1 = require("../../repositories/inventoryRepositories/recipeRepository");
 var ClientSchema_1 = require("../../models/ClientSchema");
-var createProductController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var ClientModel, client, sku, inventoryConfig, inventory, productData, newProduct, error_1;
+var mongoose_1 = require("mongoose");
+var createRecipeController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var ClientModel, client, recipeNumber, products, priceWithoutDollar, recipeData, newRecipe, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log('entering create product controller');
+                console.log("\n\nEntering create Recipe controller");
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 5, , 6]);
@@ -53,46 +54,47 @@ var createProductController = function (req, res) { return __awaiter(void 0, voi
             case 2:
                 client = _a.sent();
                 if (!client) {
-                    throw new Error('user not found');
+                    throw new Error('User not found');
                 }
-                sku = client.nextSKU++;
+                recipeNumber = client.nextRecipe++;
                 return [4 /*yield*/, client.save()];
             case 3:
                 _a.sent();
-                console.log("sku: ".concat(sku));
-                req.body.sku = sku;
-                inventoryConfig = {
-                    innerPack: req.body.innerPackDef,
-                    each: req.body.eachDef,
-                };
-                inventory = {
-                    case: req.body.caseQt,
-                    innerPack: req.body.innerPackQt,
-                    each: req.body.eachQt,
-                };
-                productData = {
+                console.log('recipeNumber: ', recipeNumber);
+                req.body.recipeNumber = recipeNumber;
+                console.log(req.body.products.map(function (product) { return ({
+                    productId: product.id,
+                    quantity: product.quantity,
+                }); }));
+                products = req.body.products.map(function (product) {
+                    var isValid = mongoose_1.Types.ObjectId.isValid(product.id);
+                    console.log("Id: ".concat(product.is));
+                    console.log("Is valid ObjectId: ".concat(isValid));
+                    return {
+                        product: mongoose_1.Types.ObjectId.createFromHexString(product.id),
+                        quantity: product.quantity,
+                    };
+                });
+                priceWithoutDollar = parseFloat(req.body.price.replace('$', ''));
+                recipeData = {
                     name: req.body.name,
-                    price: req.body.price,
-                    sku: req.body.sku,
-                    description: req.body.description,
-                    inventoryConfig: inventoryConfig,
-                    inventory: inventory,
+                    cost: req.body.cost,
+                    price: priceWithoutDollar,
+                    products: products,
+                    recipeNumber: recipeNumber,
                 };
-                console.log('productData:', JSON.stringify(productData, null, 2));
-                return [4 /*yield*/, (0, productRepository_1.createProduct)(req.app.locals.client, productData)];
+                return [4 /*yield*/, (0, recipeRepository_1.createRecipe)(req.app.locals.client, recipeData)];
             case 4:
-                newProduct = _a.sent();
-                res.status(201).json(newProduct);
+                newRecipe = _a.sent();
+                res.status(201).json({ message: ' Created new Recipe', newRecipe: newRecipe });
                 return [3 /*break*/, 6];
             case 5:
                 error_1 = _a.sent();
-                if (error_1.message === 'user not found') {
-                    res.status(404).json({ message: 'Database error: ', error: error_1 });
-                }
-                res.status(500).json({ message: 'Internal Server Error', error: error_1.message });
+                console.error("Error createing recipe: ".concat(error_1.message));
+                res.status(500).json({ message: "Internal server error" });
                 return [3 /*break*/, 6];
             case 6: return [2 /*return*/];
         }
     });
 }); };
-exports.createProductController = createProductController;
+exports.createRecipeController = createRecipeController;

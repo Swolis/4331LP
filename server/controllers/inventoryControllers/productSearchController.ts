@@ -1,21 +1,61 @@
-import productSchema, { IProduct } from '../models/productSchema';
-import clientSchema,{IClient} from '../models/ClientSchema';
-import mongoose, { Model, Connection } from 'mongoose';
-const uri = "mongodb+srv://buisnessInABox:GZW2YHtng2qNTMUo@cluster0.jvawjrm.mongodb.net/?retryWrites=true&w=majority/";
- async function findProduct (ProductSearch:any,databaseName:string,SKU:any,req:any) {
+import { Request, Response } from 'express';
+import productSchema, { IProduct } from "../../models/inventoryModels/productSchema";
+import { Model, Connection } from 'mongoose';
 
-    const clientDatabase: Connection = await mongoose.createConnection(uri, { dbName: databaseName, ssl: true });
-    //let db=req.app.locals.client
+export const findProductController = async (req: Request, res: Response): Promise<void> => {
+   console.log('entering product search controller');
+
+   // use connection
+   const clientDatabase: Connection = req.app.locals.client;
     
-    //console.log(clientDatabase)
-    const Products: Model<IProduct> = clientDatabase.model<IProduct>('Products', productSchema);
-    console.log("hi")
-   const searchableFields=  await Products.findOne({name:{ProductSearch}})
-   
-    return searchableFields;
- }
- async function main(){
-const x= await findProduct('Cheese','test4',1,'a')
+   // use product model
+   const ProductModel: Model<IProduct> = clientDatabase.model<IProduct>('products', productSchema);
 
-console.log(`result:${x}`)}
-main()
+   const query:string | number = req.body.query;
+
+   console.log(`query: ${query}`);
+   try {
+
+      let searchResult;
+      if(typeof(query) === 'string'){
+         console.log('query is a string');
+         searchResult = await ProductModel.find({
+            $or: [
+                { name: { $regex: query, $options: 'i' } },
+            ],
+        });
+      }else if(typeof(query) === 'number'){
+
+         if(query === 0){
+            searchResult = await ProductModel.find({});
+         }else{
+            console.log('query is a number');
+            searchResult = await ProductModel.find({
+               $or: [
+                   { price: query },
+                   { sku: query },
+               ],
+           });
+         }
+
+      }else{
+         throw new Error('search type invalid');
+      }
+
+     
+   
+      if(searchResult.length === 0){
+         console.log('no product found');
+         res.status(404).json({message: 'product no found'});
+         return;
+      }
+   
+      res.status(201).json(searchResult);
+
+   }catch (error: any) {
+      console.log('error: ', error);
+      res.status(500).json({ message: `Internal server error: ${error}`});
+   }
+
+
+}

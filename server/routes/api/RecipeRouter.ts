@@ -1,10 +1,10 @@
 // RecipeRouter.ts
 import { Router } from 'express';
 
-import CreateRecipeController from '../controllers/CreateRecipeController';
+import  {createRecipeController} from '../../controllers/inventoryControllers/CreateRecipeController';
 
 const RecipeRouter = Router();
 
-RecipeRouter.post('/', CreateRecipeController);
+RecipeRouter.post('/Create-Recipe', createRecipeController);
 
 export default RecipeRouter;
