@@ -36,39 +36,69 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+
+exports.findProductController = void 0;
 var productSchema_1 = require("../../models/inventoryModels/productSchema");
-var mongoose_1 = require("mongoose");
-var uri = "mongodb+srv://buisnessInABox:GZW2YHtng2qNTMUo@cluster0.jvawjrm.mongodb.net/?retryWrites=true&w=majority/";
-function findProduct(ProductSearch, databaseName, SKU, req) {
-    return __awaiter(this, void 0, void 0, function () {
-        var clientDatabase, Products, searchableFields;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, mongoose_1.default.createConnection(uri, { dbName: databaseName, ssl: true })];
-                case 1:
-                    clientDatabase = _a.sent();
-                    Products = clientDatabase.model('Products', productSchema_1.default);
-                    console.log("hi");
-                    return [4 /*yield*/, Products.findOne({ name: { ProductSearch: ProductSearch } })];
-                case 2:
-                    searchableFields = _a.sent();
-                    return [2 /*return*/, searchableFields];
-            }
-        });
-    });
-}
-function main() {
-    return __awaiter(this, void 0, void 0, function () {
-        var x;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, findProduct('Cheese', 'test4', 1, 'a')];
-                case 1:
-                    x = _a.sent();
-                    console.log("result:".concat(x));
+var findProductController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var clientDatabase, ProductModel, query, searchResult, error_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                console.log('entering product search controller');
+                clientDatabase = req.app.locals.client;
+                ProductModel = clientDatabase.model('products', productSchema_1.default);
+                query = req.body.query;
+                console.log("query: ".concat(query));
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 10, , 11]);
+                searchResult = void 0;
+                if (!(typeof (query) === 'string')) return [3 /*break*/, 3];
+                console.log('query is a string');
+                return [4 /*yield*/, ProductModel.find({
+                        $or: [
+                            { name: { $regex: query, $options: 'i' } },
+                        ],
+                    })];
+            case 2:
+                searchResult = _a.sent();
+                return [3 /*break*/, 9];
+            case 3:
+                if (!(typeof (query) === 'number')) return [3 /*break*/, 8];
+                if (!(query === 0)) return [3 /*break*/, 5];
+                return [4 /*yield*/, ProductModel.find({})];
+            case 4:
+                searchResult = _a.sent();
+                return [3 /*break*/, 7];
+            case 5:
+                console.log('query is a number');
+                return [4 /*yield*/, ProductModel.find({
+                        $or: [
+                            { price: query },
+                            { sku: query },
+                        ],
+                    })];
+            case 6:
+                searchResult = _a.sent();
+                _a.label = 7;
+            case 7: return [3 /*break*/, 9];
+            case 8: throw new Error('search type invalid');
+            case 9:
+                if (searchResult.length === 0) {
+                    console.log('no product found');
+                    res.status(404).json({ message: 'product no found' });
                     return [2 /*return*/];
-            }
-        });
+                }
+                res.status(201).json(searchResult);
+                return [3 /*break*/, 11];
+            case 10:
+                error_1 = _a.sent();
+                console.log('error: ', error_1);
+                res.status(500).json({ message: "Internal server error: ".concat(error_1) });
+                return [3 /*break*/, 11];
+            case 11: return [2 /*return*/];
+        }
     });
-}
-main();
+}); };
+exports.findProductController = findProductController;
+

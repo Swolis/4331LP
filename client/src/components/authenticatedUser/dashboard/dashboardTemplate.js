@@ -2,6 +2,12 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useIdle , handleIdleTimeout} from '../../../services/IdleContext';
 
+import '../../../styles/tailwind.css';
+
+/*
+    This is the mockup page for testing. 
+*/
+
 const DashboardTemplate = () => {
     const { isIdle, startIdle } = useIdle();
 
@@ -21,9 +27,16 @@ const DashboardTemplate = () => {
                 User DashboardTemplate
             </p>
 
-            <Link to={'/ProductPage'}>
-            <button style={{background: '#ffd485'}}className=' rounded p-1 px-4 text-gray-600 m-2' type='submit'>add new product</button>
-            </Link>
+            <div className='flex flex-row justify-center items-center h-screen overflow-auto'>
+                <Link to={'/ProductPage'}>
+                    <button style={{background: '#ffd485'}}className=' rounded p-1 px-4 text-gray-600 m-2' type='submit'>Your inventory</button>
+                </Link>
+                <Link to={'/RecipePage'}>
+                <button style={{background: '#ffd485'}}className=' rounded p-1 px-4 text-gray-600 m-2' type='submit'>Your Recipes</button>
+                </Link>
+            </div>
+
+
             
             {isIdle && (
                 <div>
