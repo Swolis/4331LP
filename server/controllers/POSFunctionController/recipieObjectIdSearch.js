@@ -36,20 +36,39 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createProduct = void 0;
-var productSchema_1 = require("../models/productSchema");
-var createProduct = function (user, ProductData) { return __awaiter(void 0, void 0, void 0, function () {
-    var newProduct;
+exports.findProductIDController = void 0;
+var recipieSchema_1 = require("../../models/inventoryModels/recipieSchema");
+var findProductIDController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var clientDatabase, RecipieModel, query, searchResult, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                newProduct = new productSchema_1.default(ProductData);
-                user.products.push(newProduct);
-                return [4 /*yield*/, user.save()];
+                console.log('entering product search controller');
+                clientDatabase = req.app.locals.client;
+                RecipieModel = clientDatabase.model('recipie', recipieSchema_1.default);
+                query = req.body.query;
+                console.log("query: ".concat(query));
+                _a.label = 1;
             case 1:
-                _a.sent();
-                return [2 /*return*/, newProduct];
+                _a.trys.push([1, 3, , 4]);
+                searchResult = void 0;
+                return [4 /*yield*/, RecipieModel.findById(query)];
+            case 2:
+                searchResult = _a.sent();
+                if (searchResult == null) {
+                    console.log('no product found');
+                    res.status(404).json({ message: 'product no found' });
+                    return [2 /*return*/];
+                }
+                res.status(201).json(searchResult);
+                return [3 /*break*/, 4];
+            case 3:
+                error_1 = _a.sent();
+                console.log('error: ', error_1);
+                res.status(500).json({ message: "Internal server error: ".concat(error_1) });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); };
-exports.createProduct = createProduct;
+exports.findProductIDController = findProductIDController;

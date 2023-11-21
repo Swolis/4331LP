@@ -1,3 +1,4 @@
+
 import { Request, Response } from 'express';
 import productSchema, { IProduct } from "../../models/inventoryModels/productSchema";
 import { Model, Connection } from 'mongoose';
@@ -7,6 +8,7 @@ export const findProductController = async (req: Request, res: Response): Promis
 
    // use connection
    const clientDatabase: Connection = req.app.locals.client;
+
     
    // use product model
    const ProductModel: Model<IProduct> = clientDatabase.model<IProduct>('products', productSchema);

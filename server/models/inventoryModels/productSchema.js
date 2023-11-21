@@ -3,9 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getProductModel = void 0;
 // productSchema.ts
 var mongoose_1 = require("mongoose");
+
 var inventorySchema_1 = require("./inventorySchema");
 // Define Schema
 var productSchema = new mongoose_1.default.Schema({
+
     name: { type: String, required: true },
     price: { type: Number, required: true },
     sku: { type: Number, required: true },

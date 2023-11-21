@@ -1,29 +1,37 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
 
+
 export const productTrackerSchema: Schema = new mongoose.Schema({
     product: { type: Types.ObjectId, ref: 'Product', required: true },
     quantity: { type: Number, required: true },
 });
+
 
 export interface ProductTrackerInterface {
     product: Types.ObjectId;
     quantity: number;
 }
 
+
 const recipeSchema: Schema = new mongoose.Schema({
+
     name: { type: String, required: true },
     cost: { type: Number, required: true },
     price: { type: Number, required: true },
+
     recipeNumber: { type: Number, required: true },
     products: [{ type: productTrackerSchema, required: true }],
+
     description: { type: String }
 });
 
 export interface IRecipe extends Document {
     name: string;
     price: number;
+
     recipeNumber: number;
     products: ProductTrackerInterface[];
+
     description?: string;
 }
 

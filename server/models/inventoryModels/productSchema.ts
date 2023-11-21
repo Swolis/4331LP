@@ -5,7 +5,15 @@ import inventoryConfigSchema, {InventoryConfig, Inventory} from "./inventorySche
 
 
 // Define Schema
-const productSchema: Schema = new mongoose.Schema({
+
+
+export interface IProduct extends Document {
+    name: string,
+    price: number,
+    sku: number,
+    description?: string,
+}
+const productSchema= new Schema<IProduct>({
     name: {type: String, required: true},
     price: {type: Number, required: true},
     sku: {type: Number, required: true},
@@ -15,6 +23,7 @@ const productSchema: Schema = new mongoose.Schema({
     inventory: {type: Object, required: true},
 
 });
+
 
 export interface IProduct extends Document {
     name: string;
@@ -28,5 +37,6 @@ export interface IProduct extends Document {
 export const getProductModel = (connection: Connection): Model<IProduct> => {
     return connection.model<IProduct>('products', productSchema);
 }
+
 
 export default productSchema;

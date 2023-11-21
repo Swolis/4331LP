@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+
 exports.findProductController = void 0;
 var productSchema_1 = require("../../models/inventoryModels/productSchema");
 var findProductController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
@@ -100,3 +101,4 @@ var findProductController = function (req, res) { return __awaiter(void 0, void 
     });
 }); };
 exports.findProductController = findProductController;
+

@@ -1,4 +1,5 @@
 "use strict";
+
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRecipeModel = exports.productTrackerSchema = void 0;
 var mongoose_1 = require("mongoose");
