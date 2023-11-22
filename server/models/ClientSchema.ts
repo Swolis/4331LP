@@ -13,6 +13,7 @@ const clientSchema: Schema = new mongoose.Schema({
     
     nextSKU: { type: Number, default: 1 },
     nextRecipe: { type: Number, default: 1 },
+    nextEmployeeID:{type:Number,default:1}
 
 });
 
@@ -32,6 +33,7 @@ export interface IClient extends Document {
     userId: mongoose.Types.ObjectId;
     nextSKU: number;
     nextRecipe: number;
+    nextEmployeeID:number
 }
 
 export const getClientModel = (connection: Connection): Model<IClient> => {
