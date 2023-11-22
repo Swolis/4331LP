@@ -9,7 +9,7 @@ export const productTrackerSchema: Schema = new mongoose.Schema({
 
 
 export interface ProductTrackerInterface {
-    product: string;
+    productId: string;
     name: string;
     quantity: number;
 }
