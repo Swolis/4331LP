@@ -77,13 +77,13 @@ class FinalizeRecipe extends Component {
   };
 
   handleSubmit = () => {
-    console.log(`dropped products: ${this.props.droppedProducts}`);
     const recipeData = {
       name: this.state.name,
       cost: this.props.totalCost,
       price: this.state.price,
       products: this.props.droppedProducts.map(product => ({
         id: product._id,
+        name: product.name,
         quantity: product.quantity,
       })),
       description: this.state.description,

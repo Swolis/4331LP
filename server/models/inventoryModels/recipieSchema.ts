@@ -1,12 +1,14 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
 
 export const productTrackerSchema: Schema = new mongoose.Schema({
-    product: { type: Types.ObjectId, ref: 'Product', required: true },
+    productId: { type: String, required: true },
+    name: {type: String, required: true },
     quantity: { type: Number, required: true },
 });
 
 export interface ProductTrackerInterface {
-    product: Types.ObjectId;
+    product: string;
+    name: string;
     quantity: number;
 }
 
