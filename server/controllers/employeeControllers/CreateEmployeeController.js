@@ -36,10 +36,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createProductController = void 0;
+exports.createEmployeeController = void 0;
 var ClientSchema_1 = require("../../models/ClientSchema");
 var employeeRepository_1 = require("../../repositories/employeeRepositories/employeeRepository");
-var createProductController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+var createEmployeeController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var ClientModel, client, EmployeeID, employeeData, newEmployee, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -84,4 +84,4 @@ var createProductController = function (req, res) { return __awaiter(void 0, voi
         }
     });
 }); };
-exports.createProductController = createProductController;
+exports.createEmployeeController = createEmployeeController;

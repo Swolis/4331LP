@@ -5,7 +5,7 @@ import clientSchema, { IClient, getClientModel } from '../../models/ClientSchema
 import { Inventory, InventoryConfig } from '../../models/inventoryModels/inventorySchema';
 import { createEmployee } from '../../repositories/employeeRepositories/employeeRepository';
 
-export const createProductController = async ( req: Request, res: Response): Promise<void> => {
+export const createEmployeeController = async ( req: Request, res: Response): Promise<void> => {
     console.log('entering create product controller');
     try {
 
