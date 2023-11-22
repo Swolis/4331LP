@@ -11,6 +11,7 @@ var clientSchema = new mongoose_1.default.Schema({
     userId: { type: mongoose_1.default.Schema.Types.ObjectId },
     nextSKU: { type: Number, default: 1 },
     nextRecipe: { type: Number, default: 1 },
+    nextEmployeeID: { type: Number, default: 1 }
 });
 clientSchema.pre('save', function (next) {
     if (!this.userId) {
