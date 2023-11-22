@@ -4,7 +4,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRecipeModel = exports.productTrackerSchema = void 0;
 var mongoose_1 = require("mongoose");
 exports.productTrackerSchema = new mongoose_1.default.Schema({
-    product: { type: mongoose_1.Types.ObjectId, ref: 'Product', required: true },
+    productId: { type: String, required: true },
+    name: { type: String, required: true },
     quantity: { type: Number, required: true },
 });
 var recipeSchema = new mongoose_1.default.Schema({

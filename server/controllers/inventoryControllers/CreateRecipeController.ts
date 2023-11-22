@@ -1,12 +1,7 @@
 import { Request, Response } from 'express';
 import { createRecipe } from '../../repositories/inventoryRepositories/recipeRepository';
 import { getClientModel } from '../../models/ClientSchema';
-
 import { Types } from 'mongoose';
-
-
-import mongoose from "mongoose";
-
 import { ProductTrackerInterface } from '../../models/inventoryModels/recipieSchema';
 
 export const createRecipeController = async ( req: Request, res: Response): Promise<void> => {
@@ -28,24 +23,22 @@ export const createRecipeController = async ( req: Request, res: Response): Prom
         console.log(
             req.body.products.map((product: any) => ({
               productId: product.id,
+              name: product.name,
               quantity: product.quantity,
             }))
           );
 
           
-          const products = req.body.products.map((product: any) => {
+          const products: ProductTrackerInterface = req.body.products.map((product: any) => {
             const isValid = Types.ObjectId.isValid(product.id);
-            console.log(`Id: ${product.is}`)
+            console.log(`Id: ${product.id}`)
             console.log(`Is valid ObjectId: ${isValid}`);
             return {
-                product: Types.ObjectId.createFromHexString(product.id),
+                productId: product.id,
+                name: product.name,
                 quantity: product.quantity,
             };
-        });
-        
-        
-        
-        
+        });      
 
         const priceWithoutDollar = parseFloat(req.body.price.replace('$', ''));
 

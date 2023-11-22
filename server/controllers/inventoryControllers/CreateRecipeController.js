@@ -64,14 +64,16 @@ var createRecipeController = function (req, res) { return __awaiter(void 0, void
                 req.body.recipeNumber = recipeNumber;
                 console.log(req.body.products.map(function (product) { return ({
                     productId: product.id,
+                    name: product.name,
                     quantity: product.quantity,
                 }); }));
                 products = req.body.products.map(function (product) {
                     var isValid = mongoose_1.Types.ObjectId.isValid(product.id);
-                    console.log("Id: ".concat(product.is));
+                    console.log("Id: ".concat(product.id));
                     console.log("Is valid ObjectId: ".concat(isValid));
                     return {
-                        product: mongoose_1.Types.ObjectId.createFromHexString(product.id),
+                        productId: product.id,
+                        name: product.name,
                         quantity: product.quantity,
                     };
                 });
