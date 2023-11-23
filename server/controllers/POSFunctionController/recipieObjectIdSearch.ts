@@ -1,16 +1,16 @@
 import { Request, Response } from 'express';
 
-import recipieSchema, { IRecipie } from "../../models/inventoryModels/recipieSchema";
+import recipieSchema, { IRecipe } from "../../models/inventoryModels/recipieSchema";
 import { Model, Connection } from 'mongoose';
 
-export const findProductIDController = async (req: Request, res: Response): Promise<void> => {
-   console.log('entering product search controller');
+export const findRecipieIDController = async (req: Request, res: Response): Promise<void> => {
+
 
    // use connection
    const clientDatabase: Connection = req.app.locals.client;
     
    // use product model
-   const RecipieModel: Model<IRecipie> = clientDatabase.model<IRecipie>('recipie', recipieSchema);
+   const RecipieModel: Model<IRecipe> = clientDatabase.model<IRecipe>('recipie', recipieSchema);
 
    const query:string = req.body.query;
 
@@ -23,8 +23,8 @@ export const findProductIDController = async (req: Request, res: Response): Prom
      
    
       if(searchResult== null){
-         console.log('no product found');
-         res.status(404).json({message: 'product no found'});
+         console.log('no recipie found');
+         res.status(404).json({message: 'recipie no found'});
          return;
       }
    
