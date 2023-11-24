@@ -141,7 +141,7 @@ class AddProductForm extends Component {
                     </div>
                 </div>
                 <div className='button-container flex'>
-                    <button style={{ background: '#ffd485' }} className='rounded p-1 px-4 text-gray-600 m-2' type='submit'>Create Product</button>
+                    <button style={{ background: '#ffd485' }} className='rounded-full p-1 px-4 text-black-600 m-2' type='submit'>Create Product</button>
                 </div>
             </form>
         );

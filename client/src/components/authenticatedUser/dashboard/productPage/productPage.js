@@ -46,7 +46,7 @@ class ProductPage extends Component {
                 >
                     <h2 style={Montserrat}>Search Product</h2>
                     <ProductList />
-                    <button onClick={() => this.handleToggleCard('create')}>create</button>
+                    <button style={{ background: '#ffd485' }} className='rounded-full p-1 px-4 text-black-600 m-2' onClick={() => this.handleToggleCard('create')}>Create New Product</button>
                 </div>
 
                 {/* Create new product card */}
@@ -57,7 +57,7 @@ class ProductPage extends Component {
                 >
                     <h2 style={Montserrat}>Create New Product</h2>
                     <AddProductForm />
-                    {/* <button onClick={() => this.handleToggleCard('search')}>Search</button> */}
+                    <button style={{ background: 'red'}} className='rounded-full p-1 px-4 text-black-600 m-2' onClick={() => this.handleToggleCard('search')}>Return</button>
                 </div>
             </div>
         );

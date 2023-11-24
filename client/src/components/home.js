@@ -15,15 +15,21 @@ class HomePage extends Component {
     return (
         <div className="bg-slate-800 min-h-screen flex flex-col items-center">
             <div className="inline-flex mt-20 mb-0 w-full items-center" style={{ maxWidth: '1100px' }}>
+              <Link to='/Login' className='drop-shadow-2xl '>
+                    <button className='bg-yellow-500 text-blue-900 text-lg pl-3 pr-3 mr-10  drop-shadow-2xl rounded' style={Montserrat}>
+                        Login
+                    </button>
+              </Link>
 
-          <img
+              <img
                 src='/LogoEnhancedSmall.png'
                 alt='Business Crafter Logo'
                 className='h-24 self-center absolute left-1/2 transform -translate-x-1/2 '
-          />
-                <Link to='/Login' className='ml-auto drop-shadow-2xl '>
+              />
+              
+                <Link to='/register' className='ml-auto drop-shadow-2xl '>
                     <button className='bg-yellow-500 text-blue-900 text-lg pl-3 pr-3 mr-10  drop-shadow-2xl rounded' style={Montserrat}>
-                        Login
+                        Register
                     </button>
                 </Link>
             </div>

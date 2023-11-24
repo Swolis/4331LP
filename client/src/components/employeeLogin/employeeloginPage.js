@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import RegisterForm from './SystemRegistrationForm'; // Import RegisterForm component
+import employeeLoginFrom from './employeeLoginFrom';
 import '../../styles/tailwind.css';
 
 
-class SystemRegistration extends Component
+class employeeLoginPage extends Component
 {
     render () {
         const cardStyle = 
@@ -29,12 +29,12 @@ class SystemRegistration extends Component
                     />
                 </Link>
             <div id='form-card' style={cardStyle} className="form-card flex flex-col justify-center items-center bg-slate-200 bg-opacity-10 py-10 w-4/5 max-w-md drop-shadow-2xl rounded-xl">
-              <h2 style={Montserrat}>Register</h2>
-              <RegisterForm/>{/* Render the RegisterForm component here */}
+              <h2 style={Montserrat}>Login</h2>
+              <employeeLoginFrom/>{/* Render the RegisterForm component here */}
             </div>
           </div>
         );
     }
 }
 
-export default SystemRegistration;
+export default employeeLoginPage;

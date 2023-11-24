@@ -98,7 +98,7 @@ class RegistrationForm extends Component {
             />
           </div>
           <div className='button-container flex'>
-            <button className='bg-red-500 rounded-full p-1 px-4 text-gray-200 font-serif m-2' type='submit'>Register</button>
+            <button style={{background: '#ffd485'}}className=' rounded-full p-1 px-4 text-black-600 m-2' type='submit'>Register</button>
           </div>
         </form>
       );

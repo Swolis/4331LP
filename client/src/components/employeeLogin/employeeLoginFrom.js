@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import '../../styles/tailwind.css';
 import handleLogin from '../../handlers/LoginHandler';
 
-class LoginForm extends Component {
+class employeeLoginFrom extends Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -60,4 +60,4 @@ class LoginForm extends Component {
     }
   }
 
-export default LoginForm;
+export default employeeLoginFrom;
