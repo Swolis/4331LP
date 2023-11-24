@@ -21,6 +21,13 @@ export const AuthenicateUserMiddleware = async (req: Request, res: Response, nex
         return;
     }
 
+    let oauthProvidedEmail=''
+
+    console.log('isVerified: ', req.body.isVerified);
+    if(req.body.isVerified){
+        oauthProvidedEmail = (req as any).body.email;
+    }
+
     console.log('Authentication is applicable')
     console.log('req.body: ', req.body);
 
@@ -33,7 +40,13 @@ export const AuthenicateUserMiddleware = async (req: Request, res: Response, nex
     {
         const ListClientModel: Model<IListClient> = mongoose.model<IListClient>('ClientList', ListClientSchema);
 
-        const user: any = await ListClientModel.findOne({ username: EnteredUsername });
+        const user: any = await ListClientModel.findOne({ 
+            $or : [
+                {username: EnteredUsername},
+                {email: oauthProvidedEmail},
+        
+            ],
+        });
         const collectionName: string = ListClientModel.collection.name;
         console.log('collection name: ', collectionName);
         console.log(user);
@@ -45,13 +58,18 @@ export const AuthenicateUserMiddleware = async (req: Request, res: Response, nex
             console.log('is user')
         }
 
-        const isMatch: boolean = await bcrypt.compare(EnteredPassword, user.hashedPassword);
+        let isMatch: boolean = false;
+
+        if(!req.body.isVerified){
+            isMatch = await bcrypt.compare(EnteredPassword, user.hashedPassword);
+        }
+         
         // just for testing, the password is not hashed
         //const isMatch = (EnteredPassword === user.hashedPassword);
         
 
 
-        if (isMatch){
+        if (isMatch || oauthProvidedEmail.length > 0){
             console.log('passwords match');
             const SecretKey = 'SecretKey';
             const token = jwt.sign({ databaseName: user.databaseName}, SecretKey);

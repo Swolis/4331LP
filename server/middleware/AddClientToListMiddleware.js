@@ -42,7 +42,7 @@ var mongoose_1 = require("mongoose");
 var bcrypt = require('bcrypt');
 var saltRounds = 12;
 var AddClientToListMiddleware = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, username, password, databaseName, hashedPassword, newClientData, ListClientModel, newClient, error_1;
+    var _a, username, password, businessEmail, databaseName, hashedPassword, newClientData, ListClientModel, newClient, error_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -53,9 +53,10 @@ var AddClientToListMiddleware = function (req, res, next) { return __awaiter(voi
                     return [2 /*return*/];
                 }
                 console.log('AddClientToList is applicable');
-                _a = req.body, username = _a.username, password = _a.password, databaseName = _a.databaseName;
-                if (!(username && password)) {
-                    console.log('Username, and password required.');
+                console.log('body: ', req.body);
+                _a = req.body, username = _a.username, password = _a.password, businessEmail = _a.businessEmail, databaseName = _a.databaseName;
+                if (!(username && password && businessEmail)) {
+                    console.log('Username, email, and password required.');
                     return [2 /*return*/, res.status(400).json({ message: 'Username, and password required.' })];
                 }
                 if (!databaseName) {
@@ -70,6 +71,7 @@ var AddClientToListMiddleware = function (req, res, next) { return __awaiter(voi
                 hashedPassword = _b.sent();
                 newClientData = {
                     username: username,
+                    email: businessEmail,
                     hashedPassword: hashedPassword,
                     databaseName: databaseName,
                 };
