@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SystemRegisterationRoute from './SystemRegisterationRoute';
 import HomePage from '../components/home';
 import LoginPage from '../components/login/loginPage';
+import RegisterClient from '../components/webclient/RegisterClient';
 
 
 function AppRouter() {
@@ -14,6 +15,7 @@ function AppRouter() {
         <Route path='/' element={<HomePage/>}/>
         <Route path="/register" element={<SystemRegisterationRoute />} />
         <Route path='/Login' element={<LoginPage />} />
+        <Route path='/webclient' element={<RegisterClient />} />
         {/* Define your other routes here */}
       </Routes>
     </Router>

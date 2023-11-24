@@ -1,0 +1,72 @@
+.pin-pad-container {
+    display: block;
+    width: 400px;
+    margin:15% auto;
+    border-radius: 15px;
+}
+
+.pin-display {
+    margin:auto;
+    min-height: 48px;
+    font-size: 200%;
+    padding: 0rem 2.3rem;
+}
+
+.pin-pad {
+    display: block;
+    width: 345px;
+    font-size: 200%;
+    margin: auto;
+    padding: 5px 0 20px 0;
+}
+
+.pin-pad button {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+}
+
+.icon {
+    padding-left: 2.3rem !important;
+    padding-right: 2.3rem !important;
+    padding-top: 2.3rem;
+    padding-bottom: 2.2rem;
+}
+
+.ActionArea {
+    background-color: white;
+    border-right: 15px;
+    border-style: solid;
+    border-color: rgb(30 41 59 / var(--tw-bg-opacity));
+}
+
+.ActiveArea {
+    background-color: white;
+    max-width: 800px;
+    max-height: 600px;
+}
+
+.GroupMenu button{
+    font-size: 110%;
+    background-color: grey;
+    border-radius: 10px 10px 0 0;
+    padding: 10px 20px;
+    margin-right: 2px;
+}
+.GroupMenu .active {
+    background-color: lightgray;
+}
+
+/* .SubMenu {
+    top: 83px;
+    right:10%;
+} */
+
+.DButton {
+    font-weight: 600;
+    border: 2px solid black;
+    border-radius: 10px;
+    height: 100px;
+    width: 100px;
+    padding: 10px;
+    margin: 5px;
+}
