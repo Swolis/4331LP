@@ -39,7 +39,7 @@ const LoginForm = () => {
   useEffect(() => {
     /* global google */
     google.accounts.id.initialize({
-      client_id: '938542162969-o6ls2sftg24k61u1j6dsnm9pipq3m6b1.apps.googleusercontent.com',
+      client_id: process.env.REACT_APP_CLIENT_ID,
       callback: handleCallbackResponse,
     });
 
