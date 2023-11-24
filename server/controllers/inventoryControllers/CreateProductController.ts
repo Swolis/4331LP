@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
 import { createProduct } from '../../repositories/inventoryRepositories/productRepository';
-import { Connection, Model } from 'mongoose';
-import clientSchema, { IClient, getClientModel } from '../../models/ClientSchema';
+import { getClientModel } from '../../models/ClientSchema';
 import { Inventory, InventoryConfig } from '../../models/inventoryModels/inventorySchema';
 
 export const createProductController = async ( req: Request, res: Response): Promise<void> => {

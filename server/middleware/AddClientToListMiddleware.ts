@@ -18,11 +18,13 @@ export const AddClientToListMiddleware = async (req: Request, res: Response, nex
     
     console.log('AddClientToList is applicable');
 
-    // validate data
-    const {username, password, databaseName} = req.body;
+    console.log('body: ', req.body);
 
-    if(!( username && password )){
-        console.log('Username, and password required.');
+    // validate data
+    const {username, password, businessEmail, databaseName} = req.body;
+
+    if(!( username && password && businessEmail )){
+        console.log('Username, email, and password required.');
         return res.status(400).json({ message: 'Username, and password required.'});
     }
 
@@ -40,6 +42,7 @@ export const AddClientToListMiddleware = async (req: Request, res: Response, nex
         const newClientData = 
         {
             username: username,
+            email: businessEmail,
             hashedPassword: hashedPassword,
             databaseName: databaseName,
 
