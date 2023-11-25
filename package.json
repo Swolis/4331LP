@@ -41,7 +41,6 @@
     "punycode": "^2.3.0",
     "punycode.js": "^2.3.0",
     "react": "^18.2.0",
-    "react-google-login": "^5.2.2",
     "supertest": "^6.3.3",
     "tls": "^0.0.1",
     "uuid": "^9.0.1"
