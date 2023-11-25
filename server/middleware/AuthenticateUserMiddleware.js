@@ -44,7 +44,7 @@ var mongoose_1 = require("mongoose");
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 var AuthenicateUserMiddleware = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var EnteredUsername, EnteredPassword, ListClientModel, user, collectionName, isMatch, SecretKey, token, error_1;
+    var oauthProvidedEmail, EnteredUsername, EnteredPassword, ListClientModel, user, collectionName, isMatch, SecretKey, token, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -55,6 +55,11 @@ var AuthenicateUserMiddleware = function (req, res, next) { return __awaiter(voi
                     console.log('Authentication Middleware not applicable');
                     next();
                     return [2 /*return*/];
+                }
+                oauthProvidedEmail = '';
+                console.log('isVerified: ', req.body.isVerified);
+                if (req.body.isVerified) {
+                    oauthProvidedEmail = req.body.email;
                 }
                 console.log('Authentication is applicable');
                 console.log('req.body: ', req.body);
@@ -67,9 +72,14 @@ var AuthenicateUserMiddleware = function (req, res, next) { return __awaiter(voi
                 console.log("u: ".concat(EnteredUsername, " p: ").concat(EnteredPassword));
                 _a.label = 3;
             case 3:
-                _a.trys.push([3, 6, , 7]);
+                _a.trys.push([3, 7, , 8]);
                 ListClientModel = mongoose_1.default.model('ClientList', ClientListSchema_1.default);
-                return [4 /*yield*/, ListClientModel.findOne({ username: EnteredUsername })];
+                return [4 /*yield*/, ListClientModel.findOne({
+                        $or: [
+                            { username: EnteredUsername },
+                            { email: oauthProvidedEmail },
+                        ],
+                    })];
             case 4:
                 user = _a.sent();
                 collectionName = ListClientModel.collection.name;
@@ -82,12 +92,16 @@ var AuthenicateUserMiddleware = function (req, res, next) { return __awaiter(voi
                 else {
                     console.log('is user');
                 }
+                isMatch = false;
+                if (!!req.body.isVerified) return [3 /*break*/, 6];
                 return [4 /*yield*/, bcrypt.compare(EnteredPassword, user.hashedPassword)];
             case 5:
                 isMatch = _a.sent();
+                _a.label = 6;
+            case 6:
                 // just for testing, the password is not hashed
                 //const isMatch = (EnteredPassword === user.hashedPassword);
-                if (isMatch) {
+                if (isMatch || oauthProvidedEmail.length > 0) {
                     console.log('passwords match');
                     SecretKey = 'SecretKey';
                     token = jwt.sign({ databaseName: user.databaseName }, SecretKey);
@@ -100,11 +114,11 @@ var AuthenicateUserMiddleware = function (req, res, next) { return __awaiter(voi
                     console.log('passwords dont match');
                     return [2 /*return*/, res.status(401).json({ message: 'Access Denied' })];
                 }
-                return [3 /*break*/, 7];
-            case 6:
+                return [3 /*break*/, 8];
+            case 7:
                 error_1 = _a.sent();
                 return [2 /*return*/, res.status(500).json({ message: 'Internal sever error.' })];
-            case 7: return [2 /*return*/];
+            case 8: return [2 /*return*/];
         }
     });
 }); };

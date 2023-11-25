@@ -1,5 +1,5 @@
 // clientSchema.ts
-import { Schema, Document } from "mongoose";
+import { Schema, Document, Connection, Model } from "mongoose";
 import mongoose from 'mongoose';
 
 
@@ -12,6 +12,8 @@ const clientSchema: Schema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId },
     
     nextSKU: { type: Number, default: 1 },
+    nextRecipe: { type: Number, default: 1 },
+    nextEmployeeID:{type:Number,default:1}
 
 });
 
@@ -30,6 +32,12 @@ export interface IClient extends Document {
     address: string;
     userId: mongoose.Types.ObjectId;
     nextSKU: number;
+    nextRecipe: number;
+    nextEmployeeID:number
+}
+
+export const getClientModel = (connection: Connection): Model<IClient> => {
+    return connection.model<IClient>('Client', clientSchema);
 }
 
 // const User: Model<IUser> = mongoose.model<IUser>('Client', userSchema);

@@ -3,6 +3,7 @@ import { Router } from 'express';
 import ProductRouter from './api/ProductRouter';
 import AdminLoginRoute from './authentication/LoginRoutes';
 import AdminRegistrationRouter from './authentication/AdminRegistrationRouter';
+import RecipeRouter from './api/RecipeRouter';
 
 const mainRouter = Router();
 
@@ -18,9 +19,9 @@ mainRouter.use('/Admin-Registration', AdminRegistrationRouter);
 
 // Mount the required router
 // Product routes
-mainRouter.use('/api/product', ProductRouter);
+mainRouter.use('/Product/', ProductRouter);
 
 // Recipe routes
-// mainRouter.use('/api/recipe', RecipeRouter);
+mainRouter.use('/Recipe-Router/', RecipeRouter);
 
 export default mainRouter;

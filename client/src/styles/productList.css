@@ -1,0 +1,9 @@
+@import './tailwind.css';
+/* Add these styles to your CSS file */
+.even-row {
+    background-color: #f0f0f0; /* or any other color you prefer */
+}
+
+.odd-row {
+    background-color: #ffffff; /* or any other color you prefer */
+}

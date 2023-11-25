@@ -2,6 +2,7 @@ import mongoose, {Schema, Document } from "mongoose";
 
 const ListClientSchema: Schema = new mongoose.Schema({
     username: {type: String, required: true},
+    email: { type: String, required: true },
     hashedPassword: {type: String, required: true},
     databaseName: {type: String, unique: true, required: true},
 },{
@@ -11,6 +12,7 @@ const ListClientSchema: Schema = new mongoose.Schema({
 
 export interface IListClient extends Document {
     username: string;
+    email:string;
     hashedPassword: string;
     databaseName: string;
 }

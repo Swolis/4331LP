@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+
 const session = require('express-session');
 import { corsConfig } from './middleware/CORS';
 //import { tokenExtractor } from './middleware/tokenExtractor';
@@ -12,7 +13,7 @@ import { ConnectToClinetDatabaseMiddleware } from './middleware/ConnectToClientD
 //import { setSession } from './middleware/setSessionMiddleware';
 import mainRouter from './routes/expressAppRouter';
 
-require('dotenv').config();
+
 
 const app = express();
 console.log('created app instance');
@@ -32,7 +33,21 @@ app.use(session({
     secret: 'temp-secret',
     resave: false,
     saveUninitialized: true,
+    cookie: {
+        maxAge: 30 * 60 * 1000,
+    }
 }));
+
+
+if (process.env.NODE_ENV !== 'production') {
+    
+    require('dotenv').config( { path: __dirname + '/.env' });
+    console.log('secret_key', process.env.SECRET_KEY);
+
+}else {
+    console.log('NOT using dotenv');
+}
+
 
 app.use(AuthenicateUserMiddleware);
 //app.use(tokenExtractor);
