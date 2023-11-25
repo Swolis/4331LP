@@ -35,7 +35,6 @@
     "mongoose": "^7.6.3",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "passport": "^0.6.0",
-    "passport-google-oauth20": "^2.0.0",
     "passport-oauth2-client-password": "^0.1.2",
     "path": "^0.12.7",
     "punycode": "^2.3.0",
