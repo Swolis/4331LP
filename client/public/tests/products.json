@@ -1,0 +1,24 @@
+[{"product":{
+    "name": "test",
+    "color": "grey",
+    "text": "Test Product 1"
+    }
+},
+{"product":{
+    "name": "test2",
+    "color": "grey",
+    "text": "Test Product 2"
+    }
+},
+{"product":{
+    "name": "test2",
+    "color": "grey",
+    "text": "Test Product 3"
+    }
+},
+{"product":{
+    "name": "test2",
+    "color": "grey",
+    "text": "Test Product 4"
+    }
+}]
