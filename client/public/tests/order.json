@@ -1,0 +1,13 @@
+[{"item": {
+    "recipeID": "0",
+    "mods": [
+        "mod-1", "mod-2"
+    ]
+}},
+{"item": {
+    "recipeID": "1",
+    "mods": [
+        "mod-3", "mod-4"
+    ]
+}
+}]

@@ -14,7 +14,7 @@
 
 .pin-pad {
     display: block;
-    width: 345px;
+    width: 350px;
     font-size: 200%;
     margin: auto;
     padding: 5px 0 20px 0;
@@ -45,6 +45,10 @@
     max-height: 600px;
 }
 
+.ActiveArea .DButton {
+    margin:0px;
+}
+
 .GroupMenu button{
     font-size: 110%;
     background-color: grey;
@@ -52,14 +56,14 @@
     padding: 10px 20px;
     margin-right: 2px;
 }
+
 .GroupMenu .active {
     background-color: lightgray;
 }
 
-/* .SubMenu {
-    top: 83px;
-    right:10%;
-} */
+/* .SubMenu button{
+    padding: 20px 10px;
+}  */
 
 .DButton {
     font-weight: 600;
@@ -69,4 +73,19 @@
     width: 100px;
     padding: 10px;
     margin: 5px;
+}
+
+.OrderTotals {
+    padding: 20px;
+}
+
+.OrderTotals table{
+    border-top: 2px;
+    border-style: solid;
+    border-color: rgb(30 41 59 / var(--tw-bg-opacity));
+    min-width: 100%;
+}
+
+.OrderTotals table tr td:nth-child(2) {
+    text-align: end;
 }

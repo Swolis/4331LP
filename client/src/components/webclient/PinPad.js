@@ -30,7 +30,6 @@ function PinPad ({ mode, setMode }){
 
   const deleteDigit = () => {
     setEnteredPin(enteredPin.slice(0, -1));
-    console.log(enteredPin);
   }
 
   useEffect(() => {
@@ -40,7 +39,7 @@ function PinPad ({ mode, setMode }){
   }, [mode]);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex justify-center absolute" style={{left:"40%"}}>
       {mode === 0 && (
         <div className="pin-pad-container bg-slate-200 rounded shadow-md items-center">
           <h1 className='text-3xl'style={{margin: 'auto', width: '130px'}}>Enter PIN</h1>

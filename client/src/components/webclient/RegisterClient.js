@@ -4,7 +4,6 @@ import ActionArea from './ActionArea';
 import PinPad from './PinPad';
 import '../../styles/tailwind.css';
 import '../../styles/webclient.css';
-import { TouchBackend } from 'react-dnd-touch-backend'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider } from 'react-dnd'
 
@@ -16,16 +15,13 @@ export default function RegisterClient() {
         setMode(newMode);
     }
 
-    // if(window.matchMedia("(pointer: coarse)").matches) {
-    //     backend = TouchBackend;
-    // }
-
     return (
+        
         <DndProvider backend={backend}>
-            <div className='bg-slate-800 min-h-screen flex'>
+            <div className='bg-slate-800 min-h-screen flex' style={{paddingTop: 'env(safe-area-inset-top)'}}>
                 <PinPad mode={mode} setMode={changeMode}/>
                 <ActionArea mode={mode}/>
-                <ActiveArea mode={mode}/> 
+                <ActiveArea mode={mode} setMode={changeMode}/> 
             </div>
         </DndProvider>
     );
