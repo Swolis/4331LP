@@ -1,9 +1,10 @@
 import axios from 'axios';
-import { query } from 'express';
+
+const baseURL = `${window.location.protocol}//${window.location.hostname}:5000`;
 
 const searchForRecipe = async (query) => {
     try {
-        const response = await axios.post('http"//localhost:3001/Recipe-Search', query, {mode: 'cors'});
+        const response = await axios.post(`${baseURL}/Recipe-Search`, query, {mode: 'cors'});
     }catch (error){
         throw new Error('Recipe search failed.');
     }
@@ -18,3 +19,5 @@ const handleQuery = async (queryState) => {
         console.error(error);
     }
 }
+
+export default handleQuery;

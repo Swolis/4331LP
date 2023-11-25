@@ -6,7 +6,7 @@ const baseURL = `${window.location.protocol}//${window.location.hostname}:5000`;
 const loginUser = async (formData) => {
 	console.log('using login handler, login user function');
     try {
-        const response = await axios.post(`${baseURL}/Admin-Login`, formData, { withCredentials: true });
+        const response = await axios.post(`${baseURL}/Admin-Login`, formData, { withCredentials: true, mode:'cors' });
 	console.log(`resonse: ${response.data}`);
         return response.data;
     } catch (error) {
