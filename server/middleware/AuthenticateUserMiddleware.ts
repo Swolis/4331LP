@@ -63,7 +63,7 @@ export const AuthenicateUserMiddleware = async (req: Request, res: Response, nex
         if(!req.body.isVerified){
             isMatch = await bcrypt.compare(EnteredPassword, user.hashedPassword);
         }
-         console.log(user.databaseName)
+        
         // just for testing, the password is not hashed
         //const isMatch = (EnteredPassword === user.hashedPassword);
         
@@ -78,7 +78,7 @@ export const AuthenicateUserMiddleware = async (req: Request, res: Response, nex
            // console.log('from authorization: req.headers.authorization: ', req.headers.authorization);
             (req as any).session.databaseName = user.databaseName;
             (req as any).session.email = user.email;
-
+             console.log(user.databaseName)
             (req as any).session.client = {
                 databaseName: (req as any).session.databaseName,
                 // other relevant information
