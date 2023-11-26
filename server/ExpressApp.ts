@@ -47,7 +47,7 @@ app.get('/', (req: any, res: any) => {
   res.send('Hello, this is the root path!');
 });
 
-app.use((req, res, next) => {
+app.use((req: any, res: any, next: any) => {
   console.log('the session variables two: ', req.session);
   next();
 });

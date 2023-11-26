@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 const baseURL = `${window.location.protocol}//${window.location.hostname}:5000`;
 
@@ -14,35 +15,21 @@ const loginUser = async (formData) => {
     }
 };
 
-const handleLogin = async (formState) => {
+const handleLogin = async (formState, setShowPinUpdate) => {
     try {
         const loginData = await loginUser(formState);
         if (loginData.message === 'Login Successful') {
             console.log('Login was successful');
 
-            handleSuccessfulLogin(loginData);
+            handleSuccessfulLogin(loginData, setShowPinUpdate);
         }
     } catch (error) {
         console.error(`Login Failed: ${error.message}`);
     }
 };
 
-export const LoginWithGoogle = async (loginData) => {
-    try {
-        const response = await axios.post(`${baseURL}/Google-Login/google`, loginData, { withCredentials: true });
-        loginData = response.data;
-        if (loginData.message === 'Login Successful') {
-            console.log('Login was successful');
-            handleSuccessfulLogin(loginData);
-        } else {
-            console.error('Login Failed: AuthToken cookie not found');
-        }
-    } catch (error) {
-        console.error('Login failure:', error);
-    }
-};
 
-function handleSuccessfulLogin(loginData) {
+export function handleSuccessfulLogin(loginData, setShowPinUpdate) {
     // Wait for a short delay to ensure the cookie is set
     setTimeout(() => {
         // Log all cookies
@@ -51,10 +38,15 @@ function handleSuccessfulLogin(loginData) {
         // Check and log the authToken cookie
         const authTokenCookie = document.cookie.split(';').map(cookie => cookie.trim()).find(cookie => cookie.startsWith('authToken='));
 
-        console.log(`authTokenCookie: ${authTokenCookie}`);
+        const authToken = authTokenCookie.split('=')[1];
 
-        if (authTokenCookie) {
-            const authToken = authTokenCookie.split('=')[1];
+        const cookieObject = jwtDecode(authToken);
+
+        if(authTokenCookie){
+            if (cookieObject.defaultPin){
+                setShowPinUpdate(true)
+            }
+
             console.log(`Received authToken: ${authToken}`);
 
             // Set the authToken in the Axios headers for subsequent requests
@@ -62,8 +54,11 @@ function handleSuccessfulLogin(loginData) {
 
             // Redirect to the clientDashboard page
             window.location.href = '/clientDashboard';
+
+
         }
     }, 1000); // Adjust the delay as needed
 }
+
 
 export default handleLogin;
