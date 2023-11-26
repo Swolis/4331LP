@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express = require('express');
 var cors = require('cors');
 var session = require('express-session');
-var https_1 = require("https");
-var fs_1 = require("fs");
-var path_1 = require("path");
+var https = require('https');
+var fs = require('fs');
+var path = require('path');
 var CORS_1 = require("./middleware/CORS");
 var DatabaseNameGen_1 = require("./middleware/DatabaseNameGen");
 var ConnectToClientListMiddleware_1 = require("./middleware/ConnectToClientListMiddleware");
@@ -30,13 +30,8 @@ app.use(session({
         maxAge: 30 * 60 * 1000,
     },
 }));
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config({ path: path_1.default.join(__dirname, '/.env') });
-    console.log('secret_key', process.env.SECRET_KEY);
-}
-else {
-    console.log('NOT using dotenv');
-}
+require('dotenv').config({ path: __dirname + '/.env' });
+console.log('secret_key', process.env.SECRET_KEY);
 app.use(AuthenticateUserMiddleware_1.AuthenicateUserMiddleware);
 app.use(DisconnectListOfClientsMiddleware_1.DisconnectFromClientList);
 app.use(ConnectToClientDatabaseMiddleware_1.ConnectToClinetDatabaseMiddleware);
@@ -45,11 +40,11 @@ app.get('/', function (req, res) {
 });
 app.use('/', expressAppRouter_1.default);
 var PORT = process.env.PORT || 5000;
-var privateKey = fs_1.default.readFileSync('/etc/letsencrypt/live/businesscraft.work/privkey.pem', 'utf8');
-var cert = fs_1.default.readFileSync('/etc/letsencrypt/live/businesscraft.work/fullchain.pem', 'utf8');
+var privateKey = fs.readFileSync('/etc/letsencrypt/live/businesscraft.work/privkey.pem', 'utf8');
+var cert = fs.readFileSync('/etc/letsencrypt/live/businesscraft.work/fullchain.pem', 'utf8');
 console.log("private key: ".concat(privateKey));
 console.log("cert: ".concat(cert));
-var server = https_1.default.createServer({
+var server = https.createServer({
     key: privateKey,
     cert: cert,
 }, app);

@@ -1,9 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
-import https from 'https';
-import fs from 'fs';
-import path from 'path';
+const https = require('https');
+const fs = require('fs');
+const path = require('path');
 import { corsConfig } from './middleware/CORS';
 import { DatabaseNameGen } from './middleware/DatabaseNameGen';
 import { ConnectToClientListMiddleWare } from './middleware/ConnectToClientListMiddleware';
@@ -35,12 +35,11 @@ app.use(
   })
 );
 
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config({ path: path.join(__dirname, '/.env') });
-  console.log('secret_key', process.env.SECRET_KEY);
-} else {
-  console.log('NOT using dotenv');
-}
+
+    
+    require('dotenv').config( { path: __dirname + '/.env' });
+    console.log('secret_key', process.env.SECRET_KEY);
+
 
 app.use(AuthenicateUserMiddleware);
 app.use(DisconnectFromClientList);
