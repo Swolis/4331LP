@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import recipieSchema, { IRecipie } from "../../models/inventoryModels/recipieSchema";
+import recipieSchema, { IRecipe } from "../../models/inventoryModels/recipieSchema";
 import { Model, Connection } from 'mongoose';
 
 export const findProductIDController = async (req: Request, res: Response): Promise<void> => {

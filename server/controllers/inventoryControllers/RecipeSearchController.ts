@@ -5,7 +5,7 @@ import { Model } from "mongoose";
 export const RecipeSearchController = async (req: Request, res: Response): Promise<void> => {
     console.log('entering search recipe controller');
 
-    const RecipeModel: Model<IRecipe> = getRecipeModel(req.app.locals.client);
+    const { model: RecipeModel, closeConnection } = getRecipeModel((req as any).session.client);
 
     const query: string | number = req.body.query;
 
@@ -42,6 +42,9 @@ export const RecipeSearchController = async (req: Request, res: Response): Promi
         }
 
         res.status(201).json(searchResult);
+
+        return;
+        
     } catch ( error: any ) {
         console.log(`error: ${error}`);
         res.status(500).json({ message: `Internal server error: ${error}`});
