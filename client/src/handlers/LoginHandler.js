@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
 
 const baseURL = `${window.location.protocol}//${window.location.hostname}:5000`;
 
@@ -15,13 +14,13 @@ const loginUser = async (formData) => {
     }
 };
 
-const handleLogin = async (formState, setShowPinUpdate) => {
+const handleLogin = async (formState) => {
     try {
         const loginData = await loginUser(formState);
         if (loginData.message === 'Login Successful') {
             console.log('Login was successful');
 
-            handleSuccessfulLogin(loginData, setShowPinUpdate);
+            handleSuccessfulLogin(loginData);
         }
     } catch (error) {
         console.error(`Login Failed: ${error.message}`);
@@ -29,7 +28,7 @@ const handleLogin = async (formState, setShowPinUpdate) => {
 };
 
 
-export function handleSuccessfulLogin(loginData, setShowPinUpdate) {
+function handleSuccessfulLogin(loginData) {
     // Wait for a short delay to ensure the cookie is set
     setTimeout(() => {
         // Log all cookies
@@ -38,15 +37,10 @@ export function handleSuccessfulLogin(loginData, setShowPinUpdate) {
         // Check and log the authToken cookie
         const authTokenCookie = document.cookie.split(';').map(cookie => cookie.trim()).find(cookie => cookie.startsWith('authToken='));
 
-        const authToken = authTokenCookie.split('=')[1];
+        console.log(`authTokenCookie: ${authTokenCookie}`);
 
-        const cookieObject = jwtDecode(authToken);
-
-        if(authTokenCookie){
-            if (cookieObject.defaultPin){
-                setShowPinUpdate(true)
-            }
-
+        if (authTokenCookie) {
+            const authToken = authTokenCookie.split('=')[1];
             console.log(`Received authToken: ${authToken}`);
 
             // Set the authToken in the Axios headers for subsequent requests
@@ -54,11 +48,8 @@ export function handleSuccessfulLogin(loginData, setShowPinUpdate) {
 
             // Redirect to the clientDashboard page
             window.location.href = '/clientDashboard';
-
-
         }
     }, 1000); // Adjust the delay as needed
 }
-
 
 export default handleLogin;
