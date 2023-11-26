@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 const baseURL = `${window.location.protocol}//${window.location.hostname}:5000`;
 
@@ -14,13 +15,13 @@ const loginUser = async (formData) => {
     }
 };
 
-const handleLogin = async (formState) => {
+const handleLogin = async (formState, setShowupdatePin) => {
     try {
         const loginData = await loginUser(formState);
         if (loginData.message === 'Login Successful') {
             console.log('Login was successful');
 
-            handleSuccessfulLogin(loginData);
+            handleSuccessfulLogin(loginData, setShowupdatePin);
         }
     } catch (error) {
         console.error(`Login Failed: ${error.message}`);
@@ -28,28 +29,30 @@ const handleLogin = async (formState) => {
 };
 
 
-function handleSuccessfulLogin(loginData) {
-    // Wait for a short delay to ensure the cookie is set
-    setTimeout(() => {
-        // Log all cookies
-        console.log(`All Cookies: ${document.cookie}`);
+function handleSuccessfulLogin(loginData, setShowupdatePin) {
+    // Check for the authToken cookie
+    const authTokenCookie = document.cookie.split(';').map(cookie => cookie.trim()).find(cookie => cookie.startsWith('authToken='));
 
-        // Check and log the authToken cookie
-        const authTokenCookie = document.cookie.split(';').map(cookie => cookie.trim()).find(cookie => cookie.startsWith('authToken='));
+    if (authTokenCookie) {
+        const authToken = authTokenCookie.split('=')[1];
 
-        console.log(`authTokenCookie: ${authTokenCookie}`);
+        const cookieObject = jwtDecode(authToken);
+        console.log(`Received authToken: ${authToken}`);
+        console.log(`cookieObject default pin: ${cookieObject.defaultPin}`);
 
-        if (authTokenCookie) {
-            const authToken = authTokenCookie.split('=')[1];
-            console.log(`Received authToken: ${authToken}`);
-
-            // Set the authToken in the Axios headers for subsequent requests
-            axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
-
-            // Redirect to the clientDashboard page
-            window.location.href = '/clientDashboard';
+        if (cookieObject.defaultPin){
+            setShowupdatePin(true);
         }
-    }, 1000); // Adjust the delay as needed
+
+        // Set the authToken in the Axios headers for subsequent requests
+        axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
+
+        // Redirect to the clientDashboard page
+        window.location.href = '/clientDashboard';
+    } else {
+        // Handle the case where the cookie is not found
+    }
 }
+
 
 export default handleLogin;

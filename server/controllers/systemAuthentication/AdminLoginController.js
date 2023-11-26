@@ -70,7 +70,7 @@ var AdminLoginController = function (req, res) { return __awaiter(void 0, void 0
                         }
                         else {
                             console.log("secret key: ".concat(SecretKey_1));
-                            var token = jwt.sign({ userID: data_1._id }, SecretKey_1, { expiresIn: '120m' });
+                            var token = jwt.sign({ userID: data_1._id, defaultPin: data_1.defaultPin }, SecretKey_1, { expiresIn: '120m' });
                             console.log("Generated token: ".concat(token));
                             res.cookie('authToken', token, { maxAge: 30 * 60 * 1000, httpOnly: false, secure: true });
                             closeConnection_1(); // Close the connection when done
