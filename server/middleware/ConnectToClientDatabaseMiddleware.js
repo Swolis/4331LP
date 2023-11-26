@@ -55,13 +55,16 @@ var ConnectToClinetDatabaseMiddleware = function (req, res, next) { return __awa
                 return [4 /*yield*/, (0, ConnectToClinet_1.connectToClient)(req.session.databaseName)];
             case 2:
                 client = _a.sent();
-                req.app.locals.client = client;
+                // Store the client in the session
+                req.session.client = client;
                 next();
                 return [3 /*break*/, 4];
             case 3:
                 error_1 = _a.sent();
                 console.error('Error connecting to client database: ', error_1);
-                return [2 /*return*/, res.status(500).json({ message: 'Error connecting to Client Database.' })];
+                return [2 /*return*/, res
+                        .status(500)
+                        .json({ message: 'Error connecting to Client Database.' })];
             case 4: return [2 /*return*/];
         }
     });

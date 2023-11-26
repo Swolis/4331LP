@@ -1,20 +1,34 @@
+// ConnectToClientDatabaseMiddleware.ts
 import { Request, Response, NextFunction } from 'express';
 import { connectToClient } from '../config/ConnectToClinet';
-import mongoose from 'mongoose';
+import mongoose, { Connection } from 'mongoose';
 
-export const ConnectToClinetDatabaseMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    console.log('entering connect to client database');
+export const ConnectToClinetDatabaseMiddleware = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  console.log('entering connect to client database');
 
-    if(!(req.url === '/Admin-Login' || req.url === '/Admin-Registration')){
-        console.log('Connect to ')
-        return next();
-    }
-    try{
-        console.log('connecting to: ', (req as any).session.databaseName);
-        const client = await connectToClient((req as any).session.databaseName);
-        req.app.locals.client = client;
-        next();
-    } catch ( error: any ) {
-        console.error('Error connecting to client database: ', error);
-        return res.status(500).json({ message: 'Error connecting to Client Database.' });    }
-}
+  if (!(req.url === '/Admin-Login' || req.url === '/Admin-Registration')) {
+    console.log('Connect to ');
+    return next();
+  }
+
+  try {
+    console.log('connecting to: ', (req as any).session.databaseName);
+
+    // Use the provided connectToClient function
+    const client: Connection = await connectToClient((req as any).session.databaseName);
+
+    // Store the client in the session
+    (req as any).session.client = client;
+    
+    next();
+  } catch (error: any) {
+    console.error('Error connecting to client database: ', error);
+    return res
+      .status(500)
+      .json({ message: 'Error connecting to Client Database.' });
+  }
+};
