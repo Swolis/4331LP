@@ -49,7 +49,7 @@ const logSession = (req: any, res: any, next: any) => {
 
 app.use(AuthenicateUserMiddleware);
 app.use(DisconnectFromClientList);
-app.use(ConnectToClinetDatabaseMiddleware);
+//app.use(ConnectToClinetDatabaseMiddleware);
 
 app.get('/', (req: any, res: any) => {
   res.send('Hello, this is the root path!');

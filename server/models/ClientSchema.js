@@ -19,7 +19,13 @@ clientSchema.pre('save', function (next) {
     }
     next();
 });
-var getClientModel = function (connection) {
+var getClientModel = function (clientInfo) {
+    var uri = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/';
+    var databaseName = clientInfo.databaseName;
+    var connection = mongoose_1.default.createConnection(uri, {
+        dbName: databaseName,
+        ssl: true,
+    });
     return connection.model('Client', clientSchema);
 };
 exports.getClientModel = getClientModel;

@@ -39,50 +39,45 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminLoginController = void 0;
 var ClientSchema_1 = require("../../models/ClientSchema");
 var jwt = require('jsonwebtoken');
-var convertToPlainObject = function (doc) {
-    return doc === null || doc === void 0 ? void 0 : doc.toObject({ getters: true, virtuals: true });
-};
 var AdminLoginController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var ClientModel, data, plainData, SecretKey, token, newData, plainNewData, error_1;
+    var ClientModel, data, SecretKey, token, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 console.log('\n\nentering set session from controller');
                 _a.label = 1;
             case 1:
-                _a.trys.push([1, 6, 7, 8]);
+                _a.trys.push([1, 3, 4, 5]);
+                console.log('Stored client connection:', req.session.client);
                 ClientModel = (0, ClientSchema_1.getClientModel)(req.session.client);
                 console.log("session stored email: ".concat(req.session.email));
-                return [4 /*yield*/, ClientModel.findOne({ email: req.session.email }).lean().exec()];
+                return [4 /*yield*/, ClientModel.findOne({ email: req.session.email }).exec()];
             case 2:
                 data = _a.sent();
-                plainData = convertToPlainObject(data);
-                console.log('Data from the "client" collection:', plainData);
-                if (!plainData) return [3 /*break*/, 3];
-                SecretKey = process.env.SECRET_KEY;
-                console.log("secret key: ".concat(SecretKey));
-                token = jwt.sign({ userID: plainData._id }, SecretKey, { expiresIn: '120m' });
-                console.log("Generated token: ".concat(token));
-                res.cookie('authToken', token, { maxAge: 30 * 60 * 1000, httpOnly: false, secure: true });
-                req.session.authenticated = true;
-                res.status(200).json({ message: 'Login Successful' });
-                return [2 /*return*/];
-            case 3: return [4 /*yield*/, ClientModel.findOne({}).exec()];
-            case 4:
-                newData = _a.sent();
-                plainNewData = convertToPlainObject(newData);
-                console.log("user email: ".concat(plainNewData === null || plainNewData === void 0 ? void 0 : plainNewData.email));
-                throw new Error('Invalid user data');
-            case 5: return [3 /*break*/, 8];
-            case 6:
+                console.log('Data from the "client" collection:', data);
+                if (data) {
+                    SecretKey = process.env.SECRET_KEY;
+                    console.log("secret key: ".concat(SecretKey));
+                    token = jwt.sign({ userID: data._id }, SecretKey, { expiresIn: '120m' });
+                    console.log("Generated token: ".concat(token));
+                    res.cookie('authToken', token, { maxAge: 30 * 60 * 1000, httpOnly: false, secure: true });
+                    req.session.authenticated = true;
+                    res.status(200).json({ message: 'Login Successful' });
+                    return [2 /*return*/]; // Add this return statement
+                }
+                else {
+                    throw new Error('Invalid user data');
+                }
+                return [3 /*break*/, 5];
+            case 3:
                 error_1 = _a.sent();
-                console.error('Error handling setSession controller:', error_1);
+                console.error('Error handling setSession contoroller:', error_1);
                 res.status(500).json({ message: 'Internal server error.' });
-                return [3 /*break*/, 8];
-            case 7:
-                res.end();
+                return [3 /*break*/, 5];
+            case 4:
+                res.end(); // Ensure response is ended even if there's an error
                 return [7 /*endfinally*/];
-            case 8: return [2 /*return*/];
+            case 5: return [2 /*return*/];
         }
     });
 }); };

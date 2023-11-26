@@ -12,7 +12,6 @@ var ConnectToClientListMiddleware_1 = require("./middleware/ConnectToClientListM
 var AuthenticateUserMiddleware_1 = require("./middleware/AuthenticateUserMiddleware");
 var AddClientToListMiddleware_1 = require("./middleware/AddClientToListMiddleware");
 var DisconnectListOfClientsMiddleware_1 = require("./middleware/DisconnectListOfClientsMiddleware");
-var ConnectToClientDatabaseMiddleware_1 = require("./middleware/ConnectToClientDatabaseMiddleware");
 var expressAppRouter_1 = require("./routes/expressAppRouter");
 var app = express();
 console.log('created app instance');
@@ -39,7 +38,7 @@ require('dotenv').config({ path: __dirname + '/.env' });
 console.log('secret_key', process.env.SECRET_KEY);
 app.use(AuthenticateUserMiddleware_1.AuthenicateUserMiddleware);
 app.use(DisconnectListOfClientsMiddleware_1.DisconnectFromClientList);
-app.use(ConnectToClientDatabaseMiddleware_1.ConnectToClinetDatabaseMiddleware);
+//app.use(ConnectToClinetDatabaseMiddleware);
 app.get('/', function (req, res) {
     res.send('Hello, this is the root path!');
 });
