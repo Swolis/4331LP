@@ -9,4 +9,5 @@ const RecipeRouter = Router();
 RecipeRouter.post('/Create-Recipe', createRecipeController);
 
 RecipeRouter.post('/Search-Recipe', RecipeSearchController);
+
 export default RecipeRouter;
