@@ -48,7 +48,7 @@ var AdminLoginController = function (req, res) { return __awaiter(void 0, void 0
                 console.log('\n\nentering set session from controller');
                 _b.label = 1;
             case 1:
-                _b.trys.push([1, 3, 4, 5]);
+                _b.trys.push([1, 3, , 4]);
                 console.log('Stored client connection:', req.session.client);
                 _a = (0, ClientSchema_1.getClientModel)(req.session.client), ClientModel = _a.model, closeConnection_1 = _a.closeConnection;
                 // Access properties from getModel
@@ -75,22 +75,20 @@ var AdminLoginController = function (req, res) { return __awaiter(void 0, void 0
                             res.cookie('authToken', token, { maxAge: 30 * 60 * 1000, httpOnly: false, secure: true });
                             closeConnection_1(); // Close the connection when done
                             res.status(200).json({ message: 'Login Successful' });
+                            return;
                         }
                     });
                 }
                 else {
                     throw new Error('Invalid user data');
                 }
-                return [3 /*break*/, 5];
+                return [3 /*break*/, 4];
             case 3:
                 error_1 = _b.sent();
                 console.error('Error handling setSession controller:', error_1);
                 res.status(500).json({ message: 'Internal server error.' });
-                return [3 /*break*/, 5];
-            case 4:
-                res.end();
-                return [7 /*endfinally*/];
-            case 5: return [2 /*return*/];
+                return [2 /*return*/];
+            case 4: return [2 /*return*/];
         }
     });
 }); };

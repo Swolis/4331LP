@@ -6,8 +6,7 @@ import { Model, Connection } from 'mongoose';
 export const findProductController = async (req: Request, res: Response): Promise<void> => {
    console.log('entering product search controller');
     
-   // use product model
-   const ProductModel = getProductModel((req as any).session.client);
+   const { model: ProductModel, closeConnection } = getProductModel((req as any).session.client);
 
    const query:string | number = req.body.query;
 
@@ -40,6 +39,7 @@ export const findProductController = async (req: Request, res: Response): Promis
          throw new Error('search type invalid');
       }
 
+      closeConnection();
      
    
       if(searchResult.length === 0){
@@ -49,6 +49,8 @@ export const findProductController = async (req: Request, res: Response): Promis
       }
    
       res.status(201).json(searchResult);
+
+      return;
 
    }catch (error: any) {
       console.log('error: ', error);

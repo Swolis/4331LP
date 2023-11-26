@@ -42,6 +42,7 @@ export const AdminLoginController = async (req: Request, res: Response) => {
 
           closeConnection(); // Close the connection when done
           res.status(200).json({ message: 'Login Successful' });
+          return
         }
       });
     } else {
@@ -50,7 +51,6 @@ export const AdminLoginController = async (req: Request, res: Response) => {
   } catch (error: any) {
     console.error('Error handling setSession controller:', error);
     res.status(500).json({ message: 'Internal server error.' });
-  } finally {
-    res.end();
-  }
+    return
+  } 
 };
