@@ -48,7 +48,7 @@ var createEmployeeController = function (req, res) { return __awaiter(void 0, vo
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 5, , 6]);
-                ClientModel = (0, ClientSchema_1.getClientModel)(req.app.locals.client);
+                ClientModel = (0, ClientSchema_1.getClientModel)(req.session.client);
                 return [4 /*yield*/, ClientModel.findOne({})];
             case 2:
                 client = _a.sent();
@@ -56,6 +56,9 @@ var createEmployeeController = function (req, res) { return __awaiter(void 0, vo
                     throw new Error('user not found');
                 }
                 EmployeeID = client.nextEmployeeID++;
+                if (req.body.defaultPin) {
+                    client.defaultPin = false;
+                }
                 return [4 /*yield*/, client.save()];
             case 3:
                 _a.sent();
