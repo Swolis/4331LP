@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from 'react';
+// LoginForm.js
+import React, { useState } from 'react';
 import '../../styles/tailwind.css';
-import handleLogin, { LoginWithGoogle } from '../../handlers/LoginHandler';
 import { jwtDecode } from 'jwt-decode';
+import { handleLogin } from '../../handlers/LoginHandler';
+import GoogleSignIn from './GoogleSignIn';
+import PinUpdateCard from './changeDefaultPin';
+import updatePin from './updatePinHandler';
 
 const LoginForm = () => {
   const [state, setState] = useState({
@@ -13,14 +17,19 @@ const LoginForm = () => {
     password: '',
   });
 
+  const [showPinUpdate, setShowPinUpdate] = useState(false); // New state for PIN check
+
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setState((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleCallbackResponse = (response) => {
     try {
-      console.log(`Encoded JWT ID token in callback: ${response.credential}`);
-      console.log('next line');
+
       const userObject = jwtDecode(response.credential);
-
       console.log('Decoded user object:', JSON.stringify(userObject, null, 2));
-
       const GoogleLoginData = {
         email: userObject.email,
         isVerified: userObject.email_verified,
@@ -36,27 +45,23 @@ const LoginForm = () => {
     }
   };
 
-  useEffect(() => {
-    /* global google */
-    google.accounts.id.initialize({
-      client_id: process.env.REACT_APP_CLIENT_ID,
-      callback: handleCallbackResponse,
-    });
+  const handlePinUpdate = async (name, newPin) => {
+    try {
+      // Call the updatePin function with the provided data
+      await updatePin(name, newPin);
 
-    google.accounts.id.renderButton(document.getElementById('signInDiv'), {
-      theme: 'outline',
-      size: 'large',
-    });
-  }, []); // empty dependency array to mimic componentDidMount
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setState((prev) => ({ ...prev, [name]: value }));
+      // After PIN update, redirect to the dashboard
+      window.location.href = '/clientDashboard';
+    } catch (error) {
+      console.error(`Error updating PIN: ${error.message}`);
+      // Handle the error as needed
+    }
   };
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    handleLogin(state);
+    handleLogin(state, (loginData) => handleSuccessfulLogin(loginData, setShowPinUpdate));
   };
 
   return (
@@ -87,10 +92,13 @@ const LoginForm = () => {
         <button style={{ background: '#ffd485' }} className=' rounded p-1 px-4 text-gray-600 m-2' type='submit'>
           Login
         </button>
-        <div id='signInDiv' className='p-1 px-2'>
-          {/* future sigIn button */}
-        </div>
+        <GoogleSignIn onCallbackResponse={handleCallbackResponse} />
+
+        
+
       </div>
+      {showPinUpdate && <PinUpdateCard onSubmit={handlePinUpdate} />}
+
     </form>
   );
 };
