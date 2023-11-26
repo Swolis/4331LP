@@ -26,8 +26,17 @@ var getClientModel = function (clientInfo) {
         dbName: databaseName,
         ssl: true,
     });
-    return connection.model('Client', clientSchema);
+    var ClientModel = connection.model('Client', clientSchema);
+    var closeConnection = function () {
+        connection.close()
+            .then(function () {
+            console.log('Connection closed successfully.');
+        })
+            .catch(function (error) {
+            console.error('Error closing the connection:', error);
+        });
+    };
+    return { model: ClientModel, closeConnection: closeConnection };
 };
 exports.getClientModel = getClientModel;
-// const User: Model<IUser> = mongoose.model<IUser>('Client', userSchema);
 exports.default = clientSchema;

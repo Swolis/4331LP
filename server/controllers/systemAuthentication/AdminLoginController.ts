@@ -1,46 +1,55 @@
-import { Request, Response, NextFunction } from 'express';
-import { Connection, Model } from 'mongoose';
-import clientSchema, { IClient, getClientModel } from '../../models/ClientSchema';
+// Import necessary types and modules
+import { Request, Response } from 'express';
+import { Model } from 'mongoose';
+import { IClient, getClientModel } from '../../models/ClientSchema';
 const jwt = require('jsonwebtoken');
 
+// Define an interface for the returned object from getClientModel
+interface ClientModelContainer {
+  model: Model<IClient>;
+  closeConnection: () => void;
+}
+
+// Controller function
 export const AdminLoginController = async (req: Request, res: Response) => {
   console.log('\n\nentering set session from controller');
 
+  try {
+    console.log('Stored client connection:', (req as any).session.client);
 
-    try {
+    // Explicitly specify the type of getModel
+    const getModel: ClientModelContainer = getClientModel((req as any).session.client);
 
-        console.log('Stored client connection:', (req as any).session.client);
+    // Access properties from getModel
+    const ClientModel: Model<IClient> = getModel.model;
+    const closeConnection = getModel.closeConnection;
 
+    console.log(`session stored email: ${(req as any).session.email}`);
 
-        const ClientModel: Model<IClient> =  getClientModel((req as any).session.client);
+    const data = await ClientModel.findOne({ email: (req as any).session.email }).exec();
+    console.log('Data from the "client" collection:', data);
 
-        console.log(`session stored email: ${(req as any).session.email}`)
+    if (data) {
+      const SecretKey = process.env.SECRET_KEY;
+      console.log(`secret key: ${SecretKey}`);
 
-        const data = await ClientModel.findOne({email: (req as any).session.email}).exec();
-        console.log('Data from the "client" collection:', data);
+      const token = jwt.sign({ userID: data._id }, SecretKey, { expiresIn: '120m' });
+      console.log(`Generated token: ${token}`);
 
-        if (data) {
-          
-          const SecretKey = process.env.SECRET_KEY;
-          console.log(`secret key: ${SecretKey}`);
+      res.cookie('authToken', token, { maxAge: 30 * 60 * 1000, httpOnly: false, secure: true });
 
-          const token = jwt.sign({ userID: data._id }, SecretKey, { expiresIn: '120m' });
-          console.log(`Generated token: ${token}`);
+      (req as any).session.authenticated = true;
 
-          res.cookie('authToken', token, { maxAge: 30 * 60 * 1000, httpOnly: false, secure: true });
-
-          
-          (req as any).session.authenticated = true;
-
-          res.status(200).json({ message: 'Login Successful' });
-          return; // Add this return statement
-        } else {
-            throw new Error('Invalid user data');
-        }
-    } catch (error: any) {
-        console.error('Error handling setSession contoroller:', error);
-        res.status(500).json({ message: 'Internal server error.' });
-    } finally {
-        res.end(); // Ensure response is ended even if there's an error
+      closeConnection(); // Close the connection when done
+      res.status(200).json({ message: 'Login Successful' });
+      return;
+    } else {
+      throw new Error('Invalid user data');
     }
+  } catch (error: any) {
+    console.error('Error handling setSession controller:', error);
+    res.status(500).json({ message: 'Internal server error.' });
+  } finally {
+    res.end();
+  }
 };

@@ -39,13 +39,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.findProductController = void 0;
 var productSchema_1 = require("../../models/inventoryModels/productSchema");
 var findProductController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var clientDatabase, ProductModel, query, searchResult, error_1;
+    var ProductModel, query, searchResult, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 console.log('entering product search controller');
-                clientDatabase = req.app.locals.client;
-                ProductModel = clientDatabase.model('products', productSchema_1.default);
+                ProductModel = (0, productSchema_1.getProductModel)(req.session.client);
                 query = req.body.query;
                 console.log("query: ".concat(query));
                 _a.label = 1;

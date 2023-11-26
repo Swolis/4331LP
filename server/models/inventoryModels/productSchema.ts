@@ -34,8 +34,29 @@ export interface IProduct extends Document {
     inventory: Inventory;
 }
 
-export const getProductModel = (connection: Connection): Model<IProduct> => {
-    return connection.model<IProduct>('products', productSchema);
+export const getProductModel = (clientInfo: any): any => {
+    const uri: string = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/';
+  
+    const { databaseName } = clientInfo;
+    const connection = mongoose.createConnection(uri, {
+      dbName: databaseName,
+      ssl: true,
+    });
+
+    const ProductModel: Model<IProduct> = connection.model<IProduct>('products', productSchema);
+
+      
+    const closeConnection = () => {
+        connection.close()
+          .then(() => {
+            console.log('Connection closed successfully.');
+          })
+          .catch((error) => {
+            console.error('Error closing the connection:', error);
+          });
+    };
+
+    return { model: ProductModel, closeConnection };
 }
 
 

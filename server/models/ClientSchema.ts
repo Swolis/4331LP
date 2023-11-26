@@ -36,17 +36,33 @@ export interface IClient extends Document {
     nextEmployeeID:number
 }
 
-export const getClientModel = (clientInfo: any): Model<IClient> => {
-    const uri: string = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/';
+ 
 
+export const getClientModel = (clientInfo: any): any => {
+    const uri: string = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/';
+  
     const { databaseName } = clientInfo;
     const connection = mongoose.createConnection(uri, {
       dbName: databaseName,
       ssl: true,
     });
-    return connection.model<IClient>('Client', clientSchema);
+  
+    const ClientModel: Model<IClient> = connection.model<IClient>('Client', clientSchema);
+  
+    const closeConnection = () => {
+      connection.close()
+        .then(() => {
+          console.log('Connection closed successfully.');
+        })
+        .catch((error) => {
+          console.error('Error closing the connection:', error);
+        });
+    };
+  
+    return { model: ClientModel, closeConnection };
   };
 
-// const User: Model<IUser> = mongoose.model<IUser>('Client', userSchema);
+
+
 
 export default clientSchema;

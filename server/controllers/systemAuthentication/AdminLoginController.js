@@ -39,8 +39,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminLoginController = void 0;
 var ClientSchema_1 = require("../../models/ClientSchema");
 var jwt = require('jsonwebtoken');
+// Controller function
 var AdminLoginController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var ClientModel, data, SecretKey, token, error_1;
+    var getModel, ClientModel, closeConnection, data, SecretKey, token, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -49,7 +50,9 @@ var AdminLoginController = function (req, res) { return __awaiter(void 0, void 0
             case 1:
                 _a.trys.push([1, 3, 4, 5]);
                 console.log('Stored client connection:', req.session.client);
-                ClientModel = (0, ClientSchema_1.getClientModel)(req.session.client);
+                getModel = (0, ClientSchema_1.getClientModel)(req.session.client);
+                ClientModel = getModel.model;
+                closeConnection = getModel.closeConnection;
                 console.log("session stored email: ".concat(req.session.email));
                 return [4 /*yield*/, ClientModel.findOne({ email: req.session.email }).exec()];
             case 2:
@@ -62,8 +65,9 @@ var AdminLoginController = function (req, res) { return __awaiter(void 0, void 0
                     console.log("Generated token: ".concat(token));
                     res.cookie('authToken', token, { maxAge: 30 * 60 * 1000, httpOnly: false, secure: true });
                     req.session.authenticated = true;
+                    closeConnection(); // Close the connection when done
                     res.status(200).json({ message: 'Login Successful' });
-                    return [2 /*return*/]; // Add this return statement
+                    return [2 /*return*/];
                 }
                 else {
                     throw new Error('Invalid user data');
@@ -71,11 +75,11 @@ var AdminLoginController = function (req, res) { return __awaiter(void 0, void 0
                 return [3 /*break*/, 5];
             case 3:
                 error_1 = _a.sent();
-                console.error('Error handling setSession contoroller:', error_1);
+                console.error('Error handling setSession controller:', error_1);
                 res.status(500).json({ message: 'Internal server error.' });
                 return [3 /*break*/, 5];
             case 4:
-                res.end(); // Ensure response is ended even if there's an error
+                res.end();
                 return [7 /*endfinally*/];
             case 5: return [2 /*return*/];
         }
