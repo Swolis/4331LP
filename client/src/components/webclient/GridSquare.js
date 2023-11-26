@@ -3,7 +3,7 @@ import { useDrop } from 'react-dnd';
 import Square from './Square';
 import { ItemTypes } from './Constants';
 
-export default function GridSquare({mode,x, y, onDrop, children}) {
+export default function GridSquare({mode, x, y, onDrop, children}) {
     const posX = x;
     const posY = y;
     const [{ isOver }, drop] = useDrop(
@@ -19,7 +19,6 @@ export default function GridSquare({mode,x, y, onDrop, children}) {
     )
     
     useEffect(() => {
-        console.log(mode);
     }, [mode]);
 
     return (

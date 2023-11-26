@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import DButton from './DButton';
 import GridSquare from './GridSquare';
 import GroupMenu from './GroupMenu';
+import sendRequest  from '../../handlers/requestHandler';
+import useInputModal from './useInputModal';
 
 
-function renderButton(mode, x, y, button) {
-    console.log(button);
-    return (<DButton mode={mode} id={button.id} fill={button.fill} text={button.text} posX={x} posY={y} funct={addToOrder}/>)
-}
+
+
 
 function addToOrder(item) {
     console.log(item);
@@ -16,6 +16,9 @@ function addToOrder(item) {
     console.log(item.price);
 }
 
+//////////////////////////////////////////////////////
+//
+//
 // The active button console 
 export default function ActiveArea({mode, setMode}) {
     const currentMode = mode;
@@ -39,20 +42,19 @@ export default function ActiveArea({mode, setMode}) {
         })
     }
 
-    useEffect(() => {
-        if (!data.length) {
-            getData();
-        }
-        if (data[0] !== undefined && "group" in data[0]) {
-            changeActiveTab(data[0].group.name);
-        }
-    },[data]);
-
+    
     const [activeTab, setActiveTab] = useState('');
     const [activeSubTab, setActiveSubTab] = useState('');
-    const [submenu, getActiveSubData] = useState([]);
+    const [submenu, setActiveSubData] = useState([]);
     const [buttons, setButtons] = useState([]);
-
+    const [status, setStatus] = useState(false);
+    const [input, setInput] = useState('');
+    const [button, setButton] = useState(null);
+    const [dropTrigger, setDropTrigger] = useState(false);
+    const [subTrigger, setSubTrigger] = useState(false);
+    const [groupTrigger, setGroupTrigger] = useState(false);
+    const [getUserInput, InputModal] = useInputModal('Enter label:', setInput);
+    
     const navigate = useNavigate();
 
     // Changes the Active tab and loads any modifier tabs
@@ -69,10 +71,10 @@ export default function ActiveArea({mode, setMode}) {
         }
 
         if (activeGroup !== null && "subgroups" in activeGroup) {
-            getActiveSubData(activeGroup.subgroups);
+            setActiveSubData(activeGroup.subgroups);
         }
         else {
-            getActiveSubData([]);
+            setActiveSubData([]);
         }
     }
 
@@ -86,10 +88,73 @@ export default function ActiveArea({mode, setMode}) {
         }
     }
 
+    function renderButton(button) {
+        console.log(button);
+        console.log(activeSubTab);
+        console.log(activeTab);
+        let currentTab = activeTab;
+        if (activeSubTab === '') {
+            let newButton = <DButton key={button.id} mode={button.mode} id={button.id} group={currentTab} fill={button.fill} text={button.text} posX={button.x} posY={button.y} funct={addToOrder}/>;
+            console.log(newButton);
+            return (newButton);
+        } else {
+            return (<DButton key={button.id} mode={button.mode} id={button.id} group={activeSubTab} fill={button.fill} text={button.text} posX={button.x} posY={button.y} funct={addToOrder}/>);
+        }
+    }
+
     // Handles drag item drop
     const handleDrop = (mode,x,y,item) => {
-        const newButton = renderButton(mode,x,y,item.item);
-        setButtons(buttons => [...buttons, newButton]);
+        let newItem = {
+            mode: item.item.mode,
+            x: x,
+            y: y,
+            fill: item.item.fill,
+            text: item.item.text,
+            id: item.item.id,
+        }
+        setButton(newItem);
+        setDropTrigger(true);
+    }
+
+    const addMenuItem = async () => {
+        const status = await getUserInput();
+        if (status) {
+            setStatus(status);
+            setGroupTrigger(true);
+        } 
+    }
+
+    // Add sub menu
+    const addSubMenuItem = async () => {
+        const status = await getUserInput();
+        if (status) {
+            setStatus(status);
+            setSubTrigger(true);
+        } 
+    }
+
+    // Save layout
+    function saveLayout() {
+        let newData = data;
+        let newButtons = [];
+        for (let i = 0; i < buttons.length; i++) {
+            newButtons.push({button:{
+                id: buttons[i].props.id,
+                group: activeTab,
+                name: buttons[i].props.text,
+                fill: buttons[i].props.fill,
+                x: buttons[i].props.posX,
+                y: buttons[i].props.posY
+                }
+            })
+        }
+        newData.find(object => object.group.name === activeTab).group.buttons = newButtons;
+    }
+
+    function test() {
+        let request = data;
+        let result = sendRequest(request, 'https://jsonplaceholder.typicode.com/posts');
+        console.log(result);
     }
 
     const grid = [];
@@ -98,16 +163,26 @@ export default function ActiveArea({mode, setMode}) {
     // Build droppable area grid
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 6; j++) {
-            for (let k = 0; k < buttons.length; k++) {
-                if (buttons[k].props.posX === i && buttons[k].props.posY === j) {
-                    newButton = buttons[k];
-                    break;
-                }
-                else {
-                    newButton = null;
+            if (buttons.length) {
+                for (let k = 0; k < buttons.length; k++) {
+                    if (buttons[k].props.posX === i && buttons[k].props.posY === j && activeSubTab !== '' && buttons[k].props.group === activeSubTab) {
+                        // console.log(buttons[k]);
+                        newButton = buttons[k];
+                        break;
+                    }
+                    else if(buttons[k].props.posX === i && buttons[k].props.posY === j && buttons[k].props.group === activeTab) {
+                        if (activeSubTab === ''){
+                            console.log(buttons[k]);
+                            newButton = buttons[k];
+                            break;
+                        }
+                    }
+                    else {
+                        newButton = null;
+                    }
                 }
             }
-            grid.push(<GridSquare key={count} mode={mode} x={i} y={j} onDrop={handleDrop}>
+            grid.push(<GridSquare key={count} group={activeTab} mode={mode} x={i} y={j} onDrop={handleDrop}>
                 {newButton}
             </GridSquare>);
             count = count + 1;
@@ -115,16 +190,48 @@ export default function ActiveArea({mode, setMode}) {
     }
 
     useEffect(() => {
-
-    }, [buttons]);
+        if (button) {
+            let newButton = renderButton(button);
+            setButtons([...buttons, newButton]);
+        }
+    }, [dropTrigger,button]);
     
     useEffect(() => {
 
     }, [currentMode]);
 
-    function setEditMode(mode) {
-        setMode(mode);
-    }
+    useEffect(() => {
+        const newData = data;
+        if (newData.length) {
+            newData.find((object) => object.group.name === activeTab).group.subgroups = submenu;
+        }
+        setData(newData);
+    }, [submenu])
+
+    useEffect(() => {
+        if(status && subTrigger) {
+            setActiveSubData([...submenu, {group:{
+                name:input,
+            }}])
+            setStatus(false);
+            setSubTrigger(false);
+        }
+        else if(status && groupTrigger) {
+            setData([...data, {group:{name: input}}])
+            setStatus(false);
+            setGroupTrigger(false);
+        }
+    }, [status,input,subTrigger, groupTrigger])
+    
+    useEffect(() => {
+        if (!data.length) {
+            getData();
+        }
+        if (data[0] !== undefined && "group" in data[0]) {
+            changeActiveTab(data[0].group.name);
+        }
+    },[data]);
+
 
     return (
         <div className='flex w-full justify-center'>
@@ -133,6 +240,9 @@ export default function ActiveArea({mode, setMode}) {
                 <div className='flex flex-col justify-normal'>
                     <div className="flex flex-row">
                         <GroupMenu res={data} activeTab={activeTab} setActiveTab={changeActiveTab} />
+                        {mode === 3 && (
+                            <button className='bg-yellow-500 text-blue-900  text-lg font-bold justify-center pl-4 pr-4 ml-1 drop-shadow-2xl rounded' onClick={() => addMenuItem()}>+</button>
+                        )}
                     </div>
                     <div className='flex'>
                         <div className='ActiveArea flex flex-row flex-wrap w-full'>{grid}</div>       
@@ -140,26 +250,30 @@ export default function ActiveArea({mode, setMode}) {
                             <GroupMenu res={submenu} 
                                     activeTab={activeSubTab} 
                                     setActiveTab={changeActiveSubTab} />
+                            {mode === 3 && (
+                                <button className='bg-yellow-500 text-blue-900  text-lg font-bold justify-center p-5 ml-1 drop-shadow-2xl rounded' onClick={() => addSubMenuItem()}>+</button>
+                            )}
                         </div>
                     </div>
                     <div className='flex '>
-                            <button className='bg-yellow-500 text-blue-900  text-lg p-5 mt-10 mr-10 drop-shadow-2xl rounded' onClick={() => setEditMode(0)}>Change User</button>
+                            <button className='bg-yellow-500 text-blue-900  text-lg p-5 mt-10 mr-10 drop-shadow-2xl rounded' onClick={() => setMode(0)}>Change User</button>
                     {mode === 2 && (
                         <div className='flex'>
-                            <button className='bg-yellow-500 text-blue-900 text-lg p-5 mt-10 mr-10 drop-shadow-2xl rounded' onClick={() => setEditMode(3)}>Edit</button>
-                            <button className='bg-yellow-500 text-blue-900 text-lg p-5 mt-10 mr-10 drop-shadow-2xl rounded' onClick={() => navigate('/RecipePage')}>Add Recipe</button>
-                            <button className='bg-yellow-500 text-blue-900 text-lg p-5 mt-10 mr-10 drop-shadow-2xl rounded' onClick={() => navigate('/ProductPage')}>Add Product</button>
+                            <button className='bg-yellow-500 text-blue-900 text-lg p-5 mt-10 mr-10 drop-shadow-2xl rounded' onClick={() => setMode(3)}>Edit</button>
                             <button className='bg-yellow-500 text-blue-900 text-lg p-5 mt-10 mr-10 drop-shadow-2xl rounded' onClick={() => navigate('/clientDashboard')}>Settings</button>
                         </div>
                     )}
                     {mode === 3 && (
                         <div className='flex'>
-                            <button className='bg-yellow-500 text-blue-900 text-lg p-5 mt-10 mr-10 drop-shadow-2xl rounded' onClick={() => setEditMode(2)}>Save</button>
+                            <button className='bg-yellow-500 text-blue-900 text-lg p-5 mt-10 mr-10 drop-shadow-2xl rounded' onClick={() => saveLayout()}>Save</button>
+                            <button className='bg-yellow-500 text-blue-900 text-lg p-5 mt-10 mr-10 drop-shadow-2xl rounded' onClick={() => setMode(2)}>Finish</button>
+                            <button className='bg-yellow-500 text-blue-900 text-lg p-5 mt-10 mr-10 drop-shadow-2xl rounded' onClick={() => test()}>test</button>
                         </div>
                     )}
                     </div>
                 </div>
             )}
+            <InputModal active={true}/>
         </div>
     )
 }

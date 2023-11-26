@@ -5,10 +5,12 @@ function ListButtons ({mode,res}) {
     const items = [];
     for (var item in res) {
         if ("recipe" in res[item]) {
-            items.push(<DButton key={item} mode={mode} id={res[item].recipe.id} fill={res[item].recipe.color} text={res[item].recipe.text} />);
+            let recipe = res[item].recipe;
+            items.push(<DButton key={recipe.id} mode={mode} id={recipe.id} fill={recipe.color} text={recipe.text} />);
         }
         else {
-            items.push(<DButton key={item} mode={mode} id={res[item].product.id} fill={res[item].product.color} text={res[item].product.text} />);
+            let product = res[item].product;
+            items.push(<DButton key={product.i} mode={mode} id={product.id} fill={product.color} text={product.text} />);
         }
     }
     
@@ -61,7 +63,7 @@ export default function ActionArea({mode}) {
             {mode > 0 && mode < 3 && (
                 <div className="ActionArea flex flex-col justify-start w-full h-screen"> 
                     <h3> Order List</h3>
-                    <div className="OrderItems flex h-screen"></div>
+                    <div className="OrderItems flex grow w-full h-5/6"></div>
                     <div className="OrderTotals flex h-min">
                         <table>
                             <tbody>

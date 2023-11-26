@@ -8,6 +8,7 @@ export default function DButton( props ) {
     const id = props.id;
     const fill = props.fill;
     const name = props.text;
+    const group = props.group;
     const price = props.price;
     const x = props.posX;
     const y = props.posY;
@@ -22,7 +23,6 @@ export default function DButton( props ) {
     }))
 
     useEffect(() => {
-        console.log(currentMode);
     }, [currentMode]);
 
     return (
