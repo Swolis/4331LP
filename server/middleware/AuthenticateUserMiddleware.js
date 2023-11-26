@@ -108,6 +108,7 @@ var AuthenicateUserMiddleware = function (req, res, next) { return __awaiter(voi
                     //(res as any).headers.authorization = token;
                     // console.log('from authorization: req.headers.authorization: ', req.headers.authorization);
                     req.session.databaseName = user.databaseName;
+                    req.session.email = user.email;
                     next();
                 }
                 else {

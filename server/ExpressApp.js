@@ -13,9 +13,6 @@ var AuthenticateUserMiddleware_1 = require("./middleware/AuthenticateUserMiddlew
 var AddClientToListMiddleware_1 = require("./middleware/AddClientToListMiddleware");
 var DisconnectListOfClientsMiddleware_1 = require("./middleware/DisconnectListOfClientsMiddleware");
 var ConnectToClientDatabaseMiddleware_1 = require("./middleware/ConnectToClientDatabaseMiddleware");
-
-var MongoStore = require('connect-mongo')(session);
-
 var expressAppRouter_1 = require("./routes/expressAppRouter");
 var app = express();
 console.log('created app instance');
@@ -31,8 +28,13 @@ app.use(session({
     saveUninitialized: true,
     cookie: {
         maxAge: 30 * 60 * 1000,
+        secure: true, // Set to true for HTTPS
     },
 }));
+var logSession = function (req, res, next) {
+    console.log('Session variables:', req.session);
+    next(); // Continue to the next middleware or route handler
+};
 require('dotenv').config({ path: __dirname + '/.env' });
 console.log('secret_key', process.env.SECRET_KEY);
 app.use(AuthenticateUserMiddleware_1.AuthenicateUserMiddleware);

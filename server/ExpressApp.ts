@@ -12,9 +12,6 @@ import { AddClientToListMiddleware } from './middleware/AddClientToListMiddlewar
 import { DisconnectFromClientList } from './middleware/DisconnectListOfClientsMiddleware';
 import { ConnectToClinetDatabaseMiddleware } from './middleware/ConnectToClientDatabaseMiddleware';
 
-const MongoStore = require('connect-mongo')(session);
-
-
 import mainRouter from './routes/expressAppRouter';
 
 const app = express();
@@ -35,9 +32,16 @@ app.use(
     saveUninitialized: true,
     cookie: {
       maxAge: 30 * 60 * 1000,
+      secure: true, // Set to true for HTTPS
     },
   })
 );
+
+const logSession = (req: any, res: any, next: any) => {
+  console.log('Session variables:', req.session);
+  next(); // Continue to the next middleware or route handler
+};
+
 
     require('dotenv').config( { path: __dirname + '/.env' });
     console.log('secret_key', process.env.SECRET_KEY);

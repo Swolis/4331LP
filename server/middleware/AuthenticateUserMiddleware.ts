@@ -77,6 +77,7 @@ export const AuthenicateUserMiddleware = async (req: Request, res: Response, nex
             
            // console.log('from authorization: req.headers.authorization: ', req.headers.authorization);
             (req as any).session.databaseName = user.databaseName;
+            (req as any).session.email = user.email;
             next();
         }else{
             console.log('passwords dont match');

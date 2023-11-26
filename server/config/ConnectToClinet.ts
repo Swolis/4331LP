@@ -4,25 +4,27 @@ import mongoose, { Connection } from "mongoose";
 
 const uri: string = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/';
 
-// Create an array to store multiple connections
-const connections: Connection[] = [];
-
 export function connectToClient(databaseName: string): Promise<Connection> {
     return new Promise(async (resolve, reject) => {
         try {
-            // Always use the second connection or create a new one if not present
-            const connectionIndex = 1;
-            const connection = connections[connectionIndex] || mongoose.createConnection();
+            const connection = mongoose.createConnection(uri, {
+                dbName: databaseName,
 
-            await connection.openUri(uri, { dbName: databaseName, ssl: true });
+                ssl: true,
+            });
 
-            console.log(`Connected to the database on connection[${connectionIndex}]`);
-            connections[connectionIndex] = connection;
+            connection.on('connected', () => {
+                console.log(`Connected to the database for ${databaseName}`);
+                resolve(connection); // Resolve with the database instance
+            });
 
-            resolve(connection); // resolve with the database instance
+            connection.on('error', (error) => {
+                console.error('Error connecting to the database:', error);
+                reject(error); // Reject with the error
+            });
         } catch (error) {
-            console.error('Error connecting to the database: ', error);
-            reject(error); // reject with the error
+            console.error('Error creating connection to the database: ', error);
+            reject(error); // Reject with the error
         }
     });
 }
