@@ -53,7 +53,7 @@ var AdminLoginController = function (req, res) { return __awaiter(void 0, void 0
                 client = _a.sent();
                 ClientModel = client.model('Client', ClientSchema_1.default);
                 console.log("session stored email: ".concat(req.session.email));
-                return [4 /*yield*/, ClientModel.findOne({ email: req.session.email }).exec()];
+                return [4 /*yield*/, ClientModel.findOne({ email: req.session.email }).lean().exec()];
             case 3:
                 data = _a.sent();
                 console.log('Data from the "client" collection:', data);
@@ -65,8 +65,8 @@ var AdminLoginController = function (req, res) { return __awaiter(void 0, void 0
                 res.cookie('authToken', token, { maxAge: 30 * 60 * 1000, httpOnly: false, secure: true });
                 req.session.authenticated = true;
                 res.status(200).json({ message: 'Login Successful' });
-                return [2 /*return*/]; // Add this return statement
-            case 4: return [4 /*yield*/, ClientModel.findOne({}).exec()];
+                return [2 /*return*/];
+            case 4: return [4 /*yield*/, ClientModel.findOne({}).lean().exec()];
             case 5:
                 newData = _a.sent();
                 console.log("user email: ".concat(newData === null || newData === void 0 ? void 0 : newData.email));
@@ -74,11 +74,11 @@ var AdminLoginController = function (req, res) { return __awaiter(void 0, void 0
             case 6: return [3 /*break*/, 9];
             case 7:
                 error_1 = _a.sent();
-                console.error('Error handling setSession contoroller:', error_1);
+                console.error('Error handling setSession controller:', error_1);
                 res.status(500).json({ message: 'Internal server error.' });
                 return [3 /*break*/, 9];
             case 8:
-                res.end(); // Ensure response is ended even if there's an error
+                res.end();
                 return [7 /*endfinally*/];
             case 9: return [2 /*return*/];
         }
