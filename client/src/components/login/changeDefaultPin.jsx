@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import updatePin from "../../api/updatePin"; // Import the updatePin function
 
 const PinUpdateCard = ({ onSubmit }) => {
   const [name, setName] = useState("");
