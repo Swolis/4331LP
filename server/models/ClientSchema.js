@@ -19,9 +19,24 @@ clientSchema.pre('save', function (next) {
     }
     next();
 });
-var getClientModel = function (connection) {
-    return connection.model('Client', clientSchema);
+var getClientModel = function (clientInfo) {
+    var uri = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/';
+    var databaseName = clientInfo.databaseName;
+    var connection = mongoose_1.default.createConnection(uri, {
+        dbName: databaseName,
+        ssl: true,
+    });
+    var ClientModel = connection.model('Client', clientSchema);
+    var closeConnection = function () {
+        connection.close()
+            .then(function () {
+            console.log('Connection closed successfully.');
+        })
+            .catch(function (error) {
+            console.error('Error closing the connection:', error);
+        });
+    };
+    return { model: ClientModel, closeConnection: closeConnection };
 };
 exports.getClientModel = getClientModel;
-// const User: Model<IUser> = mongoose.model<IUser>('Client', userSchema);
 exports.default = clientSchema;

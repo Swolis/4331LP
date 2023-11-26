@@ -1,9 +1,10 @@
 import { Connection, Model } from "mongoose";
-import productSchema, { IProduct } from "../../models/inventoryModels/productSchema";
+import productSchema, { IProduct, getProductModel } from "../../models/inventoryModels/productSchema";
+
 
 export const createProduct: (clientDatabase: Connection, ProductData: any) => Promise<IProduct> = async (clientDatabase: Connection, ProductData: any) => {
     try {
-        const ProductModel: Model<IProduct> = clientDatabase.model<IProduct>('products', productSchema);
+        const ProductModel = getProductModel(clientDatabase);
 
         const newProduct = new ProductModel(ProductData);
 

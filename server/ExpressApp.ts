@@ -29,7 +29,7 @@ app.use(
   session({
     secret: 'temp-secret',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
       maxAge: 30 * 60 * 1000,
       secure: true, // Set to true for HTTPS
@@ -37,22 +37,19 @@ app.use(
   })
 );
 
-const logSession = (req: any, res: any, next: any) => {
-  console.log('Session variables:', req.session);
-  next(); // Continue to the next middleware or route handler
-};
-
-
-    require('dotenv').config( { path: __dirname + '/.env' });
-    console.log('secret_key', process.env.SECRET_KEY);
-
+require('dotenv').config({ path: __dirname + '/.env' });
+console.log('secret_key', process.env.SECRET_KEY);
 
 app.use(AuthenicateUserMiddleware);
 app.use(DisconnectFromClientList);
-app.use(ConnectToClinetDatabaseMiddleware);
 
 app.get('/', (req: any, res: any) => {
   res.send('Hello, this is the root path!');
+});
+
+app.use((req, res, next) => {
+  console.log('the session variables two: ', req.session);
+  next();
 });
 
 app.use('/', mainRouter);
@@ -76,4 +73,3 @@ server.listen(PORT, () => {
 });
 
 export default app;
-

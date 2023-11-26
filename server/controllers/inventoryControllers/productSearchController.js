@@ -39,18 +39,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.findProductController = void 0;
 var productSchema_1 = require("../../models/inventoryModels/productSchema");
 var findProductController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var clientDatabase, ProductModel, query, searchResult, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _a, ProductModel, closeConnection, query, searchResult, error_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
                 console.log('entering product search controller');
-                clientDatabase = req.app.locals.client;
-                ProductModel = clientDatabase.model('products', productSchema_1.default);
+                _a = (0, productSchema_1.getProductModel)(req.session.client), ProductModel = _a.model, closeConnection = _a.closeConnection;
                 query = req.body.query;
                 console.log("query: ".concat(query));
-                _a.label = 1;
+                _b.label = 1;
             case 1:
-                _a.trys.push([1, 10, , 11]);
+                _b.trys.push([1, 10, , 11]);
                 searchResult = void 0;
                 if (!(typeof (query) === 'string')) return [3 /*break*/, 3];
                 console.log('query is a string');
@@ -60,14 +59,14 @@ var findProductController = function (req, res) { return __awaiter(void 0, void 
                         ],
                     })];
             case 2:
-                searchResult = _a.sent();
+                searchResult = _b.sent();
                 return [3 /*break*/, 9];
             case 3:
                 if (!(typeof (query) === 'number')) return [3 /*break*/, 8];
                 if (!(query === 0)) return [3 /*break*/, 5];
                 return [4 /*yield*/, ProductModel.find({})];
             case 4:
-                searchResult = _a.sent();
+                searchResult = _b.sent();
                 return [3 /*break*/, 7];
             case 5:
                 console.log('query is a number');
@@ -78,20 +77,21 @@ var findProductController = function (req, res) { return __awaiter(void 0, void 
                         ],
                     })];
             case 6:
-                searchResult = _a.sent();
-                _a.label = 7;
+                searchResult = _b.sent();
+                _b.label = 7;
             case 7: return [3 /*break*/, 9];
             case 8: throw new Error('search type invalid');
             case 9:
+                closeConnection();
                 if (searchResult.length === 0) {
                     console.log('no product found');
                     res.status(404).json({ message: 'product no found' });
                     return [2 /*return*/];
                 }
                 res.status(201).json(searchResult);
-                return [3 /*break*/, 11];
+                return [2 /*return*/];
             case 10:
-                error_1 = _a.sent();
+                error_1 = _b.sent();
                 console.log('error: ', error_1);
                 res.status(500).json({ message: "Internal server error: ".concat(error_1) });
                 return [3 /*break*/, 11];

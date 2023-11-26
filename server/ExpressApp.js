@@ -12,7 +12,6 @@ var ConnectToClientListMiddleware_1 = require("./middleware/ConnectToClientListM
 var AuthenticateUserMiddleware_1 = require("./middleware/AuthenticateUserMiddleware");
 var AddClientToListMiddleware_1 = require("./middleware/AddClientToListMiddleware");
 var DisconnectListOfClientsMiddleware_1 = require("./middleware/DisconnectListOfClientsMiddleware");
-var ConnectToClientDatabaseMiddleware_1 = require("./middleware/ConnectToClientDatabaseMiddleware");
 var expressAppRouter_1 = require("./routes/expressAppRouter");
 var app = express();
 console.log('created app instance');
@@ -25,23 +24,22 @@ app.use(AddClientToListMiddleware_1.AddClientToListMiddleware);
 app.use(session({
     secret: 'temp-secret',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
         maxAge: 30 * 60 * 1000,
         secure: true, // Set to true for HTTPS
     },
 }));
-var logSession = function (req, res, next) {
-    console.log('Session variables:', req.session);
-    next(); // Continue to the next middleware or route handler
-};
 require('dotenv').config({ path: __dirname + '/.env' });
 console.log('secret_key', process.env.SECRET_KEY);
 app.use(AuthenticateUserMiddleware_1.AuthenicateUserMiddleware);
 app.use(DisconnectListOfClientsMiddleware_1.DisconnectFromClientList);
-app.use(ConnectToClientDatabaseMiddleware_1.ConnectToClinetDatabaseMiddleware);
 app.get('/', function (req, res) {
     res.send('Hello, this is the root path!');
+});
+app.use(function (req, res, next) {
+    console.log('the session variables two: ', req.session);
+    next();
 });
 app.use('/', expressAppRouter_1.default);
 var PORT = process.env.PORT || 5000;

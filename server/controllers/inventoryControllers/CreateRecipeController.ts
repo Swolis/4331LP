@@ -8,6 +8,7 @@ export const createRecipeController = async ( req: Request, res: Response): Prom
     console.log(`\n\nEntering create Recipe controller`);
     try {
         const ClientModel = getClientModel((req as any).session.client);
+        
         const client = await ClientModel.findOne({});
 
         if(!client) { 

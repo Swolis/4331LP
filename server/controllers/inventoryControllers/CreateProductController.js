@@ -48,7 +48,7 @@ var createProductController = function (req, res) { return __awaiter(void 0, voi
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 5, , 6]);
-                ClientModel = (0, ClientSchema_1.getClientModel)(req.app.locals.client);
+                ClientModel = (0, ClientSchema_1.getClientModel)(req.session.client);
                 return [4 /*yield*/, ClientModel.findOne({})];
             case 2:
                 client = _a.sent();

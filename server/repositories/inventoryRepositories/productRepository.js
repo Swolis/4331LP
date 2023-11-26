@@ -44,7 +44,7 @@ var createProduct = function (clientDatabase, ProductData) { return __awaiter(vo
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                ProductModel = clientDatabase.model('products', productSchema_1.default);
+                ProductModel = (0, productSchema_1.getProductModel)(clientDatabase);
                 newProduct = new ProductModel(ProductData);
                 // Save the new product
                 return [4 /*yield*/, newProduct.save()];

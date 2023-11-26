@@ -55,7 +55,7 @@ var ConnectToClinetDatabaseMiddleware = function (req, res, next) { return __awa
                 return [4 /*yield*/, (0, ConnectToClinet_1.connectToClient)(req.session.databaseName)];
             case 2:
                 client = _a.sent();
-                req.app.locals.client = client;
+                req.session.client = client;
                 next();
                 return [3 /*break*/, 4];
             case 3:
