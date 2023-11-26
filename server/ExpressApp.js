@@ -6,8 +6,6 @@ var session = require('express-session');
 var https = require('https');
 var fs = require('fs');
 var path = require('path');
-var redis = require('redis');
-var connectRedis = require('connect-redis');
 var CORS_1 = require("./middleware/CORS");
 var DatabaseNameGen_1 = require("./middleware/DatabaseNameGen");
 var ConnectToClientListMiddleware_1 = require("./middleware/ConnectToClientListMiddleware");
@@ -23,19 +21,14 @@ app.use(express.json());
 app.use(ConnectToClientListMiddleware_1.ConnectToClientListMiddleWare);
 app.use(DatabaseNameGen_1.DatabaseNameGen);
 app.use(AddClientToListMiddleware_1.AddClientToListMiddleware);
-var RedisStore = connectRedis(session);
-var redisClient = redis.createClient();
 app.use(session({
-    secret: 'your-secret-key',
+    secret: 'temp-secret',
     resave: false,
     saveUninitialized: false,
     cookie: {
         maxAge: 30 * 60 * 1000,
-        secure: true,
-        httpOnly: true,
-        sameSite: 'Lax' // or 'Strict'
+        secure: true, // Set to true for HTTPS
     },
-    store: new RedisStore({ client: redisClient }) // Assuming you have a Redis client
 }));
 require('dotenv').config({ path: __dirname + '/.env' });
 console.log('secret_key', process.env.SECRET_KEY);

@@ -4,8 +4,6 @@ const session = require('express-session');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
-const redis = require('redis');
-const connectRedis = require('connect-redis');
 import { corsConfig } from './middleware/CORS';
 import { DatabaseNameGen } from './middleware/DatabaseNameGen';
 import { ConnectToClientListMiddleWare } from './middleware/ConnectToClientListMiddleware';
@@ -27,32 +25,20 @@ app.use(ConnectToClientListMiddleWare);
 app.use(DatabaseNameGen);
 app.use(AddClientToListMiddleware);
 
-
-
-
-const RedisStore = connectRedis(session);
-const redisClient = redis.createClient();
-
 app.use(
   session({
-    secret: 'your-secret-key',
+    secret: 'temp-secret',
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 30 * 60 * 1000, // 30 minutes
-      secure: true,
-      httpOnly: true,
-      sameSite: 'Lax' // or 'Strict'
+      maxAge: 30 * 60 * 1000,
+      secure: true, // Set to true for HTTPS
     },
-    store: new RedisStore({ client: redisClient }) // Assuming you have a Redis client
   })
 );
 
-
-
-require('dotenv').config( { path: __dirname + '/.env' });
+require('dotenv').config({ path: __dirname + '/.env' });
 console.log('secret_key', process.env.SECRET_KEY);
-
 
 app.use(AuthenicateUserMiddleware);
 app.use(DisconnectFromClientList);
@@ -61,7 +47,7 @@ app.get('/', (req: any, res: any) => {
   res.send('Hello, this is the root path!');
 });
 
-app.use((req: any, res: any, next: any) => {
+app.use((req, res, next) => {
   console.log('the session variables two: ', req.session);
   next();
 });
@@ -87,4 +73,3 @@ server.listen(PORT, () => {
 });
 
 export default app;
-

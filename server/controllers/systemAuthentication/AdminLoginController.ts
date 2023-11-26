@@ -4,12 +4,6 @@ import { Model } from 'mongoose';
 import { IClient, getClientModel } from '../../models/ClientSchema';
 const jwt = require('jsonwebtoken');
 
-// Define an interface for the returned object from getClientModel
-interface ClientModelContainer {
-  model: Model<IClient>;
-  closeConnection: () => void;
-}
-
 // Controller function
 export const AdminLoginController = async (req: Request, res: Response) => {
   console.log('\n\nentering set session from controller');
@@ -18,12 +12,9 @@ export const AdminLoginController = async (req: Request, res: Response) => {
     console.log('Stored client connection:', (req as any).session.client);
 
     // Explicitly specify the type of getModel
-    const getModel: ClientModelContainer = getClientModel((req as any).session.client);
+    const { model: ClientModel, closeConnection }: any = getClientModel((req as any).session.client);
 
     // Access properties from getModel
-    const ClientModel: Model<IClient> = getModel.model;
-    const closeConnection = getModel.closeConnection;
-
     console.log(`session stored email: ${(req as any).session.email}`);
 
     const data = await ClientModel.findOne({ email: (req as any).session.email }).exec();
@@ -31,18 +22,28 @@ export const AdminLoginController = async (req: Request, res: Response) => {
 
     if (data) {
       const SecretKey = process.env.SECRET_KEY;
-      console.log(`secret key: ${SecretKey}`);
 
-      const token = jwt.sign({ userID: data._id }, SecretKey, { expiresIn: '120m' });
-      console.log(`Generated token: ${token}`);
+      const session = (req as any).session;
+      session.client = (req as any).session.client;
+      session.userID = data._id;
+      session.authenticated = true;
 
-      res.cookie('authToken', token, { maxAge: 30 * 60 * 1000, httpOnly: false, secure: true });
+      session.save((err: any) => {
+        if (err) {
+          console.error('Error saving session:', err);
+          res.status(500).json({ message: 'Internal server error.' });
+        } else {
+          console.log(`secret key: ${SecretKey}`);
 
-      (req as any).session.authenticated = true;
+          const token = jwt.sign({ userID: data._id }, SecretKey, { expiresIn: '120m' });
+          console.log(`Generated token: ${token}`);
 
-      closeConnection(); // Close the connection when done
-      res.status(200).json({ message: 'Login Successful' });
-      return;
+          res.cookie('authToken', token, { maxAge: 30 * 60 * 1000, httpOnly: false, secure: true });
+
+          closeConnection(); // Close the connection when done
+          res.status(200).json({ message: 'Login Successful' });
+        }
+      });
     } else {
       throw new Error('Invalid user data');
     }
