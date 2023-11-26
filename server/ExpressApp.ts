@@ -12,7 +12,7 @@ import { AddClientToListMiddleware } from './middleware/AddClientToListMiddlewar
 import { DisconnectFromClientList } from './middleware/DisconnectListOfClientsMiddleware';
 import { ConnectToClinetDatabaseMiddleware } from './middleware/ConnectToClientDatabaseMiddleware';
 
-const MongoStore = require('connect-mongo')(session);
+
 
 
 import mainRouter from './routes/expressAppRouter';

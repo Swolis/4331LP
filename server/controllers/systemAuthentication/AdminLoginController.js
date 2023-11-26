@@ -44,7 +44,7 @@ var AdminLoginController = function (req, res) { return __awaiter(void 0, void 0
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log('\n\nentering set settion from controller');
+                console.log('\n\nentering set session from controller');
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 4, 5, 6]);
@@ -52,17 +52,16 @@ var AdminLoginController = function (req, res) { return __awaiter(void 0, void 0
             case 2:
                 client = _a.sent();
                 ClientModel = client.model('Client', ClientSchema_1.default);
-                return [4 /*yield*/, ClientModel.find({}).exec()];
+                return [4 /*yield*/, ClientModel.findOne({ email: req.session.email }).exec()];
             case 3:
                 data = _a.sent();
                 console.log('Data from the "client" collection:', data);
-                if (Array.isArray(data) && data.length > 0) {
+                if (data) {
                     SecretKey = process.env.SECRET_KEY;
                     console.log("secret key: ".concat(SecretKey));
-                    token = jwt.sign({ userID: data[0]._id }, SecretKey, { expiresIn: '120m' });
+                    token = jwt.sign({ userID: data._id }, SecretKey, { expiresIn: '120m' });
                     console.log("Generated token: ".concat(token));
                     res.cookie('authToken', token, { maxAge: 30 * 60 * 1000, httpOnly: false, secure: true });
-                    req.session.userID = data[0]._id;
                     req.session.authenticated = true;
                     res.status(200).json({ message: 'Login Successful' });
                     return [2 /*return*/]; // Add this return statement
