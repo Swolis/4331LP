@@ -83,6 +83,7 @@ var createRecipeController = function (req, res) { return __awaiter(void 0, void
                     cost: req.body.cost,
                     price: priceWithoutDollar,
                     products: products,
+                    description: req.body.description,
                     recipeNumber: recipeNumber,
                 };
                 return [4 /*yield*/, (0, recipeRepository_1.createRecipe)(req.app.locals.client, recipeData)];

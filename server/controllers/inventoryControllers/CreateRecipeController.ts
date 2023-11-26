@@ -47,6 +47,7 @@ export const createRecipeController = async ( req: Request, res: Response): Prom
             cost: req.body.cost,
             price: priceWithoutDollar,
             products: products,
+            description: req.body.description,
             recipeNumber: recipeNumber,
         }
 
