@@ -1,13 +1,18 @@
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+
+import PinUpdateCard from '../components/login/changeDefaultPin';
 
 const baseURL = `${window.location.protocol}//${window.location.hostname}:5000`;
 
 
+const TIMEOUT_DELAY = 1000; // Use a constant for the timeout
+
 const loginUser = async (formData) => {
-	console.log('using login handler, login user function');
+    console.log('Using login handler, login user function');
     try {
-        const response = await axios.post(`${baseURL}/Admin-Login`, formData, { withCredentials: true, mode:'cors' });
-	console.log(`resonse: ${response.data}`);
+        const response = await axios.post(`${baseURL}/Admin-Login`, formData, { withCredentials: true, mode: 'cors' });
+        console.log(`Response: ${response.data}`);
         return response.data;
     } catch (error) {
         throw new Error('Login Failure');
@@ -19,7 +24,6 @@ const handleLogin = async (formState) => {
         const loginData = await loginUser(formState);
         if (loginData.message === 'Login Successful') {
             console.log('Login was successful');
-
             handleSuccessfulLogin(loginData);
         }
     } catch (error) {
@@ -27,43 +31,49 @@ const handleLogin = async (formState) => {
     }
 };
 
-export const LoginWithGoogle = async (loginData) => {
-    try {
-        const response = await axios.post(`${baseURL}/Google-Login/google`, loginData, { withCredentials: true });
-        loginData = response.data;
-        if (loginData.message === 'Login Successful') {
-            console.log('Login was successful');
-            handleSuccessfulLogin(loginData);
+async function handleSuccessfulLogin(loginData) {
+    // Log all cookies
+    console.log(`All Cookies: ${document.cookie}`);
+
+    // Check and log the authToken cookie
+    const authTokenCookie = document.cookie.split(';').map(cookie => cookie.trim()).find(cookie => cookie.startsWith('authToken='));
+
+    if (authTokenCookie) {
+        const authToken = authTokenCookie.split('=')[1]; // Extract the value of the authToken
+        const cookieObject = jwtDecode(authToken);
+
+        if (cookieObject.defaultPin) {
+            // Prompt user to update PIN
+            try {
+                const { name, newPin } = PinUpdateCard(); // Assuming PinUpdateCard() returns the new PIN
+
+                if (newPin) {
+                    // Make an API call to update the PIN
+                    const response = await axios.post(`${baseURL}/Update-Pin`, {
+                        name,
+                        pin: newPin,
+                        permission: true,
+                        // Include any other necessary data in the request body
+                    });
+
+                    // Handle the response as needed
+                    console.log('PIN update response:', response.data);
+
+                    // If PIN is successfully updated, redirect to the dashboard
+                    window.location.href = '/clientDashboard';
+                }
+            } catch (error) {
+                console.error('Error updating PIN:', error.message);
+                // Handle the error as needed
+            }
         } else {
-            console.error('Login Failed: AuthToken cookie not found');
-        }
-    } catch (error) {
-        console.error('Login failure:', error);
-    }
-};
-
-function handleSuccessfulLogin(loginData) {
-    // Wait for a short delay to ensure the cookie is set
-    setTimeout(() => {
-        // Log all cookies
-        console.log(`All Cookies: ${document.cookie}`);
-
-        // Check and log the authToken cookie
-        const authTokenCookie = document.cookie.split(';').map(cookie => cookie.trim()).find(cookie => cookie.startsWith('authToken='));
-
-        console.log(`authTokenCookie: ${authTokenCookie}`);
-
-        if (authTokenCookie) {
-            const authToken = authTokenCookie.split('=')[1];
-            console.log(`Received authToken: ${authToken}`);
-
             // Set the authToken in the Axios headers for subsequent requests
-            axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
-
-            // Redirect to the clientDashboard page
+            axios.defaults.headers.common['Authorization'] = `Bearer ${authTokenCookie.split('=')[1]}`;
+            
+            // Redirect to the dashboard if the PIN is not the default
             window.location.href = '/clientDashboard';
         }
-    }, 1000); // Adjust the delay as needed
+    }
 }
 
 export default handleLogin;

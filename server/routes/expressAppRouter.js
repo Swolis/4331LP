@@ -6,6 +6,7 @@ var ProductRouter_1 = require("./api/ProductRouter");
 var LoginRoutes_1 = require("./authentication/LoginRoutes");
 var AdminRegistrationRouter_1 = require("./authentication/AdminRegistrationRouter");
 var RecipeRouter_1 = require("./api/RecipeRouter");
+var EmployeeRouter_1 = require("./api/EmployeeRouter");
 var mainRouter = (0, express_1.Router)();
 // Logging middleware for all routes
 mainRouter.use(function (req, res, next) {
@@ -15,6 +16,7 @@ mainRouter.use(function (req, res, next) {
 // Login routes
 mainRouter.use('/Admin-Login', LoginRoutes_1.default);
 mainRouter.use('/Admin-Registration', AdminRegistrationRouter_1.default);
+mainRouter.use('/Empoyee/', EmployeeRouter_1.default);
 // Mount the required router
 // Product routes
 mainRouter.use('/Product/', ProductRouter_1.default);

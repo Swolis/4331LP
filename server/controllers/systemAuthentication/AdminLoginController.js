@@ -59,7 +59,7 @@ var AdminLoginController = function (req, res) { return __awaiter(void 0, void 0
                 if (Array.isArray(data) && data.length > 0) {
                     SecretKey = process.env.SECRET_KEY;
                     console.log("secret key: ".concat(SecretKey));
-                    token = jwt.sign({ userID: data[0]._id }, SecretKey, { expiresIn: '120m' });
+                    token = jwt.sign({ userID: data[0]._id, defaultPin: data[0].managerDefaultPin }, SecretKey, { expiresIn: '120m' });
                     console.log("Generated token: ".concat(token));
                     res.cookie('authToken', token, { maxAge: 30 * 60 * 1000, httpOnly: false, secure: true });
                     req.session.userID = data[0]._id;

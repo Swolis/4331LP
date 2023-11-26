@@ -11,6 +11,7 @@ const clientSchema: Schema = new mongoose.Schema({
     address: {type: String, unique: true, required: true },
     userId: { type: mongoose.Schema.Types.ObjectId },
     
+    managerDefaultPin: { type: Boolean, default: true },
     nextSKU: { type: Number, default: 1 },
     nextRecipe: { type: Number, default: 1 },
     nextEmployeeID:{type:Number,default:1}
@@ -31,6 +32,7 @@ export interface IClient extends Document {
     phone: String;
     address: string;
     userId: mongoose.Types.ObjectId;
+    managerDefaultPin: boolean;
     nextSKU: number;
     nextRecipe: number;
     nextEmployeeID:number

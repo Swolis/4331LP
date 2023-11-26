@@ -19,7 +19,7 @@ export const AdminLoginController = async (req: Request, res: Response) => {
           const SecretKey = process.env.SECRET_KEY;
           console.log(`secret key: ${SecretKey}`);
 
-          const token = jwt.sign({ userID: data[0]._id }, SecretKey, { expiresIn: '120m' });
+          const token = jwt.sign({ userID: data[0]._id, defaultPin: data[0].managerDefaultPin }, SecretKey, { expiresIn: '120m' });
           console.log(`Generated token: ${token}`);
 
           res.cookie('authToken', token, { maxAge: 30 * 60 * 1000, httpOnly: false, secure: true });

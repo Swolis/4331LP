@@ -9,6 +9,7 @@ var clientSchema = new mongoose_1.default.Schema({
     phone: { type: String, unique: true, required: true },
     address: { type: String, unique: true, required: true },
     userId: { type: mongoose_1.default.Schema.Types.ObjectId },
+    managerDefaultPin: { type: Boolean, default: true },
     nextSKU: { type: Number, default: 1 },
     nextRecipe: { type: Number, default: 1 },
     nextEmployeeID: { type: Number, default: 1 }
