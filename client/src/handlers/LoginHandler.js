@@ -21,7 +21,7 @@ const handleLogin = async (formState, setShowupdatePin) => {
         if (loginData.message === 'Login Successful') {
             console.log('Login was successful');
 
-            handleSuccessfulLogin(loginData, setShowupdatePin);
+            handleSuccessfulLogin(loginData, setShowupdatePin, setShouldRedirect);
         }
     } catch (error) {
         console.error(`Login Failed: ${error.message}`);
@@ -29,7 +29,7 @@ const handleLogin = async (formState, setShowupdatePin) => {
 };
 
 
-function handleSuccessfulLogin(loginData, setShowupdatePin) {
+async function handleSuccessfulLogin(loginData, setShowupdatePin) {
     // Check for the authToken cookie
     const authTokenCookie = document.cookie.split(';').map(cookie => cookie.trim()).find(cookie => cookie.startsWith('authToken='));
 
@@ -42,6 +42,19 @@ function handleSuccessfulLogin(loginData, setShowupdatePin) {
 
         if (cookieObject.defaultPin){
             setShowupdatePin(true);
+
+            try {
+                // Perform the pin update using an HTTP request
+                const response = await updatePinFunction(); // Replace with your actual pin update function
+
+                // Once pin update is complete, set the state to trigger redirection
+                if(response.message === "200 OK"){
+                    setShouldRedirect(true);
+                }
+                
+            } catch (error) {
+                console.error('Pin update failed:', error);
+            }
         }
 
         // Set the authToken in the Axios headers for subsequent requests
