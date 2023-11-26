@@ -7,9 +7,8 @@ export const createProductController = async ( req: Request, res: Response): Pro
     console.log('entering create product controller');
     try {
 
-        const ClientModel = getClientModel(req.app.locals.client);
-        // const clientDatabase: Connection = req.app.locals.client;
-        // const ClientModel: Model<IClient> = clientDatabase.model<IClient>('Client', clientSchema);
+        const ClientModel = getClientModel((req as any).session.client);
+
         const client = await ClientModel.findOne({});
 
         if (!client){

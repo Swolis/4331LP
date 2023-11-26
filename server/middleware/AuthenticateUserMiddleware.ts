@@ -83,7 +83,8 @@ export const AuthenicateUserMiddleware = async (req: Request, res: Response, nex
                 databaseName: (req as any).session.databaseName,
                 // other relevant information
             };
-            
+
+            await (req as any).session.save();
             next();
         }else{
             console.log('passwords dont match');

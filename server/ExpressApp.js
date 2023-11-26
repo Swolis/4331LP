@@ -6,6 +6,8 @@ var session = require('express-session');
 var https = require('https');
 var fs = require('fs');
 var path = require('path');
+var redis = require('redis');
+var connectRedis = require('connect-redis');
 var CORS_1 = require("./middleware/CORS");
 var DatabaseNameGen_1 = require("./middleware/DatabaseNameGen");
 var ConnectToClientListMiddleware_1 = require("./middleware/ConnectToClientListMiddleware");
@@ -21,26 +23,30 @@ app.use(express.json());
 app.use(ConnectToClientListMiddleware_1.ConnectToClientListMiddleWare);
 app.use(DatabaseNameGen_1.DatabaseNameGen);
 app.use(AddClientToListMiddleware_1.AddClientToListMiddleware);
+var RedisStore = connectRedis(session);
+var redisClient = redis.createClient();
 app.use(session({
-    secret: 'temp-secret',
+    secret: 'your-secret-key',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
         maxAge: 30 * 60 * 1000,
-        secure: true, // Set to true for HTTPS
+        secure: true,
+        httpOnly: true,
+        sameSite: 'Lax' // or 'Strict'
     },
+    store: new RedisStore({ client: redisClient }) // Assuming you have a Redis client
 }));
-var logSession = function (req, res, next) {
-    console.log('Session variables:', req.session);
-    next(); // Continue to the next middleware or route handler
-};
 require('dotenv').config({ path: __dirname + '/.env' });
 console.log('secret_key', process.env.SECRET_KEY);
 app.use(AuthenticateUserMiddleware_1.AuthenicateUserMiddleware);
 app.use(DisconnectListOfClientsMiddleware_1.DisconnectFromClientList);
-//app.use(ConnectToClinetDatabaseMiddleware);
 app.get('/', function (req, res) {
     res.send('Hello, this is the root path!');
+});
+app.use(function (req, res, next) {
+    console.log('the session variables two: ', req.session);
+    next();
 });
 app.use('/', expressAppRouter_1.default);
 var PORT = process.env.PORT || 5000;
