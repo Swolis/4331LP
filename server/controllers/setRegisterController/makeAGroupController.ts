@@ -5,7 +5,7 @@ import { createGroup } from '../../repositories/registerRepositories/setRegister
 
 
 
-export const setRegister = async ( req: Request, res: Response): Promise<void> => {
+export const establishGroup = async ( req: Request, res: Response): Promise<void> => {
     
     try {
         const { model: ClientModel, closeConnection }: any = getClientModel((req as any).session.client);
@@ -16,14 +16,11 @@ export const setRegister = async ( req: Request, res: Response): Promise<void> =
         }
         
         await client.save();
-        const subGroupSchema={
-            name:req.body.group.subgroups.group.name,
-            button:req.body.group.subgroups.group.button
-        }
+        
         const groupSchema = {
             name: req.body.group.name,
             button:req.body.group.buttons,
-            groups:subGroupSchema
+            group:null
         }
 
         const newGroup = await createGroup(req.app.locals.client, groupSchema);
