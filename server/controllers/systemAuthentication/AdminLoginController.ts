@@ -8,8 +8,10 @@ export const AdminLoginController = async (req: Request, res: Response) => {
 
 
     try {
-        const client: Connection = await (req as any).app.locals.client;
+        const client: Connection = await (req as any).session.client;
         const ClientModel: Model<IClient> = client.model<IClient>('Client', clientSchema);
+
+        console.log(`session stored email: ${(req as any).session.email}`)
 
         const data = await ClientModel.findOne({email: (req as any).session.email}).exec();
         console.log('Data from the "client" collection:', data);
@@ -30,6 +32,8 @@ export const AdminLoginController = async (req: Request, res: Response) => {
           res.status(200).json({ message: 'Login Successful' });
           return; // Add this return statement
         } else {
+            const newData = await ClientModel.findOne({}).exec();
+            console.log(`user email: ${newData?.email}`);
             throw new Error('Invalid user data');
         }
     } catch (error: any) {

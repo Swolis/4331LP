@@ -7,7 +7,7 @@ import { ProductTrackerInterface } from '../../models/inventoryModels/recipieSch
 export const createRecipeController = async ( req: Request, res: Response): Promise<void> => {
     console.log(`\n\nEntering create Recipe controller`);
     try {
-        const ClientModel = getClientModel(req.app.locals.client);
+        const ClientModel = getClientModel((req as any).session.client);
         const client = await ClientModel.findOne({});
 
         if(!client) { 
