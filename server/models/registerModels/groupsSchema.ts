@@ -1,11 +1,12 @@
 // productSchema.ts
 import mongoose, {  Schema, Document, Model, Types, Connection } from "mongoose";
-import buttonSchema from "./buttonSchema";
+import recipieButtonSchema,{IRButton} from "./recipieButtonSchema";
+import productButtonSchema,{IPButton} from "./productButtonSchema";
 // Define Schema
 
 const subGroupSchema: Schema = new mongoose.Schema({
     name:{type:String,required:true},
-    button:{type:[String],required:true},
+    button:{type:[productButtonSchema],required:true},
     
 });
 
@@ -17,15 +18,15 @@ export interface ISubGroup{
 
 const groupSchema: Schema = new mongoose.Schema({
     name:{type:String,required:true},
-    button:{type:String,required:true},
+    button:{type:[recipieButtonSchema],required:true},
     groups:{type:[subGroupSchema],required:false}
 });
 
 
 export interface IGroup extends Document {
     name:string
-    button:[string]
-    groups:[string]
+    button:[IRButton]
+    groups:[ISubGroup]
    
 }
 
