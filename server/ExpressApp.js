@@ -13,7 +13,9 @@ var AuthenticateUserMiddleware_1 = require("./middleware/AuthenticateUserMiddlew
 var AddClientToListMiddleware_1 = require("./middleware/AddClientToListMiddleware");
 var DisconnectListOfClientsMiddleware_1 = require("./middleware/DisconnectListOfClientsMiddleware");
 var ConnectToClientDatabaseMiddleware_1 = require("./middleware/ConnectToClientDatabaseMiddleware");
+
 var MongoStore = require('connect-mongo')(session);
+
 var expressAppRouter_1 = require("./routes/expressAppRouter");
 var app = express();
 console.log('created app instance');

@@ -11,7 +11,9 @@ import { AuthenicateUserMiddleware } from './middleware/AuthenticateUserMiddlewa
 import { AddClientToListMiddleware } from './middleware/AddClientToListMiddleware';
 import { DisconnectFromClientList } from './middleware/DisconnectListOfClientsMiddleware';
 import { ConnectToClinetDatabaseMiddleware } from './middleware/ConnectToClientDatabaseMiddleware';
+
 const MongoStore = require('connect-mongo')(session);
+
 
 import mainRouter from './routes/expressAppRouter';
 
@@ -36,8 +38,6 @@ app.use(
     },
   })
 );
-
-
 
     require('dotenv').config( { path: __dirname + '/.env' });
     console.log('secret_key', process.env.SECRET_KEY);
@@ -72,3 +72,4 @@ server.listen(PORT, () => {
 });
 
 export default app;
+
