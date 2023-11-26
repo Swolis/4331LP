@@ -44,9 +44,13 @@ var ConnectToClinetDatabaseMiddleware = function (req, res, next) { return __awa
         switch (_a.label) {
             case 0:
                 console.log('entering connect to client database');
+                if (!(req.url === '/Admin-Login' || req.url === '/Admin-Registration')) {
+                    return [2 /*return*/, next()];
+                }
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
+                console.log('connecting to: ', req.session.databaseName);
                 return [4 /*yield*/, (0, ConnectToClinet_1.connectToClient)(req.session.databaseName)];
             case 2:
                 client = _a.sent();
