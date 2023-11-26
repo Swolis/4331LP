@@ -39,7 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConnectToClinetDatabaseMiddleware = void 0;
 var ConnectToClinet_1 = require("../config/ConnectToClinet");
 var ConnectToClinetDatabaseMiddleware = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var client, error_1;
+    var client, MongoStore, sessionMiddleware, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -51,6 +51,17 @@ var ConnectToClinetDatabaseMiddleware = function (req, res, next) { return __awa
             case 2:
                 client = _a.sent();
                 req.app.locals.client = client;
+                console.log('Client database connected successfully');
+                MongoStore = require('connect-mongo')(require('express-session'));
+                sessionMiddleware = require('express-session')({
+                    secret: 'your-secret-key',
+                    resave: false,
+                    saveUninitialized: true,
+                    store: new MongoStore({ mongooseConnection: client }),
+                    cookie: {
+                        maxAge: 30 * 60 * 1000, // Adjust as needed
+                    },
+                });
                 next();
                 return [3 /*break*/, 4];
             case 3:

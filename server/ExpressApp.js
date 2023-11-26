@@ -13,9 +13,8 @@ var AuthenticateUserMiddleware_1 = require("./middleware/AuthenticateUserMiddlew
 var AddClientToListMiddleware_1 = require("./middleware/AddClientToListMiddleware");
 var DisconnectListOfClientsMiddleware_1 = require("./middleware/DisconnectListOfClientsMiddleware");
 var ConnectToClientDatabaseMiddleware_1 = require("./middleware/ConnectToClientDatabaseMiddleware");
-
-var MongoStore = require('connect-mongo')(session);
-
+var MongoStoreFactory = require('connect-mongo');
+var MongoStore = MongoStoreFactory(session);
 var expressAppRouter_1 = require("./routes/expressAppRouter");
 var app = express();
 console.log('created app instance');
@@ -38,6 +37,15 @@ console.log('secret_key', process.env.SECRET_KEY);
 app.use(AuthenticateUserMiddleware_1.AuthenicateUserMiddleware);
 app.use(DisconnectListOfClientsMiddleware_1.DisconnectFromClientList);
 app.use(ConnectToClientDatabaseMiddleware_1.ConnectToClinetDatabaseMiddleware);
+app.use(session({
+    secret: 'temp-secret',
+    resave: false,
+    saveUninitialized: true,
+    store: new MongoStore({ mongooseConnection: app.locals.client }),
+    cookie: {
+        maxAge: 30 * 60 * 1000,
+    },
+}));
 app.get('/', function (req, res) {
     res.send('Hello, this is the root path!');
 });

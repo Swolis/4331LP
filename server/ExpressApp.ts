@@ -12,10 +12,12 @@ import { AddClientToListMiddleware } from './middleware/AddClientToListMiddlewar
 import { DisconnectFromClientList } from './middleware/DisconnectListOfClientsMiddleware';
 import { ConnectToClinetDatabaseMiddleware } from './middleware/ConnectToClientDatabaseMiddleware';
 
-const MongoStore = require('connect-mongo')(session);
+const MongoStoreFactory = require('connect-mongo');
+const MongoStore = MongoStoreFactory(session);
 
 
 import mainRouter from './routes/expressAppRouter';
+import mongoose from 'mongoose';
 
 const app = express();
 console.log('created app instance');
@@ -28,16 +30,18 @@ app.use(ConnectToClientListMiddleWare);
 app.use(DatabaseNameGen);
 app.use(AddClientToListMiddleware);
 
-app.use(
-  session({
-    secret: 'temp-secret',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      maxAge: 30 * 60 * 1000,
-    },
-  })
-);
+
+app.use(session({
+  secret: 'temp-secret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 30 * 60 * 1000,
+  },
+}));
+
+
+
 
     require('dotenv').config( { path: __dirname + '/.env' });
     console.log('secret_key', process.env.SECRET_KEY);
@@ -46,6 +50,16 @@ app.use(
 app.use(AuthenicateUserMiddleware);
 app.use(DisconnectFromClientList);
 app.use(ConnectToClinetDatabaseMiddleware);
+
+app.use(session({
+  secret: 'temp-secret',
+  resave: false,
+  saveUninitialized: true,
+  store: new MongoStore({ mongooseConnection: app.locals.client }),
+  cookie: {
+      maxAge: 30 * 60 * 1000,
+  },
+}));
 
 app.get('/', (req: any, res: any) => {
   res.send('Hello, this is the root path!');
