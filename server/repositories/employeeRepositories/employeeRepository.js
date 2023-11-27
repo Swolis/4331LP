@@ -39,21 +39,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createEmployee = void 0;
 var employeeSchema_1 = require("../../models/employee/employeeSchema");
 var createEmployee = function (clientDatabase, ProductData) { return __awaiter(void 0, void 0, void 0, function () {
-    var employeeModel, newEmployee, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _a, EmployeeModel, closeConnection, newEmployee, error_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                employeeModel = clientDatabase.model('employees', employeeSchema_1.default);
-                newEmployee = new employeeModel(ProductData);
+                _b.trys.push([0, 2, , 3]);
+                _a = (0, employeeSchema_1.getEmloyeeModel)(clientDatabase), EmployeeModel = _a.model, closeConnection = _a.closeConnection;
+                newEmployee = new EmployeeModel(ProductData);
                 // Save the new product
                 return [4 /*yield*/, newEmployee.save()];
             case 1:
                 // Save the new product
-                _a.sent();
+                _b.sent();
+                closeConnection();
                 return [2 /*return*/, newEmployee];
             case 2:
-                error_1 = _a.sent();
+                error_1 = _b.sent();
                 console.error('Error creating product:', error_1);
                 throw new Error('Internal Server Error');
             case 3: return [2 /*return*/];

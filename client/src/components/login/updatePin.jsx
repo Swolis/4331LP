@@ -23,8 +23,10 @@ const UpdatePin = ({ setShowUpdatePin, setShouldRedirect }) => {
                 defaultPin: true,
             };
             const response = await UpdatePinFunction(newPinData);
-            // Check the response and setShouldRedirect accordingly
-            if (response.message === '200 OK') {
+            console.log('response: ', response);
+		console.log(`response message: ${response.message}`);
+		// Check the response and setShouldRedirect accordingly
+            if (response.message === 'Successfully Added Employee') {
                 setShouldRedirect(true);
             }
         } catch (error) {
