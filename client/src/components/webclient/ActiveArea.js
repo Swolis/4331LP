@@ -7,23 +7,18 @@ import sendRequest  from '../../handlers/requestHandler';
 import useInputModal from './useInputModal';
 
 
-
-
-
-function addToOrder(item) {
-    console.log(item);
-    console.log(item.text);
-    console.log(item.price);
-}
-
 //////////////////////////////////////////////////////
 //
 //
 // The active button console 
-export default function ActiveArea({mode, setMode}) {
+export default function ActiveArea({mode, setMode, order, onAddItem, onAddModifier}) {
     const currentMode = mode;
     // State data for groups, subgroups, and buttons
     const [data, setData]=useState([]);
+
+    useEffect(() => {
+        
+    }, [order])
 
     // Get groups data
     const getData = () => {
@@ -57,6 +52,9 @@ export default function ActiveArea({mode, setMode}) {
     
     const navigate = useNavigate();
 
+    const addToOrder = (item) => onAddItem(item);
+    const modifyOrder = (item) => onAddModifier(item);
+
     // Changes the Active tab and loads any modifier tabs
     function changeActiveTab(newTab) {
         // Set active tab
@@ -89,16 +87,12 @@ export default function ActiveArea({mode, setMode}) {
     }
 
     function renderButton(button) {
-        console.log(button);
-        console.log(activeSubTab);
-        console.log(activeTab);
         let currentTab = activeTab;
         if (activeSubTab === '') {
-            let newButton = <DButton key={button.id} mode={button.mode} id={button.id} group={currentTab} fill={button.fill} text={button.text} posX={button.x} posY={button.y} funct={addToOrder}/>;
-            console.log(newButton);
+            let newButton = <DButton key={button.id} mode={button.mode} id={button.id} group={currentTab} price={button.price} fill={button.fill} text={button.text} posX={button.x} posY={button.y} funct={addToOrder}/>;
             return (newButton);
         } else {
-            return (<DButton key={button.id} mode={button.mode} id={button.id} group={activeSubTab} fill={button.fill} text={button.text} posX={button.x} posY={button.y} funct={addToOrder}/>);
+            return (<DButton key={button.id} mode={button.mode} id={button.id} group={activeSubTab} price={button.price} fill={button.fill} text={button.text} posX={button.x} posY={button.y} funct={modifyOrder}/>);
         }
     }
 
@@ -110,6 +104,7 @@ export default function ActiveArea({mode, setMode}) {
             y: y,
             fill: item.item.fill,
             text: item.item.text,
+            price: item.item.price,
             id: item.item.id,
         }
         setButton(newItem);
@@ -144,7 +139,8 @@ export default function ActiveArea({mode, setMode}) {
                 name: buttons[i].props.text,
                 fill: buttons[i].props.fill,
                 x: buttons[i].props.posX,
-                y: buttons[i].props.posY
+                y: buttons[i].props.posY,
+                price: buttons[i].props.price
                 }
             })
         }
@@ -166,13 +162,11 @@ export default function ActiveArea({mode, setMode}) {
             if (buttons.length) {
                 for (let k = 0; k < buttons.length; k++) {
                     if (buttons[k].props.posX === i && buttons[k].props.posY === j && activeSubTab !== '' && buttons[k].props.group === activeSubTab) {
-                        // console.log(buttons[k]);
                         newButton = buttons[k];
                         break;
                     }
                     else if(buttons[k].props.posX === i && buttons[k].props.posY === j && buttons[k].props.group === activeTab) {
                         if (activeSubTab === ''){
-                            console.log(buttons[k]);
                             newButton = buttons[k];
                             break;
                         }
@@ -189,11 +183,13 @@ export default function ActiveArea({mode, setMode}) {
         }
     }
 
+    // Rerenders on drop adding a button
     useEffect(() => {
         if (button) {
             let newButton = renderButton(button);
             setButtons([...buttons, newButton]);
         }
+        setDropTrigger(false);
     }, [dropTrigger,button]);
     
     useEffect(() => {
@@ -251,23 +247,47 @@ export default function ActiveArea({mode, setMode}) {
                                     activeTab={activeSubTab} 
                                     setActiveTab={changeActiveSubTab} />
                             {mode === 3 && (
-                                <button className='bg-yellow-500 text-blue-900  text-lg font-bold justify-center p-5 ml-1 drop-shadow-2xl rounded' onClick={() => addSubMenuItem()}>+</button>
+                                <button className='bg-yellow-500 text-blue-900  text-lg font-bold justify-center p-5 ml-1 drop-shadow-2xl rounded-lg' onClick={() => addSubMenuItem()}>+</button>
                             )}
                         </div>
                     </div>
                     <div className='flex '>
-                            <button className='bg-yellow-500 text-blue-900  text-lg p-5 mt-10 mr-10 drop-shadow-2xl rounded' onClick={() => setMode(0)}>Change User</button>
+                            <button className='bg-yellow-500 text-slate-900 active:bg-amber-600 font-bold uppercase 
+                                            text-sm px-6 py-3 h-20 mr-2 mt-2 rounded shadow 
+                                            hover:shadow-lg outline-none 
+                                            focus:outline-none 
+                                            ease-linear transition-all duration-150' onClick={() => setMode(0)}>Change User</button>
                     {mode === 2 && (
                         <div className='flex'>
-                            <button className='bg-yellow-500 text-blue-900 text-lg p-5 mt-10 mr-10 drop-shadow-2xl rounded' onClick={() => setMode(3)}>Edit</button>
-                            <button className='bg-yellow-500 text-blue-900 text-lg p-5 mt-10 mr-10 drop-shadow-2xl rounded' onClick={() => navigate('/clientDashboard')}>Settings</button>
+                            <button className='bg-yellow-500 text-slate-900 active:bg-amber-600 font-bold uppercase 
+                                            text-sm px-6 py-3 h-20 mr-2 mt-2 rounded shadow 
+                                            hover:shadow-lg outline-none 
+                                            focus:outline-none 
+                                            ease-linear transition-all duration-150' onClick={() => setMode(3)}>Edit</button>
+                            <button className='bg-yellow-500 text-slate-900 active:bg-amber-600 font-bold uppercase 
+                                            text-sm px-6 py-3 h-20 mr-2 mt-2 rounded shadow 
+                                            hover:shadow-lg outline-none 
+                                            focus:outline-none 
+                                            ease-linear transition-all duration-150' onClick={() => navigate('/clientDashboard')}>Settings</button>
                         </div>
                     )}
                     {mode === 3 && (
                         <div className='flex'>
-                            <button className='bg-yellow-500 text-blue-900 text-lg p-5 mt-10 mr-10 drop-shadow-2xl rounded' onClick={() => saveLayout()}>Save</button>
-                            <button className='bg-yellow-500 text-blue-900 text-lg p-5 mt-10 mr-10 drop-shadow-2xl rounded' onClick={() => setMode(2)}>Finish</button>
-                            <button className='bg-yellow-500 text-blue-900 text-lg p-5 mt-10 mr-10 drop-shadow-2xl rounded' onClick={() => test()}>test</button>
+                            <button className='bg-yellow-500 text-slate-900 active:bg-amber-600 font-bold uppercase 
+                                            text-sm px-6 py-3 h-20 mr-2 mt-2 rounded shadow 
+                                            hover:shadow-lg outline-none 
+                                            focus:outline-none 
+                                            ease-linear transition-all duration-150' onClick={() => saveLayout()}>Save</button>
+                            <button className='bg-yellow-500 text-slate-900 active:bg-amber-600 font-bold uppercase 
+                                            text-sm px-6 py-3 h-20 mr-2 mt-2 rounded shadow 
+                                            hover:shadow-lg outline-none 
+                                            focus:outline-none 
+                                            ease-linear transition-all duration-150' onClick={() => setMode(2)}>Finish</button>
+                            <button className='bg-yellow-500 text-slate-900 active:bg-amber-600 font-bold uppercase 
+                                            text-sm px-6 py-3 h-20 mr-2 mt-2 rounded shadow 
+                                            hover:shadow-lg outline-none 
+                                            focus:outline-none 
+                                            ease-linear transition-all duration-150' onClick={() => test()}>test</button>
                         </div>
                     )}
                     </div>
