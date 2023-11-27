@@ -77,15 +77,17 @@ export default function ActionArea({mode, order, onRemoveItem, totalPrice}) {
                     <div className="flex w-full">
                     <ul className="flex flex-col w-full">
                         {order.map((item, index) => (
-                        <li className="flex mt-2 w-full" key={index}>
+                        <li className="flex flex-col mt-2 w-full" key={index}>
                             <div className="flex flex-row w-full h-fit">
                                 <div className="font-bold flex w-full">+ {item.name} - ${item.price.toFixed(2)}</div>
                                 <button className="bg-gray-400 text-gray-600 flex font-bold pl-4 pr-4 pt-1 pb-1 rounded-l-md justify-end" onClick={() => onRemoveItem(index)}>-</button>
                             </div>
-                            <ul>
+                            <ul className="flex flex-col w-full">
                             {item.modifiers.map((modifier, modifierIndex) => (
                                 <li key={modifierIndex}>
-                                {modifier.name} - ${modifier.price.toFixed(2)}
+                                    <div className="flex flex-row pl-5 w-full h-fit">
+                                        + {modifier.name} - ${modifier.price.toFixed(2)}
+                                    </div>
                                 </li>
                             ))}
                             </ul>
