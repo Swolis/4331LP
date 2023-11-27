@@ -5,10 +5,12 @@ function ListButtons ({mode,res}) {
     const items = [];
     for (var item in res) {
         if ("recipe" in res[item]) {
-            items.push(<DButton key={item} mode={mode} id={res[item].recipe.id} fill={res[item].recipe.color} text={res[item].recipe.text} />);
+            let recipe = res[item].recipe;
+            items.push(<DButton key={recipe.id} mode={mode} id={recipe.id} fill={recipe.color} text={recipe.text} price={recipe.price}/>);
         }
         else {
-            items.push(<DButton key={item} mode={mode} id={res[item].product.id} fill={res[item].product.color} text={res[item].product.text} />);
+            let product = res[item].product;
+            items.push(<DButton key={product.i} mode={mode} id={product.id} fill={product.color} text={product.text} price={product.price}/>);
         }
     }
     
@@ -19,13 +21,31 @@ function ListButtons ({mode,res}) {
     )
 }
 
-export default function ActionArea({mode}) {
+export default function ActionArea({mode, order, onRemoveItem, totalPrice}) {
 
     // State for storing request data
-    const [data, setData]=useState([]);
+    const [data, setData]= useState([]);
+
+    useEffect(() => {
+        getData();
+
+    },[])
+
+    useEffect(() => {
+
+    }, [mode])
+
+    useEffect(() => {
+        console.log("this happened.")
+    }, [totalPrice])
+
+    // Totaling values
+    let tax = totalPrice * 0.07;
+    let total = totalPrice + tax;
+
 
     function submitOrder() {
-        return "order submitted.";
+        console.log("order submitted.");
     }
 
     // Get data from API for Recipe/Products by search function
@@ -47,51 +67,65 @@ export default function ActionArea({mode}) {
         })
     }
 
-    useEffect(() => {
-        getData()
-    },[])
-
-    useEffect(() => {
-
-    }, [mode])
-
     return (
         <div className="flex-initial justify-start w-5/12">
             {mode === 0 && <div></div>}
             {mode > 0 && mode < 3 && (
                 <div className="ActionArea flex flex-col justify-start w-full h-screen"> 
-                    <h3> Order List</h3>
-                    <div className="OrderItems flex h-screen"></div>
-                    <div className="OrderTotals flex h-min">
+                    <h1 className="bg-slate-100 text-slate-900 font-bold uppercase pl-2 pt-2 pb-3 text-lg shadow">Order: {order.id}</h1>
+                    <div className="OrderItems flex overflow-y-auto w-full h-5/6">
+                    <div className="flex w-full">
+                    <ul className="flex flex-col w-full">
+                        {order.map((item, index) => (
+                        <li className="flex mt-2 w-full" key={index}>
+                            <div className="flex flex-row w-full h-fit">
+                                <div className="font-bold flex w-full">+ {item.name} - ${item.price.toFixed(2)}</div>
+                                <button className="bg-gray-400 text-gray-600 flex font-bold pl-4 pr-4 pt-1 pb-1 rounded-l-md justify-end" onClick={() => onRemoveItem(index)}>-</button>
+                            </div>
+                            <ul>
+                            {item.modifiers.map((modifier, modifierIndex) => (
+                                <li key={modifierIndex}>
+                                {modifier.name} - ${modifier.price.toFixed(2)}
+                                </li>
+                            ))}
+                            </ul>
+                        </li>
+                        ))}
+                    </ul>
+                    </div>
+                    </div>
+                    <div className="OrderTotals bg-slate-100 flex h-min shadow">
                         <table>
                             <tbody>
                                 <tr>
                                     <td>Subtotal:</td>
-                                    <td>$0.00</td>
+                                    <td>${totalPrice.toFixed(2)}</td>
                                 </tr>
                                 <tr>
                                     <td>Tax:</td>
-                                    <td>$0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Tip:</td>
-                                    <td>$0.00</td>
+                                    <td>${tax.toFixed(2)}</td>
                                 </tr>
                                 <tr>
                                     <td>Total:</td>
-                                    <td>$0.00</td>
+                                    <td>${total.toFixed(2)}</td>
                                 </tr>
                                 </tbody>
                         </table>
                     </div>
                     <div className="OrderButtons flex relative bottom-0 justify-center w-full">
-                        <button className='bg-yellow-500 text-blue-900 justify-center text-lg p-5 w-full drop-shadow-2xl rounded' onClick={() => submitOrder()}>Complete Order</button>
+                        <button className='bg-yellow-500 text-slate-900 active:bg-amber-600 font-bold uppercase 
+                                            text-sm px-6 py-3 h-20 w-full shadow 
+                                            hover:shadow-lg outline-none 
+                                            focus:outline-none 
+                                            ease-linear transition-all duration-150' 
+                                            onClick={() => submitOrder()}>Complete Order
+                        </button>
                     </div>
                 </div>
             )}
             {mode === 3 && ( 
                 <div className="ActionArea flex flex-col justify-start w-full h-full"> 
-                    <h3> Edit Console </h3>
+                    <h2> Edit Console </h2>
                     <ListButtons mode={mode} res={data}/>
                 </div>)}
         </div>
