@@ -18,8 +18,8 @@ class SystemRegistration extends Component {
     };
 
     return (
-      <div className='flex justify-center items-center h-screen' style={cardStyle}>
-        <div id='form-card' className="form-card flex flex-col justify-center items-center bg-gradient-to-br from-gray-200 to-white bg-opacity-20 py-10 w-4/5 max-w-md drop-shadow-2xl rounded-xl">
+      <div className='flex bg-slate-800 justify-center items-center h-screen'>
+        <div id='form-card' className="form-card flex flex-col justify-center items-center bg-gradient-to-br from-slate-200 to-white bg-opacity-20 py-10 w-4/5 max-w-md drop-shadow-2xl rounded-xl">
           <h2 style={titleStyle}>Register</h2>
           <RegisterForm />{/* Render the RegisterForm component here */}
         </div>
