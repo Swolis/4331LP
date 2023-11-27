@@ -36,29 +36,29 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createEmployee = void 0;
-var employeeSchema_1 = require("../../models/employee/employeeSchema");
-var createEmployee = function (clientDatabase, ProductData) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, EmployeeModel, closeConnection, newEmployee, error_1;
+exports.createOrder = void 0;
+var orderSchema_1 = require("../../models/registerModels/orderSchema");
+var createOrder = function (clientDatabase, ProductData) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, OrderModel, closeConnection, newOrder, error_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 _b.trys.push([0, 2, , 3]);
-                _a = (0, employeeSchema_1.getEmployeeModel)(clientDatabase), EmployeeModel = _a.model, closeConnection = _a.closeConnection;
-                newEmployee = new EmployeeModel(ProductData);
+                _a = (0, orderSchema_1.getOrderModel)(clientDatabase), OrderModel = _a.model, closeConnection = _a.closeConnection;
+                newOrder = new OrderModel(ProductData);
                 // Save the new product
-                return [4 /*yield*/, newEmployee.save()];
+                return [4 /*yield*/, newOrder.save()];
             case 1:
                 // Save the new product
                 _b.sent();
                 closeConnection();
-                return [2 /*return*/, newEmployee];
+                return [2 /*return*/, newOrder];
             case 2:
                 error_1 = _b.sent();
-                console.error('Error creating product:', error_1);
+                console.error('Error creating order:', error_1);
                 throw new Error('Internal Server Error');
             case 3: return [2 /*return*/];
         }
     });
 }); };
-exports.createEmployee = createEmployee;
+exports.createOrder = createOrder;

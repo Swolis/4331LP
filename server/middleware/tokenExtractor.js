@@ -1,23 +1,20 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.tokenExtractor = void 0;
-var express = require('express');
-var jwt = require('jsonwebtoken');
+const express = require('express');
+const jwt = require('jsonwebtoken');
 //import dotenv = require('dotenv');
 // get config vars
 //dotenv.config();
 // access config var
 console.log('above function extracor');
-var jwtSecret = 'SecretKey'; // needs to be changed to environment variable in future
-function tokenExtractor(req, res, next) {
+const jwtSecret = 'SecretKey'; // needs to be changed to environment variable in future
+export function tokenExtractor(req, res, next) {
     console.log('Entering tokenExtractor middleware'); // Add this line
     if (!(req.url === '/Admin-Login' && req.method === 'POST')) {
         console.log('tockenExtractor not applicable');
         return next();
     }
     console.log('req.headers.authorization from token extractor : ', req.headers.authorization);
-    var token = req.headers.authorization;
-    var tokenToDecode = '';
+    const token = req.headers.authorization;
+    let tokenToDecode = '';
     if (token && token.startsWith('Bearer ')) {
         tokenToDecode = token.slice(7);
     }
@@ -27,7 +24,7 @@ function tokenExtractor(req, res, next) {
     console.log('token to decode: ', tokenToDecode);
     if (tokenToDecode) {
         try {
-            var decoded = jwt.verify(tokenToDecode, jwtSecret);
+            const decoded = jwt.verify(tokenToDecode, jwtSecret);
             if (typeof decoded === 'object' && 'databaseName' in decoded) {
                 console.log('databasename: ', decoded.databaseName);
                 req.app.locals.databaseName = decoded.databaseName;
@@ -45,7 +42,6 @@ function tokenExtractor(req, res, next) {
     // database name is used to login to a specific database on within teh atlas account
     next();
 }
-exports.tokenExtractor = tokenExtractor;
 // test case code
 // // Create a valid JWT token with a known value
 // const validToken = sign({ databaseName: 'YourDatabaseName' }, 'SecretKey', {

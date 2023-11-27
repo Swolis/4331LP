@@ -1,10 +1,10 @@
 import { Connection, Model } from "mongoose";
-import employeeSchema, { IEmployee, getEmloyeeModel } from "../../models/employee/employeeSchema";
+import employeeSchema, { IEmployee, getEmployeeModel } from "../../models/employee/employeeSchema";
 
 
 export const createEmployee: (clientDatabase: Connection, ProductData: any) => Promise<IEmployee> = async (clientDatabase: Connection, ProductData: any) => {
     try {
-        const { model: EmployeeModel, closeConnection } = getEmloyeeModel(clientDatabase);
+        const { model: EmployeeModel, closeConnection } = getEmployeeModel(clientDatabase);
 
         const newEmployee = new EmployeeModel(ProductData);
 

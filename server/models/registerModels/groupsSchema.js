@@ -1,22 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getEmployeeModel = void 0;
+exports.getGroupModel = void 0;
 // productSchema.ts
 var mongoose_1 = require("mongoose");
-var employeeSchema = new mongoose_1.Schema({
+var recipieButtonSchema_1 = require("./recipieButtonSchema");
+// Define Schema
+var groupSchema = new mongoose_1.default.Schema({
     name: { type: String, required: true },
-    pin: { type: String, required: true },
-    employeeId: { type: String, reaquired: true },
-    permission: { type: Boolean, required: true }
+    button: { type: [recipieButtonSchema_1.default], required: true },
+    groups: { type: [String], refrence: 'subgroups', required: false }
 });
-var getEmployeeModel = function (clientInfo) {
+var getGroupModel = function (clientInfo) {
     var uri = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/';
     var databaseName = clientInfo.databaseName;
     var connection = mongoose_1.default.createConnection(uri, {
         dbName: databaseName,
         ssl: true,
     });
-    var EmployeeModel = connection.model('Employee', employeeSchema);
+    var GroupModel = connection.model('orders', groupSchema);
     var closeConnection = function () {
         connection.close()
             .then(function () {
@@ -26,7 +27,7 @@ var getEmployeeModel = function (clientInfo) {
             console.error('Error closing the connection:', error);
         });
     };
-    return { model: EmployeeModel, closeConnection: closeConnection };
+    return { model: GroupModel, closeConnection: closeConnection };
 };
-exports.getEmployeeModel = getEmployeeModel;
-exports.default = employeeSchema;
+exports.getGroupModel = getGroupModel;
+exports.default = groupSchema;

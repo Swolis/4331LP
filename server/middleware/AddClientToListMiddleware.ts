@@ -50,11 +50,11 @@ export const AddClientToListMiddleware = async (req: Request, res: Response, nex
 
         const ListClientModel: Model<IListClient> = mongoose.model<IListClient>('ClientList', ListClientSchema);
 
-         if(await ListClientModel.find({username:username})!=null){
+         if(await ListClientModel.find({username:username})!=undefined){
             console.log('username is taken')
             return res.status(409).json({message:'Usename taken'})
         }
-        if(await ListClientModel.find({email:businessEmail})!=null){
+        if(await ListClientModel.find({email:businessEmail})!=undefined){
             console.log('email is taken')
             return res.status(409).json({message:'Email is already used'})
         }

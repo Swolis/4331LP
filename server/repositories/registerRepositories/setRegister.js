@@ -36,29 +36,54 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createEmployee = void 0;
-var employeeSchema_1 = require("../../models/employee/employeeSchema");
-var createEmployee = function (clientDatabase, ProductData) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, EmployeeModel, closeConnection, newEmployee, error_1;
+exports.createSubGroup = exports.createGroup = void 0;
+var groupsSchema_1 = require("../../models/registerModels/groupsSchema");
+var subGroupSchema_1 = require("../../models/registerModels/subGroupSchema");
+var createGroup = function (clientDatabase, GroupData) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, GroupModel, closeConnection, newGroup, error_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 _b.trys.push([0, 2, , 3]);
-                _a = (0, employeeSchema_1.getEmployeeModel)(clientDatabase), EmployeeModel = _a.model, closeConnection = _a.closeConnection;
-                newEmployee = new EmployeeModel(ProductData);
+                _a = (0, groupsSchema_1.getGroupModel)(clientDatabase), GroupModel = _a.model, closeConnection = _a.closeConnection;
+                newGroup = new GroupModel(GroupData);
                 // Save the new product
-                return [4 /*yield*/, newEmployee.save()];
+                return [4 /*yield*/, newGroup.save()];
             case 1:
                 // Save the new product
                 _b.sent();
                 closeConnection();
-                return [2 /*return*/, newEmployee];
+                return [2 /*return*/, newGroup];
             case 2:
                 error_1 = _b.sent();
-                console.error('Error creating product:', error_1);
+                console.error('Error creating group:', error_1);
                 throw new Error('Internal Server Error');
             case 3: return [2 /*return*/];
         }
     });
 }); };
-exports.createEmployee = createEmployee;
+exports.createGroup = createGroup;
+var createSubGroup = function (clientDatabase, GroupData) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, SubGroupModel, closeConnection, newSubGroup, error_2;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _b.trys.push([0, 2, , 3]);
+                _a = (0, subGroupSchema_1.getSubGroupModel)(clientDatabase), SubGroupModel = _a.model, closeConnection = _a.closeConnection;
+                newSubGroup = new SubGroupModel(GroupData);
+                // Save the new product
+                return [4 /*yield*/, newSubGroup.save()];
+            case 1:
+                // Save the new product
+                _b.sent();
+                closeConnection();
+                return [2 /*return*/, newSubGroup];
+            case 2:
+                error_2 = _b.sent();
+                console.error('Error creating sub:', error_2);
+                throw new Error('Internal Server Error');
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.createSubGroup = createSubGroup;

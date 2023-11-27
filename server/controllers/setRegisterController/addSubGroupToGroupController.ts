@@ -32,7 +32,7 @@ try {
 
 
 */
-export const establishGroup = async ( req: Request, res: Response): Promise<void> => {
+export const establishSubGroup = async ( req: Request, res: Response): Promise<void> => {
     
     try {
         const { model: ClientModel, closeConnection }: any = getClientModel((req as any).session.client);
@@ -48,7 +48,8 @@ export const establishGroup = async ( req: Request, res: Response): Promise<void
         closeConnection()
         const { model: GroupModel, closeConnection2 }: any = getGroupModel((req as any).session.client);
         let findGroup=GroupModel.findById(req.body.groupID)
-        if (findGroup==null){
+        if (findGroup==undefined){
+            closeConnection2()
             res.status(404).json({message: 'No group found.'});
             return;
         }
@@ -57,7 +58,7 @@ export const establishGroup = async ( req: Request, res: Response): Promise<void
             button:req.body.group.buttons,
         }
 
-        const newGroup = await createSubGroup(req.app.locals.client, subGroupSchema);
+        const newGroup = await createSubGroup((req as any).session.client, subGroupSchema);
         let gID=newGroup._id
         findGroup.groups.add(gID)
         await findGroup.save()
@@ -70,6 +71,7 @@ export const establishGroup = async ( req: Request, res: Response): Promise<void
         res.status(201).json({ message: ' Created new Order', newGroup });
     }catch (error: any) {
         console.error(`Error createing order: ${error.message}`);
+        
         res.status(500).json({message: `Internal server error`});
     }
     

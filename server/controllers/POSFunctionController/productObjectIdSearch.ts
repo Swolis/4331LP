@@ -1,16 +1,15 @@
 import { Request, Response } from 'express';
 
-import productSchema, { IProduct } from "../../models/inventoryModels/productSchema";
+import productSchema, { IProduct,getProductModel } from "../../models/inventoryModels/productSchema";
 import { Model, Connection } from 'mongoose';
 
 export const findProductIDController = async (req: Request, res: Response): Promise<void> => {
    console.log('entering product search controller');
 
-   // use connection
-   const clientDatabase: Connection = req.app.locals.client;
+   
     
    // use product model
-   const ProductModel: Model<IProduct> = clientDatabase.model<IProduct>('products', productSchema);
+   const ProductModel=getProductModel((req as any).session.client)
 
    const query:string = req.body.query;
 

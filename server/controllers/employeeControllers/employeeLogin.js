@@ -36,29 +36,48 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createEmployee = void 0;
+exports.EmployeeLoginController = void 0;
 var employeeSchema_1 = require("../../models/employee/employeeSchema");
-var createEmployee = function (clientDatabase, ProductData) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, EmployeeModel, closeConnection, newEmployee, error_1;
+var EmployeeLoginController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, EmployeeModel, closeConnection, query, searchResult, error_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _b.trys.push([0, 2, , 3]);
-                _a = (0, employeeSchema_1.getEmployeeModel)(clientDatabase), EmployeeModel = _a.model, closeConnection = _a.closeConnection;
-                newEmployee = new EmployeeModel(ProductData);
-                // Save the new product
-                return [4 /*yield*/, newEmployee.save()];
-            case 1:
-                // Save the new product
-                _b.sent();
+                _a = (0, employeeSchema_1.getEmployeeModel)(req.session.client), EmployeeModel = _a.model, closeConnection = _a.closeConnection;
+                query = req.body.query;
                 closeConnection();
-                return [2 /*return*/, newEmployee];
+                console.log("query: ".concat(query));
+                _b.label = 1;
+            case 1:
+                _b.trys.push([1, 5, , 6]);
+                searchResult = void 0;
+                if (!(typeof (query) === 'string')) return [3 /*break*/, 3];
+                console.log('query is a string');
+                return [4 /*yield*/, EmployeeModel.findOne({
+                        pin: query
+                    })];
             case 2:
+                searchResult = _b.sent();
+                return [3 /*break*/, 4];
+            case 3: throw new Error('search type invalid');
+            case 4:
+                if (searchResult == undefined) {
+                    console.log('no employee found');
+                    closeConnection();
+                    res.status(404).json({ message: 'employee not found' });
+                    return [2 /*return*/];
+                }
+                closeConnection();
+                res.status(201).json(searchResult);
+                return [3 /*break*/, 6];
+            case 5:
                 error_1 = _b.sent();
-                console.error('Error creating product:', error_1);
-                throw new Error('Internal Server Error');
-            case 3: return [2 /*return*/];
+                console.log('error: ', error_1);
+                closeConnection();
+                res.status(500).json({ message: "Internal server error: ".concat(error_1) });
+                return [3 /*break*/, 6];
+            case 6: return [2 /*return*/];
         }
     });
 }); };
-exports.createEmployee = createEmployee;
+exports.EmployeeLoginController = EmployeeLoginController;

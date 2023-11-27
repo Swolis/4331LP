@@ -39,20 +39,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createEmployeeController = void 0;
 var ClientSchema_1 = require("../../models/ClientSchema");
 var employeeRepository_1 = require("../../repositories/employeeRepositories/employeeRepository");
+var employeeSchema_1 = require("../../models/employee/employeeSchema");
 var createEmployeeController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, ClientModel, closeConnection, client, EmployeeID, employeeData, newEmployee, error_1;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var _a, ClientModel, closeConnection, client, EmployeeID, employeeData, _b, employeeModel, closeConnection2, usablePin, newEmployee, error_1;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
                 console.log('entering create employee controller');
-                _b.label = 1;
+                _c.label = 1;
             case 1:
-                _b.trys.push([1, 5, , 6]);
+                _c.trys.push([1, 5, , 6]);
                 console.log('req.body: ', req.body);
                 _a = (0, ClientSchema_1.getClientModel)(req.session.client), ClientModel = _a.model, closeConnection = _a.closeConnection;
                 return [4 /*yield*/, ClientModel.findOne({})];
             case 2:
-                client = _b.sent();
+                client = _c.sent();
                 if (!client) {
                     console.log('client not found');
                     throw new Error('user not found');
@@ -63,7 +64,7 @@ var createEmployeeController = function (req, res) { return __awaiter(void 0, vo
                 }
                 return [4 /*yield*/, client.save()];
             case 3:
-                _b.sent();
+                _c.sent();
                 //pads out id to 7 digits
                 req.body.employeeId = EmployeeID.toString().padStart(7, '0');
                 employeeData = {
@@ -73,14 +74,19 @@ var createEmployeeController = function (req, res) { return __awaiter(void 0, vo
                     permission: req.body.permission
                 };
                 console.log('employeeData:', JSON.stringify(employeeData, null, 2));
+                _b = (0, employeeSchema_1.getEmployeeModel)(req.session.client), employeeModel = _b.model, closeConnection2 = _b.closeConnection2;
+                usablePin = employeeModel.findOne({ pin: req.body.pin });
+                if (usablePin != undefined) {
+                    res.status(409).json({ message: 'Pin is already being used' });
+                }
                 return [4 /*yield*/, (0, employeeRepository_1.createEmployee)(req.session.client, employeeData)];
             case 4:
-                newEmployee = _b.sent();
+                newEmployee = _c.sent();
                 closeConnection();
-                res.status(201).json({ message: 'Successfully Added Employee' });
+                res.status(201).json({ message: 'Successfully Added Employee', newEmployee: newEmployee });
                 return [2 /*return*/];
             case 5:
-                error_1 = _b.sent();
+                error_1 = _c.sent();
                 console.log('failed to create emplooyee: ', error_1);
                 if (error_1.message === 'user not found') {
                     res.status(404).json({ message: 'Database error: ', error: error_1 });

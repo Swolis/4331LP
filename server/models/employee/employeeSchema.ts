@@ -19,7 +19,7 @@ const employeeSchema= new Schema<IEmployee>({
 
 });
 
-export const getEmloyeeModel = (clientInfo: any): any => {
+export const getEmployeeModel = (clientInfo: any): any => {
     const uri: string = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/';
 
     const { databaseName } = clientInfo;

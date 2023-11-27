@@ -39,35 +39,39 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.findProductIDController = void 0;
 var recipieSchema_1 = require("../../models/inventoryModels/recipieSchema");
 var findProductIDController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var clientDatabase, RecipieModel, query, searchResult, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _a, RecipieModel, closeConnection, query, searchResult, error_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
                 console.log('entering product search controller');
-                clientDatabase = req.app.locals.client;
-                RecipieModel = clientDatabase.model('recipie', recipieSchema_1.default);
+                return [4 /*yield*/, (0, recipieSchema_1.getRecipeModel)(req.session.client)];
+            case 1:
+                _a = _b.sent(), RecipieModel = _a.model, closeConnection = _a.closeConnection;
                 query = req.body.query;
                 console.log("query: ".concat(query));
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
+                _b.label = 2;
+            case 2:
+                _b.trys.push([2, 4, , 5]);
                 searchResult = void 0;
                 return [4 /*yield*/, RecipieModel.findById(query)];
-            case 2:
-                searchResult = _a.sent();
-                if (searchResult == null) {
+            case 3:
+                searchResult = _b.sent();
+                if (searchResult == undefined) {
                     console.log('no product found');
+                    closeConnection();
                     res.status(404).json({ message: 'product no found' });
                     return [2 /*return*/];
                 }
+                closeConnection();
                 res.status(201).json(searchResult);
-                return [3 /*break*/, 4];
-            case 3:
-                error_1 = _a.sent();
+                return [3 /*break*/, 5];
+            case 4:
+                error_1 = _b.sent();
                 console.log('error: ', error_1);
+                closeConnection();
                 res.status(500).json({ message: "Internal server error: ".concat(error_1) });
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); };

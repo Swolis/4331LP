@@ -1,16 +1,16 @@
 import { Connection, Model } from "mongoose";
-import orderSchema,{IOrder} from "../../models/registerModels/orderSchema";
+import orderSchema,{IOrder,getOrderModel} from "../../models/registerModels/orderSchema";
 
 export const createOrder: (clientDatabase: Connection, ProductData: any) => Promise<IOrder> = async (clientDatabase: Connection, ProductData: any) => {
     try {
-        const OrderModel: Model<IOrder> = clientDatabase.model<IOrder>('orders', orderSchema);
+        const {model:OrderModel,closeConnection}=getOrderModel(clientDatabase)
 
         const newOrder = new OrderModel(ProductData);
 
         // Save the new product
         await newOrder.save();
-
-   
+        
+        closeConnection()
 
         return newOrder;
     } catch (error: any) {

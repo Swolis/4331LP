@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { getClientModel } from '../../models/ClientSchema';
 import { createEmployee } from '../../repositories/employeeRepositories/employeeRepository';
-import { getEmloyeeModel } from '../../models/employee/employeeSchema';
+import { getEmployeeModel } from '../../models/employee/employeeSchema';
 
 export const createEmployeeController = async ( req: Request, res: Response): Promise<void> => {
     console.log('entering create employee controller');
@@ -37,11 +37,19 @@ export const createEmployeeController = async ( req: Request, res: Response): Pr
 
         console.log('employeeData:', JSON.stringify(employeeData, null, 2));
 
+        const {model:employeeModel,closeConnection2}=getEmployeeModel((req as any).session.client)
+
+        const usablePin=employeeModel.findOne({pin:req.body.pin})
+        
+        if(usablePin!=undefined){
+            res.status(409).json({message: 'Pin is already being used'});
+        }
+
         const newEmployee = await createEmployee((req as any).session.client, employeeData);
 
         closeConnection();
 
-        res.status(201).json({message: 'Successfully Added Employee'});
+        res.status(201).json({message: 'Successfully Added Employee',newEmployee});
         return;
 
     } catch (error: any) {

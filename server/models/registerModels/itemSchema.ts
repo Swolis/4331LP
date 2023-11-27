@@ -15,4 +15,7 @@ export interface IItem extends Document {
     mod:[string];//product IDS 
 }
 
+
+
+
 export default itemSchema;

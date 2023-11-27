@@ -78,13 +78,13 @@ var AddClientToListMiddleware = function (req, res, next) { return __awaiter(voi
                 ListClientModel = mongoose_1.default.model('ClientList', ClientListSchema_1.default);
                 return [4 /*yield*/, ListClientModel.find({ username: username })];
             case 3:
-                if ((_b.sent()) != null) {
+                if ((_b.sent()) != undefined) {
                     console.log('username is taken');
                     return [2 /*return*/, res.status(409).json({ message: 'Usename taken' })];
                 }
                 return [4 /*yield*/, ListClientModel.find({ email: businessEmail })];
             case 4:
-                if ((_b.sent()) != null) {
+                if ((_b.sent()) != undefined) {
                     console.log('email is taken');
                     return [2 /*return*/, res.status(409).json({ message: 'Email is already used' })];
                 }
@@ -106,4 +106,3 @@ var AddClientToListMiddleware = function (req, res, next) { return __awaiter(voi
     });
 }); };
 exports.AddClientToListMiddleware = AddClientToListMiddleware;
-

@@ -1,22 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getEmployeeModel = void 0;
-// productSchema.ts
+exports.getOrderModel = void 0;
+var itemSchema_1 = require("./itemSchema");
 var mongoose_1 = require("mongoose");
-var employeeSchema = new mongoose_1.Schema({
-    name: { type: String, required: true },
-    pin: { type: String, required: true },
-    employeeId: { type: String, reaquired: true },
-    permission: { type: Boolean, required: true }
+var orderSchema = new mongoose_1.Schema({
+    employeeID: { type: String, required: true },
+    orderID: { type: Number, required: true },
+    date: { type: String, required: true },
+    listOfItems: { type: [itemSchema_1.default], required: true },
+    totalPrice: { type: Number, required: true }
 });
-var getEmployeeModel = function (clientInfo) {
+var getOrderModel = function (clientInfo) {
     var uri = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/';
     var databaseName = clientInfo.databaseName;
     var connection = mongoose_1.default.createConnection(uri, {
         dbName: databaseName,
         ssl: true,
     });
-    var EmployeeModel = connection.model('Employee', employeeSchema);
+    var OrderModel = connection.model('orders', orderSchema);
     var closeConnection = function () {
         connection.close()
             .then(function () {
@@ -26,7 +27,7 @@ var getEmployeeModel = function (clientInfo) {
             console.error('Error closing the connection:', error);
         });
     };
-    return { model: EmployeeModel, closeConnection: closeConnection };
+    return { model: OrderModel, closeConnection: closeConnection };
 };
-exports.getEmployeeModel = getEmployeeModel;
-exports.default = employeeSchema;
+exports.getOrderModel = getOrderModel;
+exports.default = orderSchema;
