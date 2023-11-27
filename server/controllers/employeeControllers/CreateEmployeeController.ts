@@ -41,7 +41,7 @@ export const createEmployeeController = async ( req: Request, res: Response): Pr
 
         closeConnection();
 
-        res.status(201).json(newEmployee);
+        res.status(201).json({message: 'Successfully Added Employee'});
         return;
 
     } catch (error: any) {

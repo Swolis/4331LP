@@ -11,6 +11,7 @@ const UpdatePinFunction = async (newPinData) => {
             withCredentials: true,
             mode: 'cors',
         });
+        console.log('response data: ', response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to update pin');

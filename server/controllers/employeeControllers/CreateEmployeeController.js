@@ -77,7 +77,7 @@ var createEmployeeController = function (req, res) { return __awaiter(void 0, vo
             case 4:
                 newEmployee = _b.sent();
                 closeConnection();
-                res.status(201).json(newEmployee);
+                res.status(201).json({ message: 'Successfully Added Employee' });
                 return [2 /*return*/];
             case 5:
                 error_1 = _b.sent();
