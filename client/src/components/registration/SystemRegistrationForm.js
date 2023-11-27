@@ -3,6 +3,8 @@ import handleRegistration from '../../handlers/RegistrationHandler';
 import { withRouter } from 'react-router-dom';
 import '../../styles/RegistrationFrom.css'
 
+// some change
+
 class RegistrationForm extends Component {
     constructor(props) {
       super(props);
