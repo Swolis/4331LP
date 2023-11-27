@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import UpdatePinFunction from './updatePinHandler';
 
 const baseURL = `${window.location.protocol}//${window.location.hostname}:5000`;
 
@@ -15,7 +16,7 @@ const loginUser = async (formData) => {
     }
 };
 
-const handleLogin = async (formState, setShowupdatePin) => {
+const handleLogin = async (formState, setShowupdatePin, setShouldRedirect) => {
     try {
         const loginData = await loginUser(formState);
         if (loginData.message === 'Login Successful') {
@@ -29,7 +30,7 @@ const handleLogin = async (formState, setShowupdatePin) => {
 };
 
 
-async function handleSuccessfulLogin(loginData, setShowupdatePin) {
+async function handleSuccessfulLogin(loginData, setShowupdatePin, setShouldRedirect) {
     // Check for the authToken cookie
     const authTokenCookie = document.cookie.split(';').map(cookie => cookie.trim()).find(cookie => cookie.startsWith('authToken='));
 
@@ -45,7 +46,8 @@ async function handleSuccessfulLogin(loginData, setShowupdatePin) {
 
             try {
                 // Perform the pin update using an HTTP request
-                const response = await updatePinFunction(); // Replace with your actual pin update function
+                
+                const response = await UpdatePinFunction(); // Replace with your actual pin update function
 
                 // Once pin update is complete, set the state to trigger redirection
                 if(response.message === "200 OK"){

@@ -3,6 +3,7 @@ import '../../styles/tailwind.css';
 import UpdatePinFunction from "../../handlers/updatePinHandler";
 
 
+
 const UpdatePin = () => {
     const [state, setState] = useState ({
         name: '',
@@ -17,13 +18,13 @@ const UpdatePin = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try{
-          newPinData = {
+          const newPinData = {
             name: state.name,
             pin: state.newPin,
             permission: true,
             defaultPin: true,
           }
-          response = await UpdatePinFunction(newPinData);
+          const response = await UpdatePinFunction(newPinData);
           return response;
         }catch (error) {
           console.error('Pin update failed:', error);
@@ -61,3 +62,4 @@ const UpdatePin = () => {
 }
 
 export default UpdatePin;
+
