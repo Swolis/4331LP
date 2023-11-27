@@ -1,8 +1,7 @@
 // UpdatePin.js
 
 import React, { useState } from 'react';
-import UpdatePinFunction from './UpdatePinHandler';
-
+import UpdatePinFunction from '../../handlers/updatePinHandler';
 const UpdatePin = ({ setShowUpdatePin, setShouldRedirect }) => {
     const [state, setState] = useState({
         name: '',
