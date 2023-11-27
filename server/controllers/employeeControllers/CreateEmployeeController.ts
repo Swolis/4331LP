@@ -14,6 +14,11 @@ export const createEmployeeController = async ( req: Request, res: Response): Pr
             throw new Error('user not found');
         }
         const EmployeeID: number = client.nextEmployeeID++;
+
+        if(req.body.defaultPin){
+            client.defaultPin = false;
+        }
+
         await client.save();
 
 //pads out id to 7 digits

@@ -5,6 +5,8 @@ import AdminLoginRoute from './authentication/LoginRoutes';
 import AdminRegistrationRouter from './authentication/AdminRegistrationRouter';
 import RecipeRouter from './api/RecipeRouter';
 
+import EmployeeRouter from './api/EmployeeRouter';
+
 const mainRouter = Router();
 
 // Logging middleware for all routes
@@ -16,6 +18,8 @@ mainRouter.use((req, res, next) => {
 // Login routes
 mainRouter.use('/Admin-Login', AdminLoginRoute);
 mainRouter.use('/Admin-Registration', AdminRegistrationRouter);
+
+mainRouter.use('/Employee-Route/', EmployeeRouter);
 
 // Mount the required router
 // Product routes
