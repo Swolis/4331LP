@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../../styles/tailwind.css';
 import handleLogin, { LoginWithGoogle } from '../../handlers/LoginHandler';
 import { jwtDecode } from 'jwt-decode';
+import UpdatePin from './updatePin';
 
 const LoginForm = () => {
   const [state, setState] = useState({
@@ -12,6 +13,10 @@ const LoginForm = () => {
     username: '',
     password: '',
   });
+
+  const [showUpdatePin, setShowupdatePin] = useState(false);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
+
 
   const handleCallbackResponse = (response) => {
     try {
@@ -29,7 +34,7 @@ const LoginForm = () => {
       console.log(`Google login data: ${JSON.stringify(GoogleLoginData)}`);
 
       // Ensure proper error handling in LoginWithGoogle function
-      handleLogin(GoogleLoginData);
+      handleLogin(GoogleLoginData, setShowupdatePin, setShouldRedirect);
     } catch (error) {
       console.log('error decoding token');
       console.error('Error decoding JWT or processing Google login:', error.message);
@@ -49,6 +54,13 @@ const LoginForm = () => {
     });
   }, []); // empty dependency array to mimic componentDidMount
 
+  useEffect(() => {
+    if (shouldRedirect) {
+        // Redirect to the clientDashboard page once shouldRedirect is true
+        window.location.href = '/clientDashboard';
+    }
+  }, [shouldRedirect]);
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setState((prev) => ({ ...prev, [name]: value }));
@@ -56,10 +68,11 @@ const LoginForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    handleLogin(state);
+    handleLogin(state, setShowupdatePin, setShouldRedirect);
   };
 
   return (
+    <div>
     <form className='mx-auto gap-6 w-full object-contain p-10 flex flex-col items-center' onSubmit={handleSubmit}>
       <div className='form-group  w-5/6'>
         <label></label>
@@ -92,6 +105,8 @@ const LoginForm = () => {
         </div>
       </div>
     </form>
+    {showUpdatePin && <UpdatePin/>}
+    </div>
   );
 };
 

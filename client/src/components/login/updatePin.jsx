@@ -1,7 +1,9 @@
 import React, {Component, useState} from "react";
 import '../../styles/tailwind.css';
+import UpdatePinFunction from "../../handlers/updatePinHandler";
 
-const updatePin = () => {
+
+const UpdatePin = () => {
     const [state, setState] = useState ({
         name: '',
         newPin: '',
@@ -12,10 +14,23 @@ const updatePin = () => {
         setState((prev) => ({ ...prev, [name]: value }));
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        updatePin(state);
+        try{
+          newPinData = {
+            name: state.name,
+            pin: state.newPin,
+            permission: true,
+            defaultPin: true,
+          }
+          response = await UpdatePinFunction(newPinData);
+          return response;
+        }catch (error) {
+          console.error('Pin update failed:', error);
+      }
+
     }
+
 
     return ( 
     <form className='mx-auto gap-6 w-full object-contain p-10 flex flex-col items-center' onSubmit={handleSubmit}>
@@ -44,3 +59,5 @@ const updatePin = () => {
     </form>
     );
 }
+
+export default UpdatePin;
