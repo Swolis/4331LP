@@ -29,12 +29,11 @@ class RegistrationForm extends Component {
   
     render() {
       return (
-        <form className='mx-auto gap-6 w-full object-contain p-10 flex flex-col items-center' onSubmit={this.handleSubmit}>
-            <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'></link>
-          <div className='form-group w-5/6'>
+        <form className='mx-auto gap-6 w-5/6 object-contain p-10 flex flex-col items-center' onSubmit={this.handleSubmit}>
+          <div className='form-group w-full'>
             <label></label>
             <input
-              className='mx-auto w-full rounded-full shadow-inner p-1 px-4'
+              className='mx-auto w-full rounded-xl border border-solid border-slate-300 shadow-inner p-1 px-4'
               type='text'
               name='businessName'
               placeholder='Business Name'
@@ -42,10 +41,10 @@ class RegistrationForm extends Component {
               onChange={this.handleInputChange}
             />
           </div>
-          <div className='form-group w-5/6'>
+          <div className='form-group w-full'>
             <label></label>
             <input
-              className='mx-auto w-full rounded-full shadow-inner p-1 px-4'
+              className='mx-auto w-full rounded-xl border border-solid border-slate-300 shadow-inner p-1 px-4'
               type='text'
               name='businessEmail'
               placeholder='Business Email'
@@ -53,10 +52,10 @@ class RegistrationForm extends Component {
               onChange={this.handleInputChange}
             />
           </div>
-          <div className='form-group w-5/6'>
+          <div className='form-group w-full'>
             <label></label>
             <input
-              className='mx-auto w-full rounded-full shadow-inner p-1 px-4'
+              className='mx-auto w-full rounded-xl border border-solid border-slate-300 shadow-inner p-1 px-4'
               type='text'
               name='businessPhone'
               placeholder='Business Phone Number'
@@ -64,10 +63,10 @@ class RegistrationForm extends Component {
               onChange={this.handleInputChange}
             />
           </div>
-          <div className='form-group w-5/6'>
+          <div className='form-group w-full'>
             <label></label>
             <input
-              className='mx-auto w-full rounded-full shadow-inner p-1 px-4'
+              className='mx-auto w-full rounded-xl border border-solid border-slate-300 shadow-inner p-1 px-4'
               type='text'
               name='address'
               placeholder='Address'
@@ -75,10 +74,10 @@ class RegistrationForm extends Component {
               onChange={this.handleInputChange}
             />
           </div>
-          <div className='form-group  w-5/6'>
+          <div className='form-group  w-full'>
             <label></label>
             <input
-              className='mx-auto w-full rounded-full shadow-inner border-opacity-.5 p-1 px-4'
+              className='mx-auto w-full rounded-xl border border-solid border-slate-300 shadow-inner border-opacity-.5 p-1 px-4'
               type='text'
               name='username'
               placeholder='Username'
@@ -86,10 +85,10 @@ class RegistrationForm extends Component {
               onChange={this.handleInputChange}
             />
           </div>
-          <div className='form-group w-5/6'>
+          <div className='form-group w-full'>
             <label></label>
             <input
-              className='mx-auto w-full rounded-full shadow-inner p-1 px-4'
+              className='mx-auto w-full rounded-xl border border-solid border-slate-300 shadow-inner p-1 px-4'
               type='password'
               name='password'
               placeholder='Password'
@@ -97,8 +96,12 @@ class RegistrationForm extends Component {
               onChange={this.handleInputChange}
             />
           </div>
-          <div className='button-container flex'>
-            <button className='bg-red-500 rounded-full p-1 px-4 text-gray-200 font-serif m-2' type='submit'>Register</button>
+          <div className='button-container flex w-full'>
+            <button className='bg-yellow-500 text-slate-900 active:bg-amber-600 font-bold uppercase 
+                              text-sm px-12 py-2 h-full w-full mr-2 mt-2 rounded shadow 
+                              hover:shadow-lg outline-none 
+                              focus:outline-none 
+                              ease-linear transition-all duration-150' type='submit'>Create Account</button>
           </div>
         </form>
       );
