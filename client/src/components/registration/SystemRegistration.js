@@ -7,7 +7,7 @@ import '../../styles/tailwind.css';
 class SystemRegistration extends Component {
   render() {
     const cardStyle = {
-    background: 'linear-gradient(to bottom right, #a2d2ff, #ffe1f5)',
+    background: '"bg-slate-800 min-h-screen flex flex-col items-center',
     };
     const titleStyle = {
       fontFamily: 'Montserrat, sans-serif',

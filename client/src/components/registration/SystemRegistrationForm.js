@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import handleRegistration from '../../handlers/RegistrationHandler';
-
+import { withRouter } from 'react-router-dom';
 import '../../styles/RegistrationFrom.css'
 
 class RegistrationForm extends Component {
@@ -21,9 +21,12 @@ class RegistrationForm extends Component {
         this.setState({ [name]: value });
       };
       
-      handleSubmit = (event) => {
+      handleSubmit = async (event) => {
         event.preventDefault();
-        handleRegistration(this.state);
+        const data = await handleRegistration(this.state);
+        if (data.message === 'ok'){
+          this.props.history.push('/');
+        }
       };
 
   
@@ -98,7 +101,7 @@ class RegistrationForm extends Component {
             />
           </div>
           <div className='button-container flex'>
-            <button className='bg-red-500 rounded-full p-1 px-4 text-gray-200 font-serif m-2' type='submit'>Register</button>
+            <button className='bg-yello-600 rounded-lg p-1 px-4 text-gray-200 font-serif m-2' type='submit'>Register</button>
           </div>
         </form>
       );
