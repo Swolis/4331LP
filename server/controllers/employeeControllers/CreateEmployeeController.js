@@ -40,19 +40,19 @@ exports.createEmployeeController = void 0;
 var ClientSchema_1 = require("../../models/ClientSchema");
 var employeeRepository_1 = require("../../repositories/employeeRepositories/employeeRepository");
 var createEmployeeController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var ClientModel, client, EmployeeID, employeeData, newEmployee, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _a, ClientModel, closeConnection, client, EmployeeID, employeeData, newEmployee, error_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
                 console.log('entering create employee controller');
-                _a.label = 1;
+                _b.label = 1;
             case 1:
-                _a.trys.push([1, 5, , 6]);
+                _b.trys.push([1, 5, , 6]);
                 console.log('req.body: ', req.body);
-                ClientModel = (0, ClientSchema_1.getClientModel)(req.session.client);
+                _a = (0, ClientSchema_1.getClientModel)(req.session.client), ClientModel = _a.model, closeConnection = _a.closeConnection;
                 return [4 /*yield*/, ClientModel.findOne({})];
             case 2:
-                client = _a.sent();
+                client = _b.sent();
                 if (!client) {
                     console.log('client not found');
                     throw new Error('user not found');
@@ -63,7 +63,7 @@ var createEmployeeController = function (req, res) { return __awaiter(void 0, vo
                 }
                 return [4 /*yield*/, client.save()];
             case 3:
-                _a.sent();
+                _b.sent();
                 //pads out id to 7 digits
                 req.body.employeeId = EmployeeID.toString().padStart(7, '0');
                 employeeData = {
@@ -73,13 +73,14 @@ var createEmployeeController = function (req, res) { return __awaiter(void 0, vo
                     permission: req.body.permission
                 };
                 console.log('employeeData:', JSON.stringify(employeeData, null, 2));
-                return [4 /*yield*/, (0, employeeRepository_1.createEmployee)(req.app.locals.client, employeeData)];
+                return [4 /*yield*/, (0, employeeRepository_1.createEmployee)(req.session.client, employeeData)];
             case 4:
-                newEmployee = _a.sent();
+                newEmployee = _b.sent();
+                closeConnection();
                 res.status(201).json(newEmployee);
-                return [3 /*break*/, 6];
+                return [2 /*return*/];
             case 5:
-                error_1 = _a.sent();
+                error_1 = _b.sent();
                 console.log('failed to create emplooyee: ', error_1);
                 if (error_1.message === 'user not found') {
                     res.status(404).json({ message: 'Database error: ', error: error_1 });

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { getClientModel } from '../../models/ClientSchema';
 import { createEmployee } from '../../repositories/employeeRepositories/employeeRepository';
+import { getEmloyeeModel } from '../../models/employee/employeeSchema';
 
 export const createEmployeeController = async ( req: Request, res: Response): Promise<void> => {
     console.log('entering create employee controller');
@@ -8,7 +9,7 @@ export const createEmployeeController = async ( req: Request, res: Response): Pr
 
         console.log('req.body: ', req.body);
 
-        const ClientModel = getClientModel((req as any).session.client);
+         const { model: ClientModel, closeConnection }: any = getClientModel((req as any).session.client);
 
         const client = await ClientModel.findOne({});
 
@@ -36,11 +37,15 @@ export const createEmployeeController = async ( req: Request, res: Response): Pr
 
         console.log('employeeData:', JSON.stringify(employeeData, null, 2));
 
-        const newEmployee = await createEmployee(req.app.locals.client, employeeData);
+        const newEmployee = await createEmployee((req as any).session.client, employeeData);
+
+        closeConnection();
 
         res.status(201).json(newEmployee);
+        return;
 
     } catch (error: any) {
+        
         console.log('failed to create emplooyee: ', error);
         if(error.message === 'user not found'){
             res.status(404).json({message: 'Database error: ', error});
