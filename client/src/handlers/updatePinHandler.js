@@ -14,6 +14,7 @@ const UpdatePinFunction = async (newPinData) => {
         console.log('response data: ', response.data);
         return response.data;
     } catch (error) {
+	console.log('Error updating default pin');
         console.error('Failed to update pin');
     }
 };
