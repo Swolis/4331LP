@@ -44,15 +44,17 @@ var createEmployeeController = function (req, res) { return __awaiter(void 0, vo
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log('entering create product controller');
+                console.log('entering create employee controller');
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 5, , 6]);
+                console.log('req.body: ', req.body);
                 ClientModel = (0, ClientSchema_1.getClientModel)(req.session.client);
                 return [4 /*yield*/, ClientModel.findOne({})];
             case 2:
                 client = _a.sent();
                 if (!client) {
+                    console.log('client not found');
                     throw new Error('user not found');
                 }
                 EmployeeID = client.nextEmployeeID++;

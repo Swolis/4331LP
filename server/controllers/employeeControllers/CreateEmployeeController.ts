@@ -3,14 +3,17 @@ import { getClientModel } from '../../models/ClientSchema';
 import { createEmployee } from '../../repositories/employeeRepositories/employeeRepository';
 
 export const createEmployeeController = async ( req: Request, res: Response): Promise<void> => {
-    console.log('entering create product controller');
+    console.log('entering create employee controller');
     try {
+
+        console.log('req.body: ', req.body);
 
         const ClientModel = getClientModel((req as any).session.client);
 
         const client = await ClientModel.findOne({});
 
         if (!client){
+            console.log('client not found');
             throw new Error('user not found');
         }
         const EmployeeID: number = client.nextEmployeeID++;
