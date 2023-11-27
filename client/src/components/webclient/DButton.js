@@ -3,6 +3,7 @@ import { ItemTypes } from './Constants';
 import { useDrag } from 'react-dnd';
 
 export default function DButton( props ) {
+    console.log(props.mode);
     const currentMode = props.mode;
     const item = props;
     const id = props.id;
@@ -23,7 +24,8 @@ export default function DButton( props ) {
     }))
 
     useEffect(() => {
-    }, [currentMode]);
+        console.log(props.mode);
+    }, [props.mode]);
 
     return (
         <button key={props.id} className='DButton bg-slate-400 border-gray-800 border-2 m-auto flex justify-center text-center align-middle' 
