@@ -65,7 +65,7 @@ var AddClientToListMiddleware = function (req, res, next) { return __awaiter(voi
                 }
                 _b.label = 1;
             case 1:
-                _b.trys.push([1, 4, , 5]);
+                _b.trys.push([1, 6, , 7]);
                 return [4 /*yield*/, bcrypt.hash(password, saltRounds)];
             case 2:
                 hashedPassword = _b.sent();
@@ -76,21 +76,34 @@ var AddClientToListMiddleware = function (req, res, next) { return __awaiter(voi
                     databaseName: databaseName,
                 };
                 ListClientModel = mongoose_1.default.model('ClientList', ClientListSchema_1.default);
+                return [4 /*yield*/, ListClientModel.find({ username: username })];
+            case 3:
+                if ((_b.sent()) != null) {
+                    console.log('username is taken');
+                    return [2 /*return*/, res.status(409).json({ message: 'Usename taken' })];
+                }
+                return [4 /*yield*/, ListClientModel.find({ email: businessEmail })];
+            case 4:
+                if ((_b.sent()) != null) {
+                    console.log('email is taken');
+                    return [2 /*return*/, res.status(409).json({ message: 'Email is already used' })];
+                }
                 newClient = new ListClientModel(newClientData);
                 // store new client
                 return [4 /*yield*/, newClient.save()];
-            case 3:
+            case 5:
                 // store new client
                 _b.sent();
                 // proceed to next funciton
                 next();
-                return [3 /*break*/, 5];
-            case 4:
+                return [3 /*break*/, 7];
+            case 6:
                 error_1 = _b.sent();
                 console.log('caught error: ', error_1);
                 return [2 /*return*/, res.status(500).json({ message: "Internal server error: ".concat(error_1, ".") })];
-            case 5: return [2 /*return*/];
+            case 7: return [2 /*return*/];
         }
     });
 }); };
 exports.AddClientToListMiddleware = AddClientToListMiddleware;
+
