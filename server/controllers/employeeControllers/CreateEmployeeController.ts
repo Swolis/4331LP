@@ -30,7 +30,7 @@ export const createEmployeeController = async ( req: Request, res: Response): Pr
         const employeeData = {
             name: req.body.name,
             pin: req.body.pin,
-            nextEmployeeID: req.body.employeeId,
+            nextEmployeeID: EmployeeID,
             permission:req.body.permission
         };
 
@@ -41,6 +41,7 @@ export const createEmployeeController = async ( req: Request, res: Response): Pr
         res.status(201).json(newEmployee);
 
     } catch (error: any) {
+        console.log('failed to create emplooyee: ', error);
         if(error.message === 'user not found'){
             res.status(404).json({message: 'Database error: ', error});
         }

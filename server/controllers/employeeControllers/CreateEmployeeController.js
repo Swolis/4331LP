@@ -69,7 +69,7 @@ var createEmployeeController = function (req, res) { return __awaiter(void 0, vo
                 employeeData = {
                     name: req.body.name,
                     pin: req.body.pin,
-                    nextEmployeeID: req.body.employeeId,
+                    nextEmployeeID: EmployeeID,
                     permission: req.body.permission
                 };
                 console.log('employeeData:', JSON.stringify(employeeData, null, 2));
@@ -80,6 +80,7 @@ var createEmployeeController = function (req, res) { return __awaiter(void 0, vo
                 return [3 /*break*/, 6];
             case 5:
                 error_1 = _a.sent();
+                console.log('failed to create emplooyee: ', error_1);
                 if (error_1.message === 'user not found') {
                     res.status(404).json({ message: 'Database error: ', error: error_1 });
                 }
