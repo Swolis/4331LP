@@ -30,7 +30,7 @@ const handleLogin = async (formState, setShowupdatePin, setShouldRedirect) => {
 };
 
 
-async function handleSuccessfulLogin(setShowupdatePin, setShouldRedirect) {
+async function handleSuccessfulLogin(loginData, setShowupdatePin, setShouldRedirect) {
     // Check for the authToken cookie
     const authTokenCookie = document.cookie.split(';').map(cookie => cookie.trim()).find(cookie => cookie.startsWith('authToken='));
 
@@ -45,18 +45,6 @@ async function handleSuccessfulLogin(setShowupdatePin, setShouldRedirect) {
 
         if (cookieObject.defaultPin){
             setShowupdatePin(true);
-
-            try {
-                // Perform the pin update using an HTTP request
-                
-                // Once pin update is complete, set the state to trigger redirection
-                if(response.message === "200 OK"){
-                    setShouldRedirect(true);
-                }
-                
-            } catch (error) {
-                console.error('Pin update failed:', error);
-            }
         }else{
             window.location.href = '/clientDashboard';
         }

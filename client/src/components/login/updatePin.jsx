@@ -39,7 +39,7 @@ const UpdatePin = ({ setShowUpdatePin, setShouldRedirect }) => {
                 <input
                     className='mx-auto w-full rounded-full shadow-inner border-opacity-.5 p-1 px-4'
                     type='text'
-                    name='employee name'
+                    name='name'
                     placeholder='employee name'
                     value={state.name}
                     onChange={handleInputChange}
@@ -50,7 +50,7 @@ const UpdatePin = ({ setShowUpdatePin, setShouldRedirect }) => {
                 <input
                     className='mx-auto w-full rounded-full shadow-inner p-1 px-4'
                     type='password'
-                    name='pin'
+                    name='newPin'
                     placeholder='Password'
                     value={state.newPin}
                     onChange={handleInputChange}
