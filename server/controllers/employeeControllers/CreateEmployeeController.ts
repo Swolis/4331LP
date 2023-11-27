@@ -1,29 +1,28 @@
 import { Request, Response } from 'express'
-import { createProduct } from '../../repositories/inventoryRepositories/productRepository';
-import { Connection, Model } from 'mongoose';
-import clientSchema, { IClient, getClientModel } from '../../models/ClientSchema';
-import { Inventory, InventoryConfig } from '../../models/inventoryModels/inventorySchema';
+import { getClientModel } from '../../models/ClientSchema';
 import { createEmployee } from '../../repositories/employeeRepositories/employeeRepository';
 
 export const createEmployeeController = async ( req: Request, res: Response): Promise<void> => {
     console.log('entering create product controller');
     try {
 
-        const ClientModel = getClientModel(req.app.locals.client);
-        // const clientDatabase: Connection = req.app.locals.client;
-        // const ClientModel: Model<IClient> = clientDatabase.model<IClient>('Client', clientSchema);
+        const ClientModel = getClientModel((req as any).session.client);
+
         const client = await ClientModel.findOne({});
 
         if (!client){
             throw new Error('user not found');
         }
         const EmployeeID: number = client.nextEmployeeID++;
+
+        if(req.body.defaultPin){
+            client.defaultPin = false;
+        }
+
         await client.save();
 
 //pads out id to 7 digits
         req.body.employeeId = EmployeeID.toString().padStart(7,'0');
-
-        
 
         const employeeData = {
             name: req.body.name,

@@ -48,7 +48,7 @@ var createProductController = function (req, res) { return __awaiter(void 0, voi
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 5, , 6]);
-                ClientModel = (0, ClientSchema_1.getClientModel)(req.app.locals.client);
+                ClientModel = (0, ClientSchema_1.getClientModel)(req.session.client);
                 return [4 /*yield*/, ClientModel.findOne({})];
             case 2:
                 client = _a.sent();
@@ -82,15 +82,15 @@ var createProductController = function (req, res) { return __awaiter(void 0, voi
                 return [4 /*yield*/, (0, productRepository_1.createProduct)(req.app.locals.client, productData)];
             case 4:
                 newProduct = _a.sent();
-                res.status(201).json(newProduct);
-                return [3 /*break*/, 6];
+                return [2 /*return*/, res.status(201).json(newProduct)];
             case 5:
                 error_1 = _a.sent();
+                console.log('error: ', error_1);
                 if (error_1.message === 'user not found') {
-                    res.status(404).json({ message: 'Database error: ', error: error_1 });
+                    console.log('user not found');
+                    return [2 /*return*/, res.status(404).json({ message: 'Database error: ', error: error_1 })];
                 }
-                res.status(500).json({ message: 'Internal Server Error', error: error_1.message });
-                return [3 /*break*/, 6];
+                return [2 /*return*/, res.status(500).json({ message: 'Internal Server Error', error: error_1.message })];
             case 6: return [2 /*return*/];
         }
     });

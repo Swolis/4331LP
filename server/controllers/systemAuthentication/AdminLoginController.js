@@ -39,47 +39,56 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminLoginController = void 0;
 var ClientSchema_1 = require("../../models/ClientSchema");
 var jwt = require('jsonwebtoken');
+// Controller function
 var AdminLoginController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var client, ClientModel, data, SecretKey, token, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _a, ClientModel, closeConnection_1, data_1, SecretKey_1, session, error_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                console.log('\n\nentering set settion from controller');
-                _a.label = 1;
+                console.log('\n\nentering set session from controller');
+                _b.label = 1;
             case 1:
-                _a.trys.push([1, 4, 5, 6]);
-                return [4 /*yield*/, req.app.locals.client];
+                _b.trys.push([1, 3, , 4]);
+                console.log('Stored client connection:', req.session.client);
+                _a = (0, ClientSchema_1.getClientModel)(req.session.client), ClientModel = _a.model, closeConnection_1 = _a.closeConnection;
+                // Access properties from getModel
+                console.log("session stored email: ".concat(req.session.email));
+                return [4 /*yield*/, ClientModel.findOne({ email: req.session.email }).exec()];
             case 2:
-                client = _a.sent();
-                ClientModel = client.model('Client', ClientSchema_1.default);
-                return [4 /*yield*/, ClientModel.find({}).exec()];
-            case 3:
-                data = _a.sent();
-                console.log('Data from the "client" collection:', data);
-                if (Array.isArray(data) && data.length > 0) {
-                    SecretKey = process.env.SECRET_KEY;
-                    console.log("secret key: ".concat(SecretKey));
-                    token = jwt.sign({ userID: data[0]._id }, SecretKey, { expiresIn: '120m' });
-                    console.log("Generated token: ".concat(token));
-                    res.cookie('authToken', token, { maxAge: 30 * 60 * 1000, httpOnly: false, secure: true });
-                    req.session.userID = data[0]._id;
-                    req.session.authenticated = true;
-                    res.status(200).json({ message: 'Login Successful' });
-                    return [2 /*return*/]; // Add this return statement
+                data_1 = _b.sent();
+                console.log('Data from the "client" collection:', data_1);
+                if (data_1) {
+                    SecretKey_1 = process.env.SECRET_KEY;
+                    session = req.session;
+                    session.client = req.session.client;
+                    session.userID = data_1._id;
+                    session.authenticated = true;
+                    session.save(function (err) {
+                        if (err) {
+                            console.error('Error saving session:', err);
+                            res.status(500).json({ message: 'Internal server error.' });
+                        }
+                        else {
+                            console.log("secret key: ".concat(SecretKey_1));
+                            var token = jwt.sign({ userID: data_1._id, defaultPin: data_1.defaultPin }, SecretKey_1, { expiresIn: '120m' });
+                            console.log("Generated token: ".concat(token));
+                            res.cookie('authToken', token, { maxAge: 30 * 60 * 1000, httpOnly: false, secure: true });
+                            closeConnection_1(); // Close the connection when done
+                            res.status(200).json({ message: 'Login Successful' });
+                            return;
+                        }
+                    });
                 }
                 else {
                     throw new Error('Invalid user data');
                 }
-                return [3 /*break*/, 6];
-            case 4:
-                error_1 = _a.sent();
-                console.error('Error handling setSession contoroller:', error_1);
+                return [3 /*break*/, 4];
+            case 3:
+                error_1 = _b.sent();
+                console.error('Error handling setSession controller:', error_1);
                 res.status(500).json({ message: 'Internal server error.' });
-                return [3 /*break*/, 6];
-            case 5:
-                res.end(); // Ensure response is ended even if there's an error
-                return [7 /*endfinally*/];
-            case 6: return [2 /*return*/];
+                return [2 /*return*/];
+            case 4: return [2 /*return*/];
         }
     });
 }); };

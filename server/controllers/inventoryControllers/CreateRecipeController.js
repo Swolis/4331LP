@@ -49,7 +49,7 @@ var createRecipeController = function (req, res) { return __awaiter(void 0, void
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 5, , 6]);
-                ClientModel = (0, ClientSchema_1.getClientModel)(req.app.locals.client);
+                ClientModel = (0, ClientSchema_1.getClientModel)(req.session.client);
                 return [4 /*yield*/, ClientModel.findOne({})];
             case 2:
                 client = _a.sent();
@@ -83,6 +83,7 @@ var createRecipeController = function (req, res) { return __awaiter(void 0, void
                     cost: req.body.cost,
                     price: priceWithoutDollar,
                     products: products,
+                    description: req.body.description,
                     recipeNumber: recipeNumber,
                 };
                 return [4 /*yield*/, (0, recipeRepository_1.createRecipe)(req.app.locals.client, recipeData)];

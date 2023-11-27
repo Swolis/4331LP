@@ -9,6 +9,7 @@ var clientSchema = new mongoose_1.default.Schema({
     phone: { type: String, unique: true, required: true },
     address: { type: String, unique: true, required: true },
     userId: { type: mongoose_1.default.Schema.Types.ObjectId },
+    defaultPin: { type: Boolean, default: true },
     nextSKU: { type: Number, default: 1 },
     nextRecipe: { type: Number, default: 1 },
     nextEmployeeID: { type: Number, default: 1 }
@@ -19,9 +20,24 @@ clientSchema.pre('save', function (next) {
     }
     next();
 });
-var getClientModel = function (connection) {
-    return connection.model('Client', clientSchema);
+var getClientModel = function (clientInfo) {
+    var uri = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/';
+    var databaseName = clientInfo.databaseName;
+    var connection = mongoose_1.default.createConnection(uri, {
+        dbName: databaseName,
+        ssl: true,
+    });
+    var ClientModel = connection.model('Client', clientSchema);
+    var closeConnection = function () {
+        connection.close()
+            .then(function () {
+            console.log('Connection closed successfully.');
+        })
+            .catch(function (error) {
+            console.error('Error closing the connection:', error);
+        });
+    };
+    return { model: ClientModel, closeConnection: closeConnection };
 };
 exports.getClientModel = getClientModel;
-// const User: Model<IUser> = mongoose.model<IUser>('Client', userSchema);
 exports.default = clientSchema;

@@ -3,13 +3,12 @@ import { createProduct } from '../../repositories/inventoryRepositories/productR
 import { getClientModel } from '../../models/ClientSchema';
 import { Inventory, InventoryConfig } from '../../models/inventoryModels/inventorySchema';
 
-export const createProductController = async ( req: Request, res: Response): Promise<void> => {
+export const createProductController = async ( req: Request, res: Response): Promise<void | Response<any, Record<string, any>>> => {
     console.log('entering create product controller');
     try {
 
-        const ClientModel = getClientModel(req.app.locals.client);
-        // const clientDatabase: Connection = req.app.locals.client;
-        // const ClientModel: Model<IClient> = clientDatabase.model<IClient>('Client', clientSchema);
+        const ClientModel = getClientModel((req as any).session.client);
+
         const client = await ClientModel.findOne({});
 
         if (!client){
@@ -46,12 +45,14 @@ export const createProductController = async ( req: Request, res: Response): Pro
 
         const newProduct = await createProduct(req.app.locals.client, productData);
 
-        res.status(201).json(newProduct);
+        return res.status(201).json(newProduct);
 
     } catch (error: any) {
+        console.log('error: ', error)
         if(error.message === 'user not found'){
-            res.status(404).json({message: 'Database error: ', error});
+            console.log('user not found');
+           return  res.status(404).json({message: 'Database error: ', error});
         }
-        res.status(500).json({ message: 'Internal Server Error', error: error.message});
+       return res.status(500).json({ message: 'Internal Server Error', error: error.message});
     }
 }   

@@ -1,9 +1,11 @@
 import axios from "axios";
 
+const baseURL = `${window.location.protocol}//${window.location.hostname}:5000`;
+
 const searchForProduct = async(query) => {
     try {
         console.log(`searching for: ${query}`);
-        const response = await axios.post('http://localhost:3001/Product/Search', query, {mode: 'cors'});
+        const response = await axios.post(`${baseURL}/Product/Search`, query, {withCredentials: true, mode: 'cors'});
         return response.data;
     }catch (error) {
         console.error(`product search error: ${error}`);

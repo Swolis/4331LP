@@ -72,7 +72,7 @@ var AuthenicateUserMiddleware = function (req, res, next) { return __awaiter(voi
                 console.log("u: ".concat(EnteredUsername, " p: ").concat(EnteredPassword));
                 _a.label = 3;
             case 3:
-                _a.trys.push([3, 7, , 8]);
+                _a.trys.push([3, 10, , 11]);
                 ListClientModel = mongoose_1.default.model('ClientList', ClientListSchema_1.default);
                 return [4 /*yield*/, ListClientModel.findOne({
                         $or: [
@@ -99,26 +99,31 @@ var AuthenicateUserMiddleware = function (req, res, next) { return __awaiter(voi
                 isMatch = _a.sent();
                 _a.label = 6;
             case 6:
-                // just for testing, the password is not hashed
-                //const isMatch = (EnteredPassword === user.hashedPassword);
-                if (isMatch || oauthProvidedEmail.length > 0) {
-                    console.log('passwords match');
-                    SecretKey = 'SecretKey';
-                    token = jwt.sign({ databaseName: user.databaseName }, SecretKey);
-                    //(res as any).headers.authorization = token;
-                    // console.log('from authorization: req.headers.authorization: ', req.headers.authorization);
-                    req.session.databaseName = user.databaseName;
-                    next();
-                }
-                else {
-                    console.log('passwords dont match');
-                    return [2 /*return*/, res.status(401).json({ message: 'Access Denied' })];
-                }
-                return [3 /*break*/, 8];
+                if (!(isMatch || oauthProvidedEmail.length > 0)) return [3 /*break*/, 8];
+                console.log('passwords match');
+                SecretKey = 'SecretKey';
+                token = jwt.sign({ databaseName: user.databaseName }, SecretKey);
+                //(res as any).headers.authorization = token;
+                // console.log('from authorization: req.headers.authorization: ', req.headers.authorization);
+                req.session.databaseName = user.databaseName;
+                req.session.email = user.email;
+                req.session.client = {
+                    databaseName: req.session.databaseName,
+                    // other relevant information
+                };
+                return [4 /*yield*/, req.session.save()];
             case 7:
+                _a.sent();
+                next();
+                return [3 /*break*/, 9];
+            case 8:
+                console.log('passwords dont match');
+                return [2 /*return*/, res.status(401).json({ message: 'Access Denied' })];
+            case 9: return [3 /*break*/, 11];
+            case 10:
                 error_1 = _a.sent();
                 return [2 /*return*/, res.status(500).json({ message: 'Internal sever error.' })];
-            case 8: return [2 /*return*/];
+            case 11: return [2 /*return*/];
         }
     });
 }); };

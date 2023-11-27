@@ -36,48 +36,62 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setSession = void 0;
-var ClientSchema_1 = require("../models/ClientSchema");
-var setSession = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var client, ClientModel, data, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+exports.RecipeSearchController = void 0;
+var recipieSchema_1 = require("../../models/inventoryModels/recipieSchema");
+var RecipeSearchController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, RecipeModel, closeConnection, query, searchResult, error_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                if (!(req.url === '/Admin-Login')) {
-                    console.log('set session not applicable');
-                    return [2 /*return*/, next()];
-                }
-                console.log('set session applicable');
-                _a.label = 1;
+                console.log('entering search recipe controller');
+                _a = (0, recipieSchema_1.getRecipeModel)(req.session.client), RecipeModel = _a.model, closeConnection = _a.closeConnection;
+                query = req.body.query;
+                console.log("query: ".concat(query));
+                _b.label = 1;
             case 1:
-                _a.trys.push([1, 4, 5, 6]);
-                return [4 /*yield*/, req.app.locals.client];
+                _b.trys.push([1, 10, , 11]);
+                searchResult = void 0;
+                if (!(typeof (query) === 'string')) return [3 /*break*/, 3];
+                return [4 /*yield*/, RecipeModel.find({
+                        $or: [
+                            { name: { $regex: query, $options: 'i' } },
+                        ],
+                    })];
             case 2:
-                client = _a.sent();
-                ClientModel = client.model('Client', ClientSchema_1.default);
-                return [4 /*yield*/, ClientModel.find({}).exec()];
+                searchResult = _b.sent();
+                return [3 /*break*/, 9];
             case 3:
-                data = _a.sent();
-                console.log('Data from the "client" collection:', data);
-                if (Array.isArray(data) && data.length > 0) {
-                    req.session.userID = data[0]._id;
-                    res.status(200).json({ message: 'Login Successful' });
-                    return [2 /*return*/]; // Add this return statement
-                }
-                else {
-                    throw new Error('Invalid user data');
-                }
-                return [3 /*break*/, 6];
+                if (!(typeof (query) === 'number')) return [3 /*break*/, 8];
+                if (!(query === 0)) return [3 /*break*/, 5];
+                return [4 /*yield*/, RecipeModel.find({})];
             case 4:
-                error_1 = _a.sent();
-                console.error('Error handling setSession middleware:', error_1);
-                res.status(500).json({ message: 'Internal server error.' });
-                return [3 /*break*/, 6];
-            case 5:
-                res.end(); // Ensure response is ended even if there's an error
-                return [7 /*endfinally*/];
-            case 6: return [2 /*return*/];
+                searchResult = _b.sent();
+                return [3 /*break*/, 7];
+            case 5: return [4 /*yield*/, RecipeModel.find({
+                    $or: [
+                        { price: query },
+                        { sku: query },
+                    ],
+                })];
+            case 6:
+                searchResult = _b.sent();
+                _b.label = 7;
+            case 7: return [3 /*break*/, 9];
+            case 8: throw new Error('Search type invalid.');
+            case 9:
+                if (searchResult.length === 0) {
+                    res.status(404).json({ message: 'No recipe found.' });
+                    return [2 /*return*/];
+                }
+                res.status(201).json(searchResult);
+                return [2 /*return*/];
+            case 10:
+                error_1 = _b.sent();
+                console.log("error: ".concat(error_1));
+                res.status(500).json({ message: "Internal server error: ".concat(error_1) });
+                return [3 /*break*/, 11];
+            case 11: return [2 /*return*/];
         }
     });
 }); };
-exports.setSession = setSession;
+exports.RecipeSearchController = RecipeSearchController;

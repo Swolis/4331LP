@@ -40,32 +40,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.connectToClient = void 0;
 var mongoose_1 = require("mongoose");
 var uri = 'mongodb+srv://jjoslin0994:22maGentafagoTTa@cluster0.zwwns9p.mongodb.net/';
-// Create an array to store multiple connections
-var connections = [];
 function connectToClient(databaseName) {
     var _this = this;
     return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-        var connectionIndex, connection, error_1;
+        var connection_1;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    connectionIndex = 1;
-                    connection = connections[connectionIndex] || mongoose_1.default.createConnection();
-                    return [4 /*yield*/, connection.openUri(uri, { dbName: databaseName, ssl: true })];
-                case 1:
-                    _a.sent();
-                    console.log("Connected to the database on connection[".concat(connectionIndex, "]"));
-                    connections[connectionIndex] = connection;
-                    resolve(connection); // resolve with the database instance
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_1 = _a.sent();
-                    console.error('Error connecting to the database: ', error_1);
-                    reject(error_1); // reject with the error
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+            try {
+                connection_1 = mongoose_1.default.createConnection(uri, {
+                    dbName: databaseName,
+                    ssl: true,
+                });
+                connection_1.on('connected', function () {
+                    console.log("Connected to the database for ".concat(databaseName));
+                    resolve(connection_1); // Resolve with the database instance
+                });
+                connection_1.on('error', function (error) {
+                    console.error('Error connecting to the database:', error);
+                    reject(error); // Reject with the error
+                });
             }
+            catch (error) {
+                console.error('Error creating connection to the database: ', error);
+                reject(error); // Reject with the error
+            }
+            return [2 /*return*/];
         });
     }); });
 }

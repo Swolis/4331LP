@@ -1,8 +1,11 @@
 import axios from 'axios';
 
+const baseURL = `${window.location.protocol}//${window.location.hostname}:5000`;
+
+
 const registerUser = async (formData) => {
     try {
-        const response = await axios.post('http://localhost:3001/Admin-Registration', formData, {mode: 'cors'});
+        const response = await axios.post(`${baseURL}/Admin-Registration`, formData, { mode: 'cors' });
         return response.data;
     } catch (error) {
         if (error.response) {
