@@ -44,7 +44,7 @@ var createRecipe = function (connection, recipeData) { return __awaiter(void 0, 
         switch (_b.label) {
             case 0:
                 _b.trys.push([0, 2, , 3]);
-                _a = (0, recipieSchema_1.getRecipeModel)(connection), RecipeModel = _a.mode, closeConnection = _a.closeConnection;
+                _a = (0, recipieSchema_1.getRecipeModel)(connection), RecipeModel = _a.model, closeConnection = _a.closeConnection;
                 newRecipe = new RecipeModel(recipeData);
                 return [4 /*yield*/, newRecipe.save()];
             case 1:
