@@ -4,9 +4,10 @@ import DraggableButton from './DraggableButton';
 import GridSquare from './GridSquare';
 import GroupMenu from './GroupMenu';
 import { useMode } from './ModeContext';
-import { useOrderState, useOrderDispatch } from './OrderContext';
+import { useOrderDispatch } from './OrderContext';
 import sendRequest  from '../../handlers/requestHandler';
 import useInputModal from './useInputModal';
+import { BaseURI } from './Constants';
 
 
 //////////////////////////////////////////////////////
@@ -154,8 +155,10 @@ export default function ActiveArea() {
 
     // Save layout
     function saveLayout() {
-        let newData = data;
+        var newData = data;
         let newButtons = [];
+        var group = newData.find(object => object.group.name === activeTab).group;
+
         for (let i = 0; i < buttons.length; i++) {
             newButtons.push({button:{
                 id: buttons[i].props.id,
@@ -168,7 +171,38 @@ export default function ActiveArea() {
                 }
             })
         }
-        newData.find(object => object.group.name === activeTab).group.buttons = newButtons;
+        
+        if (activeSubTab !== '') {
+            group = group.subgroups.find(object => object.group.name === activeSubTab).group.buttons = newButtons;
+            console.log(group);
+            let result = sendRequest(group, BaseURI + '/Button-Routes/Update-Group-Buttons');
+            setData((prevData) => {
+                return prevData.map((group) => {
+                    if (group.group.id === activeTab) {
+                        return {
+                            ...group,
+                            group: {
+                                ...group.group,
+                                subgroups: group.group.subgroups.map((subgroup) => {
+                                    if (subgroup.group.id === result.id) {
+                                        return {...subgroup, group: result };
+                                    }
+                                    return subgroup;
+                                }),
+                            },
+                        };
+                    }
+                    return group;
+                });
+            } );
+        } else {
+            group.buttons = newButtons;
+            console.log(group);
+            let result = sendRequest(group, BaseURI + '/Button-Routes/Update-Group-Buttons');
+            setData(...data, data.find(object => object.group.id === group.id).group = result);
+        }
+
+        setButtons([]);
     }
 
     // function test() {
