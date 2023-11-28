@@ -32,7 +32,7 @@ export default function RegisterClient() {
     const addModifier = (item) => {
         const updatedOrder = [...order];
         console.log(order);
-        updatedOrder[order.length-1].modifiers.push({ name: item.text, price: item.price });
+        updatedOrder[order.length].modifiers.push({ name: item.text, price: item.price });
         setOrder(updatedOrder);
         updateTotalPrice();
     };
@@ -68,10 +68,12 @@ export default function RegisterClient() {
     return (
         
         <DndProvider backend={backend}>
-            <div className='bg-slate-800 min-h-screen flex'>
+            <div className='bg-slate-800 min-h-screen flex flex-col'>
                 <PinPad mode={mode} setMode={changeMode}/>
-                <ActionArea mode={mode} order={order} onRemoveItem={removeItem} totalPrice={totalPrice} />
-                <ActiveArea mode={mode} setMode={changeMode} order={order} onAddItem={addItem} onAddModifier={addModifier}  /> 
+                <div className='flex flex-row h-screen'>
+                    <ActionArea mode={mode} order={order} onRemoveItem={removeItem} totalPrice={totalPrice} />
+                    <ActiveArea mode={mode} setMode={changeMode} order={order} onAddItem={addItem} onAddModifier={addModifier}  />
+                </div>
             </div>
         </DndProvider>
     );

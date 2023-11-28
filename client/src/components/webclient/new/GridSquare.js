@@ -9,17 +9,12 @@ export default function GridSquare({mode, x, y, onDrop, children}) {
     const [{ isOver }, drop] = useDrop(
         () => ({
           accept: ItemTypes.BUTTON,
-        drop: (children) => {onDrop(mode,posX,posY,children)},
+        drop: (item) => {onDrop(mode,posX,posY,item.props)},
             collect: (monitor) => ({
             isOver: !!monitor.isOver(),
             canDrop: !!monitor.canDrop()
           })
-        }),
-        [x, y]
-    )
-    
-    useEffect(() => {
-    }, [mode]);
+        }));
 
     return (
         <div
@@ -32,7 +27,9 @@ export default function GridSquare({mode, x, y, onDrop, children}) {
                 height: '100px',
             }}
             >
-            <Square>{children}</Square>
+            <Square>
+                {children}
+            </Square>
             {isOver && (
                 <div
                 style={{

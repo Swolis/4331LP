@@ -1,8 +1,6 @@
 .pin-pad-container {
     display: block;
     width: 400px;
-    margin:15% auto;
-    border-radius: 15px;
 }
 
 .pin-display {
@@ -12,7 +10,7 @@
     padding: 0rem 2.3rem;
 }
 
-.pin-pad {
+/* .pin-pad {
     display: block;
     width: 350px;
     font-size: 200%;
@@ -23,7 +21,7 @@
 .pin-pad button {
     padding-left: 2.5rem;
     padding-right: 2.5rem;
-}
+} */
 
 .icon {
     padding-left: 2.3rem !important;
@@ -49,17 +47,15 @@
     margin:0px;
 }
 
-.GroupMenu button{
-    font-size: 110%;
-    background-color: grey;
+/* .GroupMenu button{
     border-radius: 10px 10px 0 0;
     padding: 10px 20px;
     margin-right: 2px;
-}
+} */
 
-.GroupMenu .active {
+/* .GroupMenu .active {
     background-color: lightgray;
-}
+} */
 
 /* .SubMenu button{
     padding: 20px 10px;
