@@ -48,7 +48,7 @@ export const establishSubGroup = async ( req: Request, res: Response): Promise<v
         closeConnection()
         const { model: GroupModel, closeConnection2 }: any = getGroupModel((req as any).session.client);
         let findGroup=GroupModel.findById(req.body.groupID)
-        if (findGroup==null){
+        if (findGroup==undefined){
             closeConnection2()
             res.status(404).json({message: 'No group found.'});
             return;
