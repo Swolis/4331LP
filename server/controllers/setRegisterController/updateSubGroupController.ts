@@ -18,8 +18,8 @@ export const updateSubGroups = async ( req: Request, res: Response): Promise<voi
         await client.save();
         closeConnection()
         const { model: subGroupModel, closeConnection2 }: any = getSubGroupModel((req as any).session.client);
-        let findGroup=subGroupModel.findById(req.body.group.subgroups.group.groupID)
-        if (findGroup==null){
+        let findGroup = await subGroupModel.findById(req.body.group.subgroups.group.groupID)
+        if (findGroup === null){
             res.status(404).json({message: 'No group found.'});
             return;
         }

@@ -7,7 +7,8 @@ import { createOrder } from '../../repositories/orderRepositories/makeAnOrder';
 export const createOrderController = async ( req: Request, res: Response): Promise<void> => {
     
     try {
-        const ClientModel = getClientModel(req.app.locals.client);
+        const { model: ClientModel, closeConnection }: any = getClientModel((req as any).session.client);
+
         const client = await ClientModel.findOne({});
 
         if(!client) { 
@@ -15,19 +16,20 @@ export const createOrderController = async ( req: Request, res: Response): Promi
         }
         const orderNumber: number = client.nextOrderID++;
         await client.save();
+
+        closeConnection();
+
         let itemCount=req.body.itemCount;
-        let itemArray=[itemCount]
-
-
+        let itemArray=[itemCount];
 
         req.body.orderNumber = orderNumber;
         req.body.date=new Date().toString()
-        let modsize
-        let itemData
-        //item[0]
-        //recipie 0 is cheeseburger
-        // mod 0:[ketchup,mustard] mod[0][0]=ketchup
-        for(let ammountOfItems=0;ammountOfItems<itemCount;ammountOfItems++){
+        let modsize;
+        let itemData;
+
+        
+
+        for(let ammountOfItems = 0;ammountOfItems<itemCount;ammountOfItems++){
             modsize=req.body.mod[ammountOfItems].length
             let modArray=[modsize]
             for(let ammountOfMods=0;ammountOfMods<modsize;ammountOfMods++){
@@ -41,10 +43,6 @@ export const createOrderController = async ( req: Request, res: Response): Promi
 
         }
 
-          
-            
-
-
         const orderData = {
             employeeID: req.body.employeeID,
             orderID:req.body.orderNumber,
@@ -53,9 +51,12 @@ export const createOrderController = async ( req: Request, res: Response): Promi
             totalPrice: req.body.totalPrice,
         }
 
-        const newOrder = await createOrder(req.app.locals.client, orderData);
+        const newOrder = await createOrder((req as any).session.client, orderData);
 
         res.status(201).json({ message: ' Created new Order', newOrder });
+        return;
+
+        
     }catch (error: any) {
         console.error(`Error createing order: ${error.message}`);
         res.status(500).json({message: `Internal server error`});
