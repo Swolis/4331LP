@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import DButton from './DButton';
+import DraggableButton from './DraggableButton';
 import GridSquare from './GridSquare';
 import GroupMenu from './GroupMenu';
+import { useMode } from './ModeContext';
+import { useOrderState, useOrderDispatch } from './OrderContext';
 import sendRequest  from '../../handlers/requestHandler';
 import useInputModal from './useInputModal';
 
@@ -11,14 +13,17 @@ import useInputModal from './useInputModal';
 //
 //
 // The active button console 
-export default function ActiveArea({mode, setMode, order, onAddItem, onAddModifier}) {
-    const currentMode = mode;
-    // State data for groups, subgroups, and buttons
-    const [data, setData]=useState([]);
+export default function ActiveArea() {
+
+    const orderDispatch = useOrderDispatch();
+    const { mode, toggleMode } = useMode();
 
     useEffect(() => {
-        
-    }, [order])
+
+    }, [])
+
+    // State data for groups, subgroups, and buttons
+    const [data, setData]=useState([]);
 
     // Get groups data
     const getData = () => {
@@ -36,12 +41,12 @@ export default function ActiveArea({mode, setMode, order, onAddItem, onAddModifi
             setData(myJson);
         })
     }
-
     
     const [activeTab, setActiveTab] = useState('');
     const [activeSubTab, setActiveSubTab] = useState('');
     const [submenu, setActiveSubData] = useState([]);
     const [buttons, setButtons] = useState([]);
+ //////////////////////////////////////////////////////////////////////////////////////
     const [status, setStatus] = useState(false);
     const [input, setInput] = useState('');
     const [button, setButton] = useState(null);
@@ -49,11 +54,13 @@ export default function ActiveArea({mode, setMode, order, onAddItem, onAddModifi
     const [subTrigger, setSubTrigger] = useState(false);
     const [groupTrigger, setGroupTrigger] = useState(false);
     const [getUserInput, InputModal] = useInputModal('Enter label:', setInput);
-    
+  //////////////////////////////////////////////////////////////////////////////////////   
     const navigate = useNavigate();
 
-    const addToOrder = (item) => onAddItem(item);
-    const modifyOrder = (item) => onAddModifier(item);
+    const addItemToOrder = (product) => {
+        orderDispatch({ type: 'ADD_TO_ORDER', item: product });
+    };
+
 
     // Changes the Active tab and loads any modifier tabs
     function changeActiveTab(newTab) {
@@ -89,10 +96,26 @@ export default function ActiveArea({mode, setMode, order, onAddItem, onAddModifi
     function renderButton(button) {
         let currentTab = activeTab;
         if (activeSubTab === '') {
-            let newButton = <DButton key={button.id} mode={button.mode} id={button.id} group={currentTab} price={button.price} fill={button.fill} text={button.text} posX={button.x} posY={button.y} funct={addToOrder}/>;
-            return (newButton);
+            return (<DraggableButton key={button.id} 
+                                    id={button.id} 
+                                    group={currentTab} 
+                                    price={button.price} 
+                                    fill={button.fill} 
+                                    name={button.name}
+                                    modifiers={button.modifiers} 
+                                    posX={button.x} 
+                                    posY={button.y}
+                                    funct={addItemToOrder}/>);
         } else {
-            return (<DButton key={button.id} mode={button.mode} id={button.id} group={activeSubTab} price={button.price} fill={button.fill} text={button.text} posX={button.x} posY={button.y} funct={modifyOrder}/>);
+            return (<DraggableButton key={button.id} 
+                                    id={button.id} 
+                                    group={activeSubTab} 
+                                    price={button.price} 
+                                    fill={button.fill} 
+                                    name={button.name} 
+                                    posX={button.x} 
+                                    posY={button.y} 
+                                    funct={addItemToOrder}/>);
         }
     }
 
@@ -103,10 +126,10 @@ export default function ActiveArea({mode, setMode, order, onAddItem, onAddModifi
             mode: mode,
             x: x,
             y: y,
-            fill: item.props.fill,
-            text: item.props.text,
-            price: item.props.price,
-            id: item.props.id,
+            name: item.name,
+            modifiers: [],
+            price: item.price,
+            id: item.id,
         }
         setButton(newItem);
         setDropTrigger(true);
@@ -137,7 +160,7 @@ export default function ActiveArea({mode, setMode, order, onAddItem, onAddModifi
             newButtons.push({button:{
                 id: buttons[i].props.id,
                 group: activeTab,
-                name: buttons[i].props.text,
+                name: buttons[i].props.name,
                 fill: buttons[i].props.fill,
                 x: buttons[i].props.posX,
                 y: buttons[i].props.posY,
@@ -148,11 +171,11 @@ export default function ActiveArea({mode, setMode, order, onAddItem, onAddModifi
         newData.find(object => object.group.name === activeTab).group.buttons = newButtons;
     }
 
-    function test() {
-        let request = data;
-        let result = sendRequest(request, 'https://jsonplaceholder.typicode.com/posts');
-        console.log(result);
-    }
+    // function test() {
+    //     let request = data;
+    //     let result = sendRequest(request, 'https://jsonplaceholder.typicode.com/posts');
+    //     console.log(result);
+    // }
 
     const grid = [];
     let count = 0;
@@ -182,20 +205,24 @@ export default function ActiveArea({mode, setMode, order, onAddItem, onAddModifi
                             break;
                         }
                     } else {
-                    newButton = null;
+                        newButton = null;
                     }
             }
         }
 
         grid.push(
-        <GridSquare key={count} group={activeTab} mode={mode} x={i} y={j} onDrop={handleDrop}>
-        {newButton}
-        </GridSquare>
+            <GridSquare key={count} group={activeTab} mode={mode} x={i} y={j} onDrop={handleDrop}>
+                {newButton}
+            </GridSquare>
         );
 
         count = count + 1;
         }
     }
+
+    useEffect (() => {
+        getData();
+    }, []);
 
 
     // Rerenders on drop adding a button
@@ -207,9 +234,6 @@ export default function ActiveArea({mode, setMode, order, onAddItem, onAddModifi
         setDropTrigger(false);
     }, [dropTrigger,button]);
     
-    useEffect(() => {
-
-    }, [currentMode]);
 
     useEffect(() => {
         const newData = data;
@@ -243,11 +267,10 @@ export default function ActiveArea({mode, setMode, order, onAddItem, onAddModifi
         }
     },[data]);
 
-
     return (
         <div className='flex w-full justify-center'>
-            {mode === 0 && <div></div>}
-            {mode > 0 && (
+            {mode === 0 && <></>}
+            
                 <div className='flex flex-col justify-normal'>
                     <div className="flex flex-row">
                         <GroupMenu res={data} activeTab={activeTab} setActiveTab={changeActiveTab} />
@@ -273,14 +296,14 @@ export default function ActiveArea({mode, setMode, order, onAddItem, onAddModifi
                                             text-sm px-6 py-3 h-20 mr-2 mt-2 rounded shadow 
                                             hover:shadow-lg outline-none 
                                             focus:outline-none 
-                                            ease-linear transition-all duration-150' onClick={() => setMode(0)}>Change User</button>
+                                            ease-linear transition-all duration-150' onClick={() => toggleMode(0)}>Change User</button>
                     {mode === 2 && (
                         <div className='flex'>
                             <button className='bg-yellow-400 text-slate-900 active:bg-amber-600 font-bold uppercase 
                                             text-sm px-6 py-3 h-20 mr-2 mt-2 rounded shadow 
                                             hover:shadow-lg outline-none 
                                             focus:outline-none 
-                                            ease-linear transition-all duration-150' onClick={() => setMode(3)}>Edit</button>
+                                            ease-linear transition-all duration-150' onClick={() => toggleMode(3)}>Edit</button>
                             <button className='bg-yellow-400 text-slate-900 active:bg-amber-600 font-bold uppercase 
                                             text-sm px-6 py-3 h-20 mr-2 mt-2 rounded shadow 
                                             hover:shadow-lg outline-none 
@@ -299,7 +322,7 @@ export default function ActiveArea({mode, setMode, order, onAddItem, onAddModifi
                                             text-sm px-6 py-3 h-20 mr-2 mt-2 rounded shadow 
                                             hover:shadow-lg outline-none 
                                             focus:outline-none 
-                                            ease-linear transition-all duration-150' onClick={() => setMode(2)}>Finish</button>
+                                            ease-linear transition-all duration-150' onClick={() => toggleMode(2)}>Finish</button>
                             <button className='bg-yellow-400 text-slate-900 active:bg-amber-600 font-bold uppercase 
                                             text-sm px-6 py-3 h-20 mr-2 mt-2 rounded shadow 
                                             hover:shadow-lg outline-none 
@@ -309,7 +332,7 @@ export default function ActiveArea({mode, setMode, order, onAddItem, onAddModifi
                     )}
                     </div>
                 </div>
-            )}
+ 
             <InputModal active={true}/>
         </div>
     )

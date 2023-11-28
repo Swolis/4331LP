@@ -1,12 +1,11 @@
 import React from 'react';
-import { ItemTypes } from './Constants';
 import { useDrag } from 'react-dnd';
+import { useMode } from './ModeContext';
+import { ItemTypes } from './Constants';
 
-export default function DButton( props ) {
-    const id = props.id;
-    const fill = props.fill;
-    const name = props.text;
-    const clickFunct = props.funct;
+export default function DraggableButton( props ) {
+    const { id, fill, name, funct } = props;
+    const { mode } = useMode(); 
 
     const [{isDragging}, drag] = useDrag(() => ({
         type: ItemTypes.BUTTON,
@@ -16,15 +15,21 @@ export default function DButton( props ) {
         }),
     }))
 
+    const handleClick = () => {
+        if (funct) {
+          funct(props);
+        }
+      };
+
     return (
         <button key={id} className='DButton bg-neutral-400 border-neutral-900 text-gray-950 border p-3 mr-2 mt-2 flex content-center items-center justify-content-center text-center shadow-md align-middle' 
-            ref={props.mode === 3 ? drag : null}
+            ref={mode === 3 ? drag : null}
             style={{
                 background: fill,
                 opacity: isDragging ? 0.5 : 1,
-                cursor: props.mode === 3 ? 'grab' : '',
+                cursor: mode === 3 ? 'grab' : '',
             }}
-            onClick={() => clickFunct(props)}    
+            onClick={handleClick}    
             >
             { name }
         </button>
