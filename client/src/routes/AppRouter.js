@@ -8,7 +8,7 @@ import RegisterClient from '../components/webclient/RegisterClient';
 import DashboardTemplate from '../components/authenticatedUser/dashboard/dashboardTemplate';
 import ProductPage from '../components/authenticatedUser/dashboard/productPage/productPage';
 import RecipePage from '../components/authenticatedUser/dashboard/recipePage/recipePage';
-import WebClient from '../components/webclient/new/WebClient';
+import WebClient from '../components/webclient/WebClient';
 
 
 function AppRouter() {
