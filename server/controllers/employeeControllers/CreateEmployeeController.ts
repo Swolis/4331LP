@@ -31,25 +31,17 @@ export const createEmployeeController = async ( req: Request, res: Response): Pr
         const employeeData = {
             name: req.body.name,
             pin: req.body.pin,
-            nextEmployeeID: EmployeeID,
+            EmployeeID: EmployeeID,
             permission:req.body.permission
         };
 
         console.log('employeeData:', JSON.stringify(employeeData, null, 2));
 
-        const {model:employeeModel,closeConnection2}=getEmployeeModel((req as any).session.client)
-
-        const usablePin=employeeModel.findOne({pin:req.body.pin})
-        
-        if(usablePin!=undefined){
-            res.status(409).json({message: 'Pin is already being used'});
-        }
-
         const newEmployee = await createEmployee((req as any).session.client, employeeData);
 
         closeConnection();
 
-        res.status(201).json({message: 'Successfully Added Employee',newEmployee});
+        res.status(201).json({message: 'Successfully Added Employee'});
         return;
 
     } catch (error: any) {

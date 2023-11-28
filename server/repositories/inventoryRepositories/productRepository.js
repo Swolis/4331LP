@@ -39,21 +39,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createProduct = void 0;
 var productSchema_1 = require("../../models/inventoryModels/productSchema");
 var createProduct = function (clientDatabase, ProductData) { return __awaiter(void 0, void 0, void 0, function () {
-    var ProductModel, newProduct, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _a, ProductModel, closeConnection, newProduct, error_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                ProductModel = (0, productSchema_1.getProductModel)(clientDatabase);
+                _b.trys.push([0, 2, , 3]);
+                _a = (0, productSchema_1.getProductModel)(clientDatabase), ProductModel = _a.model, closeConnection = _a.closeConnection;
                 newProduct = new ProductModel(ProductData);
                 // Save the new product
                 return [4 /*yield*/, newProduct.save()];
             case 1:
                 // Save the new product
-                _a.sent();
+                _b.sent();
+                closeConnection();
                 return [2 /*return*/, newProduct];
             case 2:
-                error_1 = _a.sent();
+                error_1 = _b.sent();
                 console.error('Error creating product:', error_1);
                 throw new Error('Internal Server Error');
             case 3: return [2 /*return*/];

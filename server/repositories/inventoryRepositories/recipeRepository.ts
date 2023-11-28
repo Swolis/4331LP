@@ -3,11 +3,13 @@ import recipeSchema, { IRecipe, getRecipeModel } from "../../models/inventoryMod
 
 export const createRecipe: (connection: Connection, recipeData: any) => Promise<IRecipe> = async (connection: Connection, recipeData: any) => {
     try {
-        const RecipeModel = getRecipeModel(connection);
+        const {mode: RecipeModel, closeConnection } = getRecipeModel(connection);
         const newRecipe = new RecipeModel(recipeData);
     
         await newRecipe.save();
-    
+        
+        closeConnection();
+
         return newRecipe;
     } catch (error: any) {
         console.error('Error createing recipe: ', error);
