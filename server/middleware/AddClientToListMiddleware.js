@@ -42,7 +42,7 @@ var mongoose_1 = require("mongoose");
 var bcrypt = require('bcrypt');
 var saltRounds = 12;
 var AddClientToListMiddleware = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, username, password, businessEmail, databaseName, hashedPassword, newClientData, ListClientModel, newClient, error_1;
+    var _a, username, password, businessEmail, databaseName, hashedPassword, newClientData, ListClientModel, existingUsername, existingEmail, newClient, error_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -78,13 +78,15 @@ var AddClientToListMiddleware = function (req, res, next) { return __awaiter(voi
                 ListClientModel = mongoose_1.default.model('ClientList', ClientListSchema_1.default);
                 return [4 /*yield*/, ListClientModel.find({ username: username })];
             case 3:
-                if ((_b.sent()) != undefined) {
+                existingUsername = _b.sent();
+                return [4 /*yield*/, ListClientModel.find({ email: businessEmail })];
+            case 4:
+                existingEmail = _b.sent();
+                if (existingUsername.length !== 0) {
                     console.log('username is taken');
                     return [2 /*return*/, res.status(409).json({ message: 'Usename taken' })];
                 }
-                return [4 /*yield*/, ListClientModel.find({ email: businessEmail })];
-            case 4:
-                if ((_b.sent()) != undefined) {
+                if (existingEmail.length !== 0) {
                     console.log('email is taken');
                     return [2 /*return*/, res.status(409).json({ message: 'Email is already used' })];
                 }

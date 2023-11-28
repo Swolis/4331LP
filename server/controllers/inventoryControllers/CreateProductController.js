@@ -40,27 +40,28 @@ exports.createProductController = void 0;
 var productRepository_1 = require("../../repositories/inventoryRepositories/productRepository");
 var ClientSchema_1 = require("../../models/ClientSchema");
 var createProductController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var ClientModel, client, sku, inventoryConfig, inventory, productData, newProduct, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _a, ClientModel, closeConnection, client, sku, inventoryConfig, inventory, productData, newProduct, error_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
                 console.log('entering create product controller');
-                _a.label = 1;
+                _b.label = 1;
             case 1:
-                _a.trys.push([1, 5, , 6]);
-                ClientModel = (0, ClientSchema_1.getClientModel)(req.session.client);
+                _b.trys.push([1, 5, , 6]);
+                _a = (0, ClientSchema_1.getClientModel)(req.session.client), ClientModel = _a.model, closeConnection = _a.closeConnection;
                 return [4 /*yield*/, ClientModel.findOne({})];
             case 2:
-                client = _a.sent();
+                client = _b.sent();
                 if (!client) {
                     throw new Error('user not found');
                 }
                 sku = client.nextSKU++;
                 return [4 /*yield*/, client.save()];
             case 3:
-                _a.sent();
+                _b.sent();
                 console.log("sku: ".concat(sku));
                 req.body.sku = sku;
+                closeConnection();
                 inventoryConfig = {
                     innerPack: req.body.innerPackDef,
                     each: req.body.eachDef,
@@ -79,12 +80,12 @@ var createProductController = function (req, res) { return __awaiter(void 0, voi
                     inventory: inventory,
                 };
                 console.log('productData:', JSON.stringify(productData, null, 2));
-                return [4 /*yield*/, (0, productRepository_1.createProduct)(req.app.locals.client, productData)];
+                return [4 /*yield*/, (0, productRepository_1.createProduct)(req.session.client, productData)];
             case 4:
-                newProduct = _a.sent();
+                newProduct = _b.sent();
                 return [2 /*return*/, res.status(201).json(newProduct)];
             case 5:
-                error_1 = _a.sent();
+                error_1 = _b.sent();
                 console.log('error: ', error_1);
                 if (error_1.message === 'user not found') {
                     console.log('user not found');

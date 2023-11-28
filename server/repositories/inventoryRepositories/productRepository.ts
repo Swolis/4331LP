@@ -4,14 +4,14 @@ import productSchema, { IProduct, getProductModel } from "../../models/inventory
 
 export const createProduct: (clientDatabase: Connection, ProductData: any) => Promise<IProduct> = async (clientDatabase: Connection, ProductData: any) => {
     try {
-        const ProductModel = getProductModel(clientDatabase);
+        const {model: ProductModel, closeConnection } = getProductModel(clientDatabase);
 
         const newProduct = new ProductModel(ProductData);
 
         // Save the new product
         await newProduct.save();
 
-   
+        closeConnection();
 
         return newProduct;
     } catch (error: any) {

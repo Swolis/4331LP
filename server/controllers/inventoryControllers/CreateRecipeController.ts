@@ -7,7 +7,7 @@ import { ProductTrackerInterface } from '../../models/inventoryModels/recipieSch
 export const createRecipeController = async ( req: Request, res: Response): Promise<void> => {
     console.log(`\n\nEntering create Recipe controller`);
     try {
-        const ClientModel = getClientModel((req as any).session.client);
+        const { model: ClientModel, closeConnection } = getClientModel((req as any).session.client);
         
         const client = await ClientModel.findOne({});
 
@@ -20,6 +20,8 @@ export const createRecipeController = async ( req: Request, res: Response): Prom
 
         console.log('recipeNumber: ', recipeNumber);
         req.body.recipeNumber = recipeNumber;
+
+        closeConnection();
 
         console.log(
             req.body.products.map((product: any) => ({
@@ -52,7 +54,7 @@ export const createRecipeController = async ( req: Request, res: Response): Prom
             recipeNumber: recipeNumber,
         }
 
-        const newRecipe = await createRecipe(req.app.locals.client, recipeData);
+        const newRecipe = await createRecipe((req as any).session.client, recipeData);
 
         res.status(201).json({ message: ' Created new Recipe', newRecipe });
     }catch (error: any) {

@@ -41,27 +41,28 @@ var recipeRepository_1 = require("../../repositories/inventoryRepositories/recip
 var ClientSchema_1 = require("../../models/ClientSchema");
 var mongoose_1 = require("mongoose");
 var createRecipeController = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var ClientModel, client, recipeNumber, products, priceWithoutDollar, recipeData, newRecipe, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _a, ClientModel, closeConnection, client, recipeNumber, products, priceWithoutDollar, recipeData, newRecipe, error_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
                 console.log("\n\nEntering create Recipe controller");
-                _a.label = 1;
+                _b.label = 1;
             case 1:
-                _a.trys.push([1, 5, , 6]);
-                ClientModel = (0, ClientSchema_1.getClientModel)(req.session.client);
+                _b.trys.push([1, 5, , 6]);
+                _a = (0, ClientSchema_1.getClientModel)(req.session.client), ClientModel = _a.model, closeConnection = _a.closeConnection;
                 return [4 /*yield*/, ClientModel.findOne({})];
             case 2:
-                client = _a.sent();
+                client = _b.sent();
                 if (!client) {
                     throw new Error('User not found');
                 }
                 recipeNumber = client.nextRecipe++;
                 return [4 /*yield*/, client.save()];
             case 3:
-                _a.sent();
+                _b.sent();
                 console.log('recipeNumber: ', recipeNumber);
                 req.body.recipeNumber = recipeNumber;
+                closeConnection();
                 console.log(req.body.products.map(function (product) { return ({
                     productId: product.id,
                     name: product.name,
@@ -86,13 +87,13 @@ var createRecipeController = function (req, res) { return __awaiter(void 0, void
                     description: req.body.description,
                     recipeNumber: recipeNumber,
                 };
-                return [4 /*yield*/, (0, recipeRepository_1.createRecipe)(req.app.locals.client, recipeData)];
+                return [4 /*yield*/, (0, recipeRepository_1.createRecipe)(req.session.client, recipeData)];
             case 4:
-                newRecipe = _a.sent();
+                newRecipe = _b.sent();
                 res.status(201).json({ message: ' Created new Recipe', newRecipe: newRecipe });
                 return [3 /*break*/, 6];
             case 5:
-                error_1 = _a.sent();
+                error_1 = _b.sent();
                 console.error("Error createing recipe: ".concat(error_1.message));
                 res.status(500).json({ message: "Internal server error" });
                 return [3 /*break*/, 6];
