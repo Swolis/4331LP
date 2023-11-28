@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useMode } from './ModeContext';
 
-function PinPad ({ mode, setMode }){
+const PinPad = () => {
+  const { toggleMode } = useMode();
 
   const [enteredPin, setEnteredPin] = useState('');
   const [pinError, setPinError] = useState('');
@@ -17,7 +19,7 @@ function PinPad ({ mode, setMode }){
     const newMode = validatePin(enteredPin);
 
     if (newMode > 0) {
-      setMode(newMode);
+      toggleMode(newMode);
       setPinError('');
     } else {
       setPinError('PIN invalid');
@@ -32,15 +34,8 @@ function PinPad ({ mode, setMode }){
     setEnteredPin(enteredPin.slice(0, -1));
   }
 
-  useEffect(() => {
-    // Reset enteredPin and pinError when the mode changes
-    setEnteredPin('');
-    setPinError('');
-  }, [mode]);
-
   return (
     <div className="flex justify-center items-center">
-      {mode === 0 && (
         <div className="pin-pad-container bg-gradient-to-br from-slate-200 to-white bg-opacity-20 mt-20 rounded-xl drop-shadow-2xl items-center">
           <h1 className='text-3xl text-center py-4'>Enter PIN</h1>
           <div className="pin-display text-center">{enteredPin.replace(/./g, '*')}</div>
@@ -82,8 +77,6 @@ function PinPad ({ mode, setMode }){
           </div>
           {pinError && <p className="error-message">{pinError}</p>}
         </div>
-      )}
-
     </div>
   );
 };
