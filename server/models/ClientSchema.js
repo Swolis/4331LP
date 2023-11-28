@@ -12,7 +12,8 @@ var clientSchema = new mongoose_1.default.Schema({
     defaultPin: { type: Boolean, default: true },
     nextSKU: { type: Number, default: 1 },
     nextRecipe: { type: Number, default: 1 },
-    nextEmployeeID: { type: Number, default: 1 }
+    nextEmployeeID: { type: Number, default: 1 },
+    nextOrderID: { type: Number, default: 1 },
 });
 clientSchema.pre('save', function (next) {
     if (!this.userId) {

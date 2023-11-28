@@ -1,5 +1,5 @@
 // clientSchema.ts
-import { Schema, Document, Connection, Model } from "mongoose";
+import { Schema, Document, Model } from "mongoose";
 import mongoose from 'mongoose';
 
 
@@ -14,7 +14,8 @@ const clientSchema: Schema = new mongoose.Schema({
     defaultPin: { type: Boolean, default: true },
     nextSKU: { type: Number, default: 1 },
     nextRecipe: { type: Number, default: 1 },
-    nextEmployeeID:{type:Number,default:1}
+    nextEmployeeID:{type:Number,default:1},
+    nextOrderID:{type:Number,default:1},
 
 });
 

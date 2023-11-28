@@ -1,16 +1,10 @@
 import { Request, Response } from 'express';
-import { getClientModel } from '../../models/ClientSchema';
-import recipieSchema, { IRecipe,getRecipeModel } from "../../models/inventoryModels/recipieSchema";
-import { Model, Connection } from 'mongoose';
+import { getRecipeModel } from "../../models/inventoryModels/recipieSchema";
 
 export const findProductIDController = async (req: Request, res: Response): Promise<void> => {
    console.log('entering product search controller');
 
-   // use connection
-   
-    
-   // use product model
-   const {model:RecipieModel,closeConnection}=await getRecipeModel((req as any).session.client)
+   const { model:RecipieModel, closeConnection }=await getRecipeModel((req as any).session.client);
 
    const query:string = req.body.query;
 
@@ -18,24 +12,22 @@ export const findProductIDController = async (req: Request, res: Response): Prom
    try {
 
       let searchResult;
-      searchResult=await RecipieModel.findById(query)
-
-     
+      searchResult=await RecipieModel.findById(query);
    
       if(searchResult== undefined){
          console.log('no product found');
-         closeConnection()
          res.status(404).json({message: 'product no found'});
          
          return;
       }
-      closeConnection()
+
       res.status(201).json(searchResult);
       
    }catch (error: any) {
       console.log('error: ', error);
-      closeConnection()
       res.status(500).json({ message: `Internal server error: ${error}`});
+   } finally {
+      closeConnection();
    }
 
 

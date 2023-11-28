@@ -3,7 +3,7 @@ import { getClientModel } from '../../models/ClientSchema';
 import groupSchema,{IGroup,getGroupModel} from '../../models/registerModels/groupsSchema';
 import subGroupSchema,{ISubGroup,getSubGroupModel} from '../../models/registerModels/subGroupSchema';
 
-export const updateSubGroups = async ( req: Request, res: Response): Promise<void> => {
+export const updateGroup = async ( req: Request, res: Response): Promise<void> => {
     
     try {
         const { model: ClientModel, closeConnection }: any = getClientModel((req as any).session.client);
@@ -18,8 +18,8 @@ export const updateSubGroups = async ( req: Request, res: Response): Promise<voi
         await client.save();
         closeConnection()
         const { model: GroupModel, closeConnection2 }: any = getSubGroupModel((req as any).session.client);
-        let findGroup=GroupModel.findById(req.body.group.groupID)
-        if (findGroup==null){
+        let findGroup = await GroupModel.findById(req.body.group.groupID)
+        if (findGroup === null){
             res.status(404).json({message: 'No group found.'});
             return;
         }
@@ -28,8 +28,6 @@ export const updateSubGroups = async ( req: Request, res: Response): Promise<voi
         findGroup.button= req.body.group.button
         await findGroup.save()
        
-
-
         closeConnection2()
         
        

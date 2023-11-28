@@ -6,10 +6,8 @@ import { Model, Connection } from 'mongoose';
 export const findProductIDController = async (req: Request, res: Response): Promise<void> => {
    console.log('entering product search controller');
 
-   
-    
    // use product model
-   const ProductModel=getProductModel((req as any).session.client)
+   const { model: ProductModel, closeConnection } = getProductModel((req as any).session.client)
 
    const query:string = req.body.query;
 
@@ -17,11 +15,9 @@ export const findProductIDController = async (req: Request, res: Response): Prom
    try {
 
       let searchResult;
-      searchResult=await ProductModel.findById(query)
+      searchResult=await ProductModel.findById(query);
 
-     
-   
-      if(searchResult== null){
+      if(searchResult === null){
          console.log('no product found');
          res.status(404).json({message: 'product no found'});
          return;
@@ -32,6 +28,8 @@ export const findProductIDController = async (req: Request, res: Response): Prom
    }catch (error: any) {
       console.log('error: ', error);
       res.status(500).json({ message: `Internal server error: ${error}`});
+   }finally {
+      closeConnection();
    }
 
 

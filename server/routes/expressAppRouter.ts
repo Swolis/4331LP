@@ -6,6 +6,8 @@ import AdminRegistrationRouter from './authentication/AdminRegistrationRouter';
 import RecipeRouter from './api/RecipeRouter';
 
 import EmployeeRouter from './api/EmployeeRouter';
+import orderRouter from './api/orderRoutes/orderRouter';
+import groupRouter from './api/registerRoutes/groupRouter'
 
 const mainRouter = Router();
 
@@ -27,5 +29,12 @@ mainRouter.use('/Product/', ProductRouter);
 
 // Recipe routes
 mainRouter.use('/Recipe-Router/', RecipeRouter);
+
+
+// order router
+mainRouter.use('/Order-Router/', orderRouter);
+
+// managing buttons of POS
+mainRouter.use('/Button-Routes/', groupRouter);
 
 export default mainRouter;

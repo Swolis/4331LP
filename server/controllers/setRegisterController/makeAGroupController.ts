@@ -23,7 +23,7 @@ export const establishGroup = async ( req: Request, res: Response): Promise<void
             group:null
         }
 
-        const newGroup = await createGroup(req.app.locals.client, groupSchema);
+        const newGroup = await createGroup((req as any).session.client, groupSchema);
         closeConnection()
         res.status(201).json({ message: ' Created new Order', newGroup });
     }catch (error: any) {
